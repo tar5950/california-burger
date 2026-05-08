@@ -335,14 +335,19 @@
     }
     .hero-title em {
       font-style: normal;
-      color: #e7feff;
       display: block;
-      -webkit-text-stroke: 1.8px #00141a;
+      width: max-content;
+      max-width: 100%;
+      color: var(--neon);
+      background: #0a090f;
+      padding: 0.06em 0.22em 0.1em;
+      margin-left: -0.22em;
+      -webkit-text-stroke: 0;
       text-shadow:
-        0 0 1px #000,
-        0 0 6px rgba(0,0,0,.95),
-        0 0 28px #00f0ff,
-        0 0 64px rgba(0,240,255,.55);
+        0 0 1px #fff5fb,
+        0 0 14px var(--neon),
+        0 0 36px rgba(255,45,120,.65),
+        0 0 72px rgba(255,45,120,.3);
     }
 
     .hero-tagline {
@@ -1848,7 +1853,7 @@
   <!-- HEADER -->
   <header class="header" id="header">
     <div class="container nav">
-      <a href="#" class="logo">CALIFORNIA<span>.</span></a>
+      <a href="#" class="logo">CALIFORNIA<span> BURGER</span></a>
 
       <ul class="nav-links" id="navLinks">
         <li><a href="#menu">Menu</a></li>
