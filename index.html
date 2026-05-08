@@ -223,7 +223,7 @@
       inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: 78% center;
+      object-position: 82% 20%;
       z-index: 0;
     }
 
@@ -303,11 +303,11 @@
       position: relative;
       z-index: 3;
       width: 100%;
-      padding: 60px 24px 80px;
+      padding: 60px 24px 120px;
     }
 
     .hero-content-inner {
-      max-width: 460px;
+      max-width: 440px;
     }
 
     .hero-eyebrow {
@@ -1071,8 +1071,8 @@
        ───────────────────────────────────────────────────────── */
     .cart-widget {
       position: fixed;
-      bottom: 28px; right: 24px;
-      width: 54px; height: 54px;
+      bottom: 28px; right: 20px;
+      width: 50px; height: 50px;
       border-radius: 2px;
       background: var(--neon);
       display: flex;
@@ -1289,11 +1289,11 @@
       .mobile-bar { display: block; }
       /* safe-area + bar height */
       body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
-      .cart-widget { bottom: 80px; right: 16px; }
-      .cart-panel { bottom: 148px; right: 16px; left: 16px; width: auto; max-width: none; }
-      .loyalty-widget { bottom: 80px; left: 16px; }
-      .loyalty-panel { bottom: 148px; left: 16px; right: 16px; width: auto; max-width: none; }
-      .sp-toast { bottom: 220px; left: 16px; width: calc(100vw - 32px); }
+      .cart-widget { bottom: 76px; right: 14px; width: 46px; height: 46px; font-size: 19px; }
+      .cart-panel { bottom: 140px; right: 14px; left: 14px; width: auto; max-width: none; }
+      .loyalty-widget { bottom: 76px; left: 14px; width: 46px; height: 46px; }
+      .loyalty-panel { bottom: 140px; left: 14px; right: 14px; width: auto; max-width: none; }
+      .sp-toast { bottom: 210px; left: 14px; width: calc(100vw - 28px); }
       .contact-layout { grid-template-columns: 1fr; }
       .contact-map-panel { min-height: 240px; }
       .contact-info-panel { padding: 32px 20px; }
@@ -1368,8 +1368,8 @@
        ───────────────────────────────────────────────────────── */
     .loyalty-widget {
       position: fixed;
-      bottom: 28px; left: 24px;
-      width: 54px; height: 54px;
+      bottom: 28px; left: 20px;
+      width: 50px; height: 50px;
       border-radius: 2px;
       border: 1px solid rgba(255,45,120,.45);
       background: var(--ink2);
@@ -1520,7 +1520,8 @@
       background: var(--ink3);
       border-top: 1px solid rgba(255,45,120,.2);
       border-bottom: 1px solid rgba(255,45,120,.2);
-      padding: 10px 12px;
+      padding: 13px 16px;
+      box-shadow: 0 0 20px rgba(255,45,120,.06);
       animation: fadeDown .3s ease;
     }
     .crosssell-toast.show { display: flex; }
@@ -1693,8 +1694,8 @@
     }
     .suggest-card:hover { border-color: rgba(255,45,120,.35); }
     .suggest-thumb {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border-radius: 2px;
       background: var(--ink2);
       border: 1px solid var(--rule);
@@ -1778,65 +1779,235 @@
     }
 
     /* ─────────────────────────────────────────────────────────
-       F3. SOCIAL PROOF TOASTS
+       F3. SOCIAL PROOF TOASTS — redesigné
        ───────────────────────────────────────────────────────── */
     .sp-toast {
       position: fixed;
       bottom: 158px; left: 24px;
-      width: 240px;
+      width: 360px;
       background: var(--ink2);
       border: 1px solid var(--rule);
-      border-left: 2px solid var(--neon);
-      border-radius: 2px;
-      padding: 12px 14px;
+      border-left: 3px solid var(--neon);
+      border-radius: 3px;
+      padding: 18px 20px;
       z-index: 295;
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      transform: translateX(-120%);
+      align-items: center;
+      gap: 0;
+      box-shadow: 0 0 0 1px rgba(255,45,120,.06), 0 8px 32px rgba(0,0,0,.55), 0 0 28px rgba(255,45,120,.10);
+      transform: translateX(-110%) scale(0.96);
       opacity: 0;
-      transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+      transition: transform .38s cubic-bezier(.22,1,.36,1), opacity .32s ease, scale .38s cubic-bezier(.22,1,.36,1);
       pointer-events: none;
     }
     .sp-toast.visible {
-      transform: translateX(0);
+      transform: translateX(0) scale(1);
       opacity: 1;
     }
+    /* séparateur vertical rose entre avatar et texte */
+    .sp-sep {
+      width: 1px;
+      align-self: stretch;
+      background: var(--neon);
+      opacity: .35;
+      margin: 0 14px;
+      flex-shrink: 0;
+    }
     .sp-avatar {
-      width: 34px; height: 34px;
+      width: 44px; height: 44px;
       border-radius: 50%;
-      background: var(--neon-lo);
-      border: 1px solid rgba(255,45,120,.3);
+      background: linear-gradient(135deg, rgba(255,45,120,.22) 0%, rgba(255,45,120,.06) 100%);
+      border: 1px solid rgba(255,45,120,.35);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--type-display);
-      font-size: 13px;
+      font-size: 15px;
       color: var(--neon);
       flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(255,45,120,.15);
     }
-    .sp-body {}
+    .sp-body { flex: 1; min-width: 0; }
     .sp-name {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--warm);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      letter-spacing: .01em;
     }
     .sp-product {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.45;
     }
     .sp-product em {
       font-style: normal;
       color: var(--warm);
+      font-weight: 600;
+    }
+    .sp-time {
+      font-size: 10px;
+      color: var(--muted2);
+      font-style: italic;
+      margin-top: 4px;
+      letter-spacing: .02em;
+    }
+    /* mini check animé */
+    .sp-check {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--neon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #fff;
+      flex-shrink: 0;
+      margin-left: 10px;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity .25s .55s ease, transform .25s .55s cubic-bezier(.34,1.56,.64,1);
+    }
+    .sp-toast.visible .sp-check {
+      opacity: 1;
+      transform: scale(1);
     }
     @media (max-width: 768px) {
-      .sp-toast { bottom: 210px; }
+      .sp-toast { bottom: 210px; width: calc(100vw - 28px); }
     }
     @media (max-width: 480px) {
       .sp-toast { display: none !important; }
     }
+
+    /* ─────────────────────────────────────────────────────────
+       MODALE CHECKOUT CROSS-SELL
+       ───────────────────────────────────────────────────────── */
+    .checkout-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,7,12,.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+    .checkout-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .checkout-modal {
+      background: var(--ink2);
+      border: 1px solid rgba(255,45,120,.28);
+      border-top: 2px solid var(--neon);
+      border-radius: 4px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 28px 28px 24px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 0 40px rgba(255,45,120,.08);
+      transform: scale(0.96);
+      transition: transform .28s cubic-bezier(.22,1,.36,1);
+      scrollbar-width: none;
+    }
+    .checkout-modal::-webkit-scrollbar { display: none; }
+    .checkout-overlay.open .checkout-modal {
+      transform: scale(1);
+    }
+    .checkout-modal-title {
+      font-family: var(--type-display);
+      font-size: 15px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 6px;
+    }
+    .checkout-modal-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .checkout-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .checkout-suggestion-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--ink3);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 12px 14px;
+      transition: border-color .2s;
+    }
+    .checkout-suggestion-card:hover { border-color: rgba(255,45,120,.35); }
+    .checkout-sug-thumb {
+      width: 44px; height: 44px;
+      border-radius: 2px;
+      background: var(--ink2);
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .checkout-sug-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .checkout-sug-info { flex: 1; min-width: 0; }
+    .checkout-sug-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--warm);
+      margin-bottom: 2px;
+    }
+    .checkout-sug-price {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .checkout-sug-add {
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      padding: 7px 14px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: background .2s, color .2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .checkout-sug-add:hover { background: var(--neon); color: var(--ink); }
+    .checkout-sug-add.added {
+      background: var(--wa);
+      border-color: var(--wa);
+      color: #fff;
+    }
+    .checkout-skip {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      transition: border-color .2s, color .2s;
+    }
+    .checkout-skip:hover { border-color: var(--muted2); color: var(--warm); }
   </style>
 </head>
 <body>
@@ -2215,9 +2386,22 @@
   <!-- SOCIAL PROOF -->
   <div class="sp-toast" id="spToast">
     <div class="sp-avatar" id="spAvatar"></div>
+    <div class="sp-sep"></div>
     <div class="sp-body">
       <p class="sp-name" id="spName"></p>
       <p class="sp-product" id="spProduct"></p>
+      <p class="sp-time" id="spTime"></p>
+    </div>
+    <div class="sp-check" id="spCheck">✓</div>
+  </div>
+
+  <!-- MODALE CHECKOUT CROSS-SELL -->
+  <div class="checkout-overlay" id="checkoutOverlay">
+    <div class="checkout-modal" id="checkoutModal">
+      <p class="checkout-modal-title">Avant de commander, tu prends...</p>
+      <p class="checkout-modal-sub">Ces produits vont bien avec ta sélection.</p>
+      <div class="checkout-suggestions" id="checkoutSuggestions"></div>
+      <button class="checkout-skip" id="checkoutSkip">Non merci, envoyer ma commande</button>
     </div>
   </div>
 
@@ -2670,7 +2854,10 @@
           </div>
         `).join('');
         items.querySelectorAll('.qty-btn').forEach(btn => {
-          btn.addEventListener('click', () => changeQty(btn.dataset.id, btn.dataset.act === 'inc' ? 1 : -1));
+          btn.addEventListener('click', () => {
+            changeQty(btn.dataset.id, btn.dataset.act === 'inc' ? 1 : -1);
+            if (cart.length === 0) crosssellPopupShown = false;
+          });
         });
       }
 
@@ -2720,7 +2907,9 @@
       window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg || buildMsg())}`, '_blank');
     }
 
-    document.getElementById('cartSend').addEventListener('click', () => openWhatsApp());
+    document.getElementById('cartSend').addEventListener('click', () => {
+      openCheckoutModal(() => openWhatsApp());
+    });
 
     ['tb-wa','nav-wa','hero-wa','final-wa','mobile-wa','contact-wa'].forEach(id => {
       const el = document.getElementById(id);
@@ -2924,7 +3113,7 @@
     /* ─────────────────────────────────────────────────────────
        F3. SOCIAL PROOF
        ───────────────────────────────────────────────────────── */
-    const SP_NAMES    = ['Karim','Sarah','Mehdi','Léa','Yann','Lina','Hugo','Inès','Adam','Jade','Ryan','Camille'];
+    const SP_NAMES  = ['Karim · Lille','Sarah · Roubaix','Mehdi · Villeneuve','Léa · Lille','Yann · Tourcoing','Lina · Lille','Hugo · Lambersart','Inès · Marcq','Adam · Lille','Jade · Mons-en-Barœul','Ryan · Lille','Camille · Hellemmes'];
     const SP_PRODUCTS = PRODUCTS.filter(p => BURGER_CATS.includes(p.cat) || p.cat === 'sides').map(p => p.name);
 
     let spTimer = null;
@@ -2935,18 +3124,18 @@
       if (document.getElementById('cartPanel').classList.contains('open')) return;
 
       const toast   = document.getElementById('spToast');
-      const name    = SP_NAMES[Math.floor(Math.random() * SP_NAMES.length)];
+      const entry   = SP_NAMES[Math.floor(Math.random() * SP_NAMES.length)];
       const product = SP_PRODUCTS[Math.floor(Math.random() * SP_PRODUCTS.length)];
       const mins    = Math.floor(Math.random() * 14) + 1;
 
-      document.getElementById('spAvatar').textContent  = name[0];
-      document.getElementById('spName').textContent    = `${name} vient de commander`;
-      document.getElementById('spProduct').innerHTML   = `<em>1 ${product}</em> · il y a ${mins} min`;
+      document.getElementById('spAvatar').textContent = entry[0];
+      document.getElementById('spName').textContent   = entry;
+      document.getElementById('spProduct').innerHTML  = `vient de commander <em>${product}</em>`;
+      document.getElementById('spTime').textContent   = `il y a ${mins} min`;
 
       toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 6000);
+      setTimeout(() => toast.classList.remove('visible'), 6500);
 
-      // prochain toast : 45-90s
       const next = (45 + Math.floor(Math.random() * 46)) * 1000;
       spTimer = setTimeout(showSocialProof, next);
     }
@@ -2964,6 +3153,91 @@
         spTimer = setTimeout(showSocialProof, 8000);
       }
     });
+
+    /* ─────────────────────────────────────────────────────────
+       MODALE CHECKOUT CROSS-SELL
+       ───────────────────────────────────────────────────────── */
+    let crosssellPopupShown = false;
+
+    function buildCheckoutSuggestions() {
+      const hasSide  = cartSideQty() > 0;
+      const hasDrink = cartDrinkQty() > 0;
+      if (hasSide && hasDrink) return []; // rien à suggérer
+
+      const candidates = [];
+      if (!hasSide) {
+        candidates.push(PRODUCTS.find(p => p.id === 'frites'));
+        candidates.push(PRODUCTS.find(p => p.id === 'onion-rings'));
+      }
+      if (!hasDrink) {
+        candidates.push(PRODUCTS.find(p => p.id === 'softs'));
+        candidates.push(PRODUCTS.find(p => p.id === 'milkshake'));
+      }
+      return candidates.filter(Boolean).slice(0, 3);
+    }
+
+    function openCheckoutModal(onConfirm) {
+      const suggestions = buildCheckoutSuggestions();
+      if (suggestions.length === 0 || crosssellPopupShown) {
+        onConfirm();
+        return;
+      }
+      crosssellPopupShown = true;
+
+      const overlay = document.getElementById('checkoutOverlay');
+      const container = document.getElementById('checkoutSuggestions');
+      const ICONS = { sides: '🍟', boissons: '🥤' };
+
+      container.innerHTML = suggestions.map(p => {
+        const icon = ICONS[p.cat] || '⭐';
+        const imgHtml = p.image
+          ? `<img src="${p.image}" alt="${p.name}">`
+          : icon;
+        return `
+          <div class="checkout-suggestion-card">
+            <div class="checkout-sug-thumb">${imgHtml}</div>
+            <div class="checkout-sug-info">
+              <div class="checkout-sug-name">${p.name}</div>
+              <div class="checkout-sug-price">${p.price.toFixed(2)}€</div>
+            </div>
+            <button class="checkout-sug-add" data-id="${p.id}">+ Ajouter</button>
+          </div>
+        `;
+      }).join('');
+
+      // Listeners boutons + ajouter
+      container.querySelectorAll('.checkout-sug-add').forEach(btn => {
+        btn.addEventListener('click', () => {
+          addToCart(btn.dataset.id, null);
+          btn.textContent = '✓ Ajouté';
+          btn.classList.add('added');
+          btn.disabled = true;
+        });
+      });
+
+      overlay.classList.add('open');
+
+      // Bouton skip → ferme et envoie
+      document.getElementById('checkoutSkip').onclick = () => {
+        overlay.classList.remove('open');
+        onConfirm();
+      };
+
+      // Clic overlay derrière → ferme sans envoyer
+      overlay.addEventListener('click', function handler(e) {
+        if (e.target === overlay) {
+          overlay.classList.remove('open');
+          overlay.removeEventListener('click', handler);
+        }
+      });
+    }
+
+    // Réinitialiser le flag quand le panier est vidé
+    const _origChangeQty = changeQty;
+    function changeQtyWithReset(id, delta) {
+      _origChangeQty(id, delta);
+      if (cart.length === 0) crosssellPopupShown = false;
+    }
 
     /* ─── INIT ─── */
     renderMenu();
