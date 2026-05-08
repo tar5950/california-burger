@@ -273,11 +273,11 @@
       -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
     }
 
-    /* Overlay : voile bas pour la lisibilité du texte, image préservée en haut */
+    /* Overlay : voile bas progressif pour faire respirer le texte, image préservée en haut */
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(12,11,16,.15) 0%, rgba(12,11,16,.4) 50%, rgba(12,11,16,.92) 100%);
+      background: linear-gradient(to bottom, rgba(12,11,16,.05) 0%, rgba(12,11,16,.25) 40%, rgba(12,11,16,.7) 75%, rgba(12,11,16,.94) 100%);
       z-index: 1;
     }
 
@@ -304,13 +304,7 @@
     }
 
     .hero-content-inner {
-      max-width: 540px;
-      background: rgba(8, 7, 12, .78);
-      backdrop-filter: blur(10px) saturate(120%);
-      -webkit-backdrop-filter: blur(10px) saturate(120%);
-      border-left: 2px solid var(--neon);
-      padding: 36px 40px 40px;
-      box-shadow: 0 30px 80px -20px rgba(0,0,0,.6);
+      max-width: 620px;
     }
 
     .hero-eyebrow {
@@ -320,6 +314,7 @@
       text-transform: uppercase;
       color: var(--neon);
       margin-bottom: 24px;
+      text-shadow: 0 2px 14px rgba(0,0,0,.85);
       opacity: 0;
       animation: fadeUp .6s .2s forwards;
     }
@@ -331,6 +326,7 @@
       letter-spacing: -.01em;
       color: var(--warm);
       margin-bottom: 8px;
+      text-shadow: 0 4px 28px rgba(0,0,0,.9), 0 2px 8px rgba(0,0,0,.7);
       opacity: 0;
       animation: fadeUp .7s .35s forwards;
     }
@@ -345,9 +341,10 @@
       font-size: clamp(15px, 2vw, 18px);
       color: var(--warm);
       line-height: 1.55;
-      margin-top: 8px;
-      margin-bottom: 32px;
+      margin-top: 20px;
+      margin-bottom: 36px;
       max-width: 440px;
+      text-shadow: 0 2px 16px rgba(0,0,0,.9);
       opacity: 0;
       animation: fadeUp .7s .5s forwards;
     }
@@ -1596,6 +1593,10 @@
       <div class="container">
         <div class="hero-content-inner">
           <p class="hero-eyebrow">Lille · Depuis 2022 · Vice Beach Diner</p>
+          <h1 class="hero-title">
+            Le seul<br>
+            <em>qu'on retient.</em>
+          </h1>
           <p class="hero-tagline">
             Recettes Miami. Viande fraiche. Livraison 30 min.
           </p>
