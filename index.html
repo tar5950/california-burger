@@ -52,6 +52,7 @@
       --neon:   #ff2d78;       /* rose néon — accent UNIQUE */
       --neon-lo: rgba(255,45,120,.12);
       --neon-glow: 0 0 18px rgba(255,45,120,.55), 0 0 40px rgba(255,45,120,.25);
+      --neon-glow-strong: 0 0 2px #000, 0 0 6px #000, 0 0 24px rgba(255,45,120,.9), 0 0 56px rgba(255,45,120,.5);
 
       --warm:   #f5ede0;       /* blanc ivoire — corps de texte */
       --muted:  #7a6f86;       /* teinte secondaire */
@@ -277,7 +278,7 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(12,11,16,.05) 0%, rgba(12,11,16,.25) 40%, rgba(12,11,16,.7) 75%, rgba(12,11,16,.94) 100%);
+      background: linear-gradient(to bottom, rgba(12,11,16,0) 0%, rgba(12,11,16,.12) 40%, rgba(12,11,16,.48) 75%, rgba(12,11,16,.78) 100%);
       z-index: 1;
     }
 
@@ -321,20 +322,21 @@
 
     .hero-title {
       font-family: var(--type-display);
-      font-size: clamp(42px, 7vw, 96px);
-      line-height: 1.05;
-      letter-spacing: -.01em;
+      font-size: clamp(60px, 11vw, 140px);
+      line-height: 1.0;
+      letter-spacing: -.02em;
       color: var(--warm);
       margin-bottom: 8px;
-      text-shadow: 0 4px 28px rgba(0,0,0,.9), 0 2px 8px rgba(0,0,0,.7);
+      text-shadow: 0 2px 4px rgba(0,0,0,.95), 0 6px 32px rgba(0,0,0,.8);
       opacity: 0;
       animation: fadeUp .7s .35s forwards;
     }
     .hero-title em {
       font-style: normal;
-      color: var(--neon);
-      text-shadow: var(--neon-glow);
+      color: var(--warm);
       display: block;
+      -webkit-text-stroke: 1.5px var(--neon);
+      text-shadow: var(--neon-glow-strong);
     }
 
     .hero-tagline {
@@ -503,31 +505,41 @@
     .product-card.is-hidden { display: none; }
     .product-card:hover { background: var(--ink3); }
 
-    /* Placeholder image — ligne diagonale élégante au lieu d'un emoji géant */
+    /* Thumb : photo réelle ou placeholder sobre */
     .product-thumb {
-      aspect-ratio: 16/7;
+      aspect-ratio: 4/3;
       background: var(--ink3);
       margin-bottom: 20px;
       position: relative;
       overflow: hidden;
       border: 1px solid var(--rule);
     }
-    .product-thumb::before {
+    /* Photo réelle */
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .product-card:hover .product-thumb img { transform: scale(1.04); }
+
+    /* Placeholder — pas de photo dispo */
+    .product-thumb.no-photo::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(135deg, var(--ink) 0%, var(--ink3) 100%);
+      background: linear-gradient(135deg, var(--ink) 0%, var(--ink3) 60%, rgba(255,45,120,.06) 100%);
     }
-    .product-thumb::after {
+    .product-thumb.no-photo::after {
       content: '';
       position: absolute;
       top: 50%; left: 50%;
-      width: 200%;
+      width: 220%;
       height: 1px;
-      background: var(--rule);
-      transform: translate(-50%, -50%) rotate(-18deg);
-      opacity: .6;
+      background: linear-gradient(90deg, transparent, var(--rule) 30%, var(--rule) 70%, transparent);
+      transform: translate(-50%, -50%) rotate(-14deg);
     }
     .product-thumb-label {
       position: absolute;
@@ -536,10 +548,11 @@
       align-items: center;
       justify-content: center;
       font-family: var(--type-display);
-      font-size: 10px;
-      letter-spacing: .15em;
+      font-size: 9px;
+      letter-spacing: .18em;
       text-transform: uppercase;
       color: var(--muted2);
+      z-index: 1;
     }
 
     .product-tag {
@@ -1248,42 +1261,88 @@
         top: 100%; left: 0; right: 0;
         background: var(--ink2);
         flex-direction: column;
-        padding: 24px;
+        padding: 20px 16px;
         gap: 20px;
         border-bottom: 1px solid var(--rule);
+        z-index: 499;
+      }
+      .nav-links.mobile-open a {
+        font-size: 15px;
+        padding: 4px 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
       }
       .burger { display: flex; }
       .btn-wa-nav { display: none; }
       .mobile-bar { display: block; }
-      body { padding-bottom: 58px; }
-      .cart-widget { bottom: 76px; }
-      .cart-panel { bottom: 140px; }
+      /* safe-area + bar height */
+      body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+      .cart-widget { bottom: 80px; right: 16px; }
+      .cart-panel { bottom: 148px; right: 16px; left: 16px; width: auto; max-width: none; }
+      .loyalty-widget { bottom: 80px; left: 16px; }
+      .loyalty-panel { bottom: 148px; left: 16px; right: 16px; width: auto; max-width: none; }
+      .sp-toast { bottom: 220px; left: 16px; width: calc(100vw - 32px); }
       .contact-layout { grid-template-columns: 1fr; }
-      section { padding: 72px 0; }
+      .contact-map-panel { min-height: 240px; }
+      .contact-info-panel { padding: 32px 20px; }
+      section { padding: 64px 0; }
+      .section-head { margin-bottom: 40px; }
       .reviews-layout {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
       }
       .review-divider { display: none; }
-      .review-block { border-bottom: 1px solid var(--rule); }
+      .review-block { border-bottom: 1px solid var(--rule); padding: 28px 20px; }
       .review-block:last-child { border-bottom: none; }
+      .review-quote { font-size: 15px; }
+      .combo-grid { grid-template-columns: 1fr; gap: 1px; }
+      .combo-card { padding: 28px 20px; }
+      .cta-final { padding: 80px 0; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      /* filter pills: scroll horizontal sur mobile */
+      .menu-filters { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; scrollbar-width: none; }
+      .menu-filters::-webkit-scrollbar { display: none; }
+      .filter-pill { flex-shrink: 0; min-height: 44px; padding: 10px 18px; }
     }
 
     @media (max-width: 600px) {
-      .menu-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+      .menu-grid { grid-template-columns: repeat(2, 1fr); }
       body { cursor: auto; }
       .cursor-dot, .cursor-ring { display: none; }
       .container { padding: 0 16px; }
-      .hero-content { padding: 80px 16px 80px; }
-      .hero-content-inner { padding: 28px 24px 32px; }
-      .hero-meta { gap: 24px; flex-wrap: wrap; }
+      /* Hero : hook grand format — coupures de mots évitées */
+      .hero-content { padding: 60px 16px 96px; }
+      .hero-title {
+        font-size: clamp(44px, 13vw, 80px);
+        word-break: break-word;
+        hyphens: auto;
+      }
+      .hero-tagline { font-size: 14px; margin-bottom: 28px; }
+      .hero-meta { gap: 20px; flex-wrap: wrap; margin-top: 36px; }
+      .hero-meta-value { font-size: 18px; }
+      .hero-meta-label { font-size: 11px; }
+      .manifesto-statement { font-size: clamp(20px, 5vw, 28px); }
+      .product-card { padding: 16px 14px; }
+      .product-name { font-size: 14px; }
+      .product-desc { font-size: 12px; }
+      .product-price { font-size: 17px; }
+      .add-btn { padding: 9px 12px; font-size: 11px; min-height: 44px; }
+      .section-title { font-size: clamp(22px, 6vw, 36px); }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 430px) {
+      .menu-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: clamp(42px, 14vw, 64px); }
       .hero-ctas { flex-direction: column; align-items: stretch; }
-      .btn-primary, .btn-outline { padding: 14px 24px; justify-content: center; }
-      .combo-grid { grid-template-columns: 1fr; }
+      .btn-primary, .btn-outline {
+        padding: 15px 20px;
+        justify-content: center;
+        min-height: 52px;
+        font-size: 13px;
+      }
+      .topbar { font-size: 11px; padding: 6px 12px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1977,40 +2036,52 @@
     const PRODUCTS = [
       { id: 'classic-cali',  cat: 'classics', name: 'Classic Cali',   price: 9.90,
         desc: 'Double cheese, bacon, sauce Cali maison',
-        ings: ['Bacon', 'Cheddar', 'Beef'], tag: null },
+        ings: ['Bacon', 'Cheddar', 'Beef'], tag: null,
+        image: 'img/menu/classic.jpg' },
       { id: 'royal-cali',   cat: 'classics', name: 'Royal Cali',    price: 12.90,
         desc: 'Triple steak, double cheese, oignons caramelises',
-        ings: ['Triple steak', 'Cheddar', 'Oignons'], tag: null },
+        ings: ['Triple steak', 'Cheddar', 'Oignons'], tag: null,
+        image: 'img/menu/double.jpg' },
       { id: 'bacon-master', cat: 'classics', name: 'Bacon Master',   price: 11.90,
         desc: '100% bacon, sauce BBQ fumee, cheddar fondu',
-        ings: ['Extra bacon', 'BBQ fumee'], tag: null },
+        ings: ['Extra bacon', 'BBQ fumee'], tag: null,
+        image: null },
       { id: 'spicy-vice',   cat: 'spicy',   name: 'Spicy Vice',    price: 11.90,
         desc: 'Chicken croustillant, jalapeños, sauce piquante',
-        ings: ['Chicken', 'Jalapeño', 'Hot sauce'], tag: 'spicy' },
+        ings: ['Chicken', 'Jalapeño', 'Hot sauce'], tag: 'spicy',
+        image: 'img/menu/spicy.jpg' },
       { id: 'inferno',      cat: 'spicy',   name: 'Inferno',       price: 13.90,
         desc: 'Le plus piquant. Habanero, sauce diablo. Pour les braves.',
-        ings: ['Habanero', 'Sauce diablo'], tag: 'spicy' },
+        ings: ['Habanero', 'Sauce diablo'], tag: 'spicy',
+        image: null },
       { id: 'veggie-wave',  cat: 'veggie',  name: 'Veggie Wave',   price: 10.90,
         desc: 'Beyond Meat, avocat, pousses fraiches, sauce vegan',
-        ings: ['Vegan', 'Avocat'], tag: 'veggie' },
+        ings: ['Vegan', 'Avocat'], tag: 'veggie',
+        image: 'img/menu/veggie.jpg' },
       { id: 'green-power',  cat: 'veggie',  name: 'Green Power',   price: 11.90,
         desc: 'Steak vegetal, mozza, legumes grilles',
-        ings: ['Veggie', 'Mozza'], tag: 'veggie' },
+        ings: ['Veggie', 'Mozza'], tag: 'veggie',
+        image: null },
       { id: 'frites',       cat: 'sides',   name: 'Frites Maison', price: 3.50,
         desc: 'Fraichement coupees, double cuisson',
-        ings: ['Fresh'], tag: null },
+        ings: ['Fresh'], tag: null,
+        image: null },
       { id: 'onion-rings',  cat: 'sides',   name: 'Onion Rings',   price: 4.50,
         desc: 'Croustillants, sauce Cali',
-        ings: ['Crispy'], tag: null },
+        ings: ['Crispy'], tag: null,
+        image: null },
       { id: 'softs',        cat: 'boissons', name: 'Softs',        price: 2.50,
         desc: 'Coca / Fanta / Sprite / Ice Tea',
-        ings: ['33cl'], tag: null },
+        ings: ['33cl'], tag: null,
+        image: null },
       { id: 'milkshake',    cat: 'boissons', name: 'Milkshake Oreo', price: 5.90,
         desc: 'Onctueux, oreo concasse',
-        ings: ['Vanille', 'Oreo'], tag: null },
+        ings: ['Vanille', 'Oreo'], tag: null,
+        image: null },
       { id: 'mojito',       cat: 'boissons', name: 'Mojito Beach',  price: 4.90,
         desc: 'Sans alcool. Menthe fraiche, citron vert, sucre de canne',
-        ings: ['Menthe', 'Citron'], tag: null }
+        ings: ['Menthe', 'Citron'], tag: null,
+        image: null }
     ];
 
     /* ─── RENDER MENU ─── */
@@ -2019,8 +2090,11 @@
     function renderMenu() {
       menuGrid.innerHTML = PRODUCTS.map(p => `
         <article class="product-card reveal" data-cat="${p.cat}">
-          <div class="product-thumb">
-            <span class="product-thumb-label">${p.name}</span>
+          <div class="product-thumb${p.image ? '' : ' no-photo'}">
+            ${p.image
+              ? `<img src="${p.image}" alt="${p.name}" loading="lazy" width="600" height="450">`
+              : `<span class="product-thumb-label">${p.name}</span>`
+            }
             ${p.tag === 'spicy'  ? '<span class="product-tag spicy">Spicy</span>' : ''}
             ${p.tag === 'veggie' ? '<span class="product-tag veggie">Vegan</span>' : ''}
           </div>
