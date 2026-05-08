@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (au cas où)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+*.log
+
+# Backups
+*.bak
+*.backup
+
+# Brouillons / fichiers temporaires
+draft.html
+test.html
+*.tmp
+
+# Fichiers vidéo lourds (si on veut versionner ailleurs)
+# hero-video.mp4

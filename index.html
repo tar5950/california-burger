@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#ff1493">
+
+  <title>California Burger · Le diner Miami de Lille · Commande WhatsApp</title>
+  <meta name="description" content="California Burger, le diner Miami de Lille. Burgers de fou, vibe 80s, commande WhatsApp en 2 clics, livraison 30 min.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="California Burger · Vice Beach à Lille">
+  <meta property="og:description" content="Burgers de fou, vibe Miami 80s, livraison express. Commande WhatsApp en 2 clics.">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:locale" content="fr_FR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="California Burger · Vice Beach à Lille">
+  <meta name="twitter:description" content="Burgers de fou, vibe Miami 80s, livraison 30 min.">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "California Burger",
+    "description": "Diner burgers vibe Miami 80s à Lille",
+    "servesCuisine": ["American", "Burger"],
+    "priceRange": "€€",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Lille",
+      "addressCountry": "FR"
+    },
+    "telephone": "+33768789800",
+    "openingHours": "Mo-Su 11:00-23:00"
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       VARIABLES CSS : IDENTITE CALIFORNIA BURGER
+       ═══════════════════════════════════════════════════════ */
+    :root {
+      /* Fonds noirs profonds */
+      --n: #0a0510;
+      --n2: #14091e;
+      --n3: #1f0d2e;
+      --n4: #2a1240;
+
+      /* Néons signatures */
+      --neon-pink: #ff1493;
+      --neon-pink-2: #ff5cb3;
+      --neon-cyan: #00ffff;
+      --neon-cyan-2: #5cffff;
+      --neon-orange: #ff6b35;
+      --neon-green: #39ff14;
+      --neon-purple: #b026ff;
+
+      /* Texte */
+      --w: #fff5f0;
+      --w2: #ffe6f0;
+      --mid: #b599c7;
+
+      /* WhatsApp */
+      --wa: #25D366;
+      --wa2: #1da855;
+
+      /* Glow */
+      --glow-pink: 0 0 20px rgba(255,20,147,0.6), 0 0 40px rgba(255,20,147,0.3);
+      --glow-cyan: 0 0 20px rgba(0,255,255,0.6), 0 0 40px rgba(0,255,255,0.3);
+      --glow-green: 0 0 20px rgba(57,255,20,0.5), 0 0 40px rgba(57,255,20,0.25);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       RESET + BASE
+       ═══════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--n);
+      color: var(--w);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Grille tech en arrière-plan */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,20,147,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Vignette violette pour la profondeur */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center,
+        transparent 0%,
+        transparent 60%,
+        rgba(10,5,16,0.6) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 5; }
+
+    /* ═══════════════════════════════════════════════════════
+       TYPOGRAPHIE
+       ═══════════════════════════════════════════════════════ */
+    .display {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.02em;
+      font-weight: 400;
+    }
+
+    .pixel {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; line-height: 1; }
+
+    /* ═══════════════════════════════════════════════════════
+       UTILS NÉON
+       ═══════════════════════════════════════════════════════ */
+    .neon-pink {
+      color: var(--neon-pink);
+      text-shadow:
+        0 0 10px rgba(255,20,147,0.8),
+        0 0 20px rgba(255,20,147,0.6),
+        0 0 40px rgba(255,20,147,0.4);
+    }
+
+    .neon-cyan {
+      color: var(--neon-cyan);
+      text-shadow:
+        0 0 10px rgba(0,255,255,0.8),
+        0 0 20px rgba(0,255,255,0.6),
+        0 0 40px rgba(0,255,255,0.4);
+    }
+
+    .neon-orange {
+      color: var(--neon-orange);
+      text-shadow:
+        0 0 10px rgba(255,107,53,0.8),
+        0 0 20px rgba(255,107,53,0.5);
+    }
+
+    .neon-green {
+      color: var(--neon-green);
+      text-shadow:
+        0 0 10px rgba(57,255,20,0.8),
+        0 0 20px rgba(57,255,20,0.5);
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.92; }
+      52% { opacity: 0.6; }
+      54% { opacity: 1; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: var(--glow-pink); }
+      50% { box-shadow: 0 0 30px rgba(255,20,147,0.9), 0 0 60px rgba(255,20,147,0.5); }
+    }
+
+    @keyframes scroll-grid {
+      from { background-position: 0 0; }
+      to { background-position: 60px 60px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       1. TRUST BAR (sticky top)
+       ═══════════════════════════════════════════════════════ */
+    .trustbar {
+      background: var(--n2);
+      border-bottom: 1px solid rgba(255,20,147,0.2);
+      padding: 8px 0;
+      position: relative;
+      z-index: 100;
+      font-size: 13px;
+    }
+
+    .trustbar-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      color: var(--mid);
+    }
+
+    .trustbar-inner a {
+      color: var(--neon-pink);
+      font-weight: 700;
+      transition: text-shadow 0.3s;
+    }
+    .trustbar-inner a:hover { text-shadow: var(--glow-pink); }
+
+    .trustbar-inner span { display: inline-flex; align-items: center; gap: 6px; }
+
+    /* ═══════════════════════════════════════════════════════
+       2. HEADER NAVIGATION
+       ═══════════════════════════════════════════════════════ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(10, 5, 16, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,20,147,0.15);
+      transition: padding 0.3s ease, background 0.3s ease;
+    }
+
+    .header.scrolled {
+      padding: 4px 0;
+      background: rgba(10, 5, 16, 0.95);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      transition: padding 0.3s ease;
+    }
+
+    .header.scrolled .nav { padding: 10px 0; }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-cyan) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 8px rgba(255,20,147,0.4));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--w2);
+      transition: color 0.3s, text-shadow 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--neon-pink);
+      box-shadow: var(--glow-pink);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--neon-pink); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .btn-wa-nav {
+      background: var(--wa);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: var(--glow-green);
+    }
+
+    .btn-wa-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(57,255,20,0.7);
+    }
+
+    .burger {
+      display: none;
+      width: 32px;
+      height: 24px;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .burger span {
+      display: block;
+      height: 3px;
+      background: var(--neon-pink);
+      box-shadow: 0 0 8px var(--neon-pink);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .burger.open span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+    /* ═══════════════════════════════════════════════════════
+       3. HERO SECTION
+       ═══════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* Fallback gradient si pas de vidéo */
+    .hero-bg-fallback {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,20,147,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(0,255,255,0.3) 0%, transparent 50%),
+        linear-gradient(180deg, #1a0833 0%, #0a0510 100%);
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        rgba(10,5,16,0.85) 0%,
+        rgba(255,20,147,0.25) 50%,
+        rgba(0,255,255,0.2) 100%);
+      z-index: 1;
+    }
+
+    /* Lignes scanline rétro */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      padding: 80px 24px;
+    }
+
+    .hero-content-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      line-height: 0.95;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .line-1 {
+      display: block;
+      font-size: clamp(28px, 5vw, 56px);
+      color: var(--w2);
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+      animation: fadeInDown 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .hero-title .line-2 {
+      display: block;
+      font-size: clamp(64px, 13vw, 180px);
+      background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-pink-2) 50%, var(--neon-cyan) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 30px rgba(255,20,147,0.5));
+      letter-spacing: 0.05em;
+      animation: fadeInDown 1s 0.2s ease-out forwards;
+      opacity: 0;
+    }
+
+    .hero-title .line-3 {
+      display: block;
+      font-size: clamp(16px, 2.5vw, 24px);
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-cyan);
+      letter-spacing: 0.3em;
+      margin-top: 16px;
+      animation: fadeInDown 1s 0.4s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--w2);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+      animation: fadeInUp 1s 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      animation: fadeInUp 1s 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .btn-primary {
+      background: var(--wa);
+      color: white;
+      padding: 18px 36px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: var(--glow-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 0 40px rgba(57,255,20,0.8);
+    }
+
+    .btn-secondary {
+      border: 2px solid var(--neon-pink);
+      color: var(--neon-pink);
+      padding: 16px 34px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      box-shadow: var(--glow-pink);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--neon-pink);
+      color: var(--n);
+      transform: translateY(-3px);
+    }
+
+    .hero-trust {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--w2);
+      animation: fadeInUp 1s 1s ease-out forwards;
+      opacity: 0;
+    }
+
+    .hero-trust span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(10,5,16,0.6);
+      border: 1px solid rgba(255,20,147,0.3);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Palmiers décoratifs SVG */
+    .palm-deco {
+      position: absolute;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.4;
+      filter: drop-shadow(0 0 20px rgba(255,20,147,0.5));
+    }
+
+    .palm-left { left: 2%; width: 120px; }
+    .palm-right { right: 2%; width: 120px; transform: scaleX(-1); }
+
+    /* ═══════════════════════════════════════════════════════
+       SECTIONS GENERIC
+       ═══════════════════════════════════════════════════════ */
+    section {
+      padding: 80px 0;
+      position: relative;
+      z-index: 5;
+    }
+
+    .section-title {
+      font-size: clamp(40px, 7vw, 80px);
+      text-align: center;
+      margin-bottom: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--mid);
+      font-size: 17px;
+      margin-bottom: 56px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Animation au scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       4. SECTION MENU "NOS BURGERS"
+       ═══════════════════════════════════════════════════════ */
+    #menu {
+      background: linear-gradient(180deg, var(--n) 0%, var(--n2) 100%);
+    }
+
+    .menu-filters {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .filter-pill {
+      padding: 10px 20px;
+      background: var(--n3);
+      border: 1px solid var(--n4);
+      border-radius: 999px;
+      color: var(--mid);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s;
+      letter-spacing: 0.03em;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--neon-pink);
+      color: var(--w);
+    }
+
+    .filter-pill.active {
+      background: var(--neon-pink);
+      color: white;
+      border-color: var(--neon-pink);
+      box-shadow: var(--glow-pink);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--n3);
+      border: 1px solid var(--n4);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.4s, border-color 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-card.is-hidden {
+      display: none;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--neon-pink);
+      box-shadow: 0 0 30px rgba(255,20,147,0.4);
+    }
+
+    .product-image {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-purple) 50%, var(--neon-cyan) 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      overflow: hidden;
+    }
+
+    .product-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 4px,
+        rgba(0,0,0,0.15) 4px,
+        rgba(0,0,0,0.15) 5px
+      );
+    }
+
+    .product-tag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--n);
+      border: 1px solid var(--neon-orange);
+      color: var(--neon-orange);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      z-index: 2;
+      box-shadow: 0 0 12px rgba(255,107,53,0.4);
+    }
+
+    .product-tag.veggie {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      box-shadow: 0 0 12px rgba(57,255,20,0.4);
+    }
+
+    .product-tag.spicy {
+      border-color: var(--neon-orange);
+      color: var(--neon-orange);
+    }
+
+    .product-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 0.05em;
+      color: var(--neon-pink);
+      text-shadow: 0 0 12px rgba(255,20,147,0.5);
+      margin-bottom: 6px;
+    }
+
+    .product-desc {
+      color: var(--w2);
+      font-size: 14px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .product-ingredients {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .ing-pill {
+      background: var(--n4);
+      color: var(--mid);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .product-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-cyan);
+      letter-spacing: 0.02em;
+    }
+
+    .add-btn {
+      background: var(--neon-pink);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      box-shadow: 0 0 12px rgba(255,20,147,0.5);
+    }
+
+    .add-btn:hover {
+      transform: scale(1.05);
+      box-shadow: var(--glow-pink);
+    }
+
+    .add-btn.added {
+      background: var(--wa);
+      box-shadow: var(--glow-green);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       5. SECTION COMBO PARFAIT
+       ═══════════════════════════════════════════════════════ */
+    .combos {
+      background: var(--n2);
+    }
+
+    .combo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .combo-card {
+      background: linear-gradient(135deg, rgba(255,20,147,0.15) 0%, rgba(0,255,255,0.1) 100%);
+      border: 1px solid rgba(255,20,147,0.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .combo-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(255,20,147,0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .combo-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 40px rgba(255,20,147,0.3);
+    }
+
+    .combo-card:hover::before { opacity: 1; }
+
+    .combo-emojis {
+      font-size: 40px;
+      margin-bottom: 16px;
+      letter-spacing: 0.1em;
+    }
+
+    .combo-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-cyan);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .combo-desc {
+      color: var(--w2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .combo-price {
+      display: block;
+      margin-top: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--neon-pink);
+      text-shadow: var(--glow-pink);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       6. POURQUOI NOUS
+       ═══════════════════════════════════════════════════════ */
+    .why {
+      background: var(--n);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .why-card {
+      text-align: center;
+      padding: 32px 20px;
+      background: var(--n3);
+      border: 1px solid var(--n4);
+      border-radius: 16px;
+      transition: all 0.4s;
+    }
+
+    .why-card:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-4px);
+    }
+
+    .why-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+      filter: drop-shadow(0 0 12px rgba(255,20,147,0.5));
+    }
+
+    .why-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px rgba(255,20,147,0.4);
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .why-desc {
+      color: var(--w2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       7. PROMO TICKER
+       ═══════════════════════════════════════════════════════ */
+    .promo {
+      padding: 40px 0;
+      background: linear-gradient(90deg, var(--neon-pink) 0%, var(--neon-purple) 50%, var(--neon-cyan) 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .promo-ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker 20s linear infinite;
+    }
+
+    .promo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      color: white;
+      letter-spacing: 0.08em;
+      padding: 0 40px;
+      text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       8. SECTION AVIS
+       ═══════════════════════════════════════════════════════ */
+    .reviews {
+      background: var(--n2);
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .review-card {
+      background: var(--n3);
+      border: 1px solid rgba(255,20,147,0.3);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .review-card:hover {
+      border-color: var(--neon-pink);
+      box-shadow: var(--glow-pink);
+      transform: translateY(-4px);
+    }
+
+    .review-stars {
+      color: #ffdd00;
+      font-size: 18px;
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 8px rgba(255,221,0,0.5);
+    }
+
+    .review-text {
+      color: var(--w2);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-cyan) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .review-name {
+      font-weight: 700;
+      color: var(--w);
+      font-size: 14px;
+    }
+
+    .review-date {
+      font-size: 12px;
+      color: var(--mid);
+    }
+
+    .reviews-cta {
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       9. CONTACT
+       ═══════════════════════════════════════════════════════ */
+    .contact {
+      background: var(--n);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: stretch;
+    }
+
+    .contact-map {
+      background: var(--n3);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 16px;
+      box-shadow: var(--glow-cyan);
+      overflow: hidden;
+      min-height: 400px;
+      position: relative;
+    }
+
+    .contact-map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      filter: invert(0.9) hue-rotate(180deg) saturate(0.8);
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      color: var(--mid);
+      background: linear-gradient(135deg, rgba(0,255,255,0.1) 0%, rgba(255,20,147,0.1) 100%);
+    }
+
+    .map-placeholder .icon { font-size: 64px; }
+
+    .contact-info {
+      background: var(--n3);
+      border: 1px solid var(--n4);
+      border-radius: 16px;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .contact-icon {
+      font-size: 24px;
+      width: 40px;
+      flex-shrink: 0;
+    }
+
+    .contact-label {
+      font-size: 13px;
+      color: var(--mid);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .contact-value {
+      font-size: 17px;
+      color: var(--w);
+      font-weight: 600;
+    }
+
+    .contact-value a:hover {
+      color: var(--neon-pink);
+      text-shadow: var(--glow-pink);
+    }
+
+    .contact-cta {
+      margin-top: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       10. CTA FINAL
+       ═══════════════════════════════════════════════════════ */
+    .cta-final {
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(255,20,147,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 50%, rgba(0,255,255,0.3) 0%, transparent 60%),
+        linear-gradient(135deg, var(--n) 0%, var(--n3) 100%);
+      padding: 100px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent 0,
+        transparent 40px,
+        rgba(255,20,147,0.05) 40px,
+        rgba(255,20,147,0.05) 41px
+      );
+    }
+
+    .cta-final-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 9vw, 120px);
+      background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-cyan) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 30px rgba(255,20,147,0.6));
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-final-sub {
+      font-size: clamp(18px, 2.5vw, 24px);
+      color: var(--w2);
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .btn-giant {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--wa);
+      color: white;
+      padding: 24px 48px;
+      border-radius: 999px;
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: var(--glow-green);
+      animation: pulse-glow-green 2s ease-in-out infinite;
+      transition: transform 0.2s;
+      position: relative;
+    }
+
+    .btn-giant:hover { transform: scale(1.05); }
+
+    @keyframes pulse-glow-green {
+      0%, 100% { box-shadow: 0 0 20px rgba(57,255,20,0.5), 0 0 40px rgba(57,255,20,0.3); }
+      50% { box-shadow: 0 0 40px rgba(57,255,20,0.8), 0 0 80px rgba(57,255,20,0.5); }
+    }
+
+    .cta-final-mention {
+      margin-top: 24px;
+      color: var(--w2);
+      font-size: 15px;
+      position: relative;
+    }
+
+    .cta-final-trust {
+      margin-top: 12px;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--mid);
+      position: relative;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       11. FOOTER
+       ═══════════════════════════════════════════════════════ */
+    .footer {
+      background: var(--n2);
+      border-top: 1px solid var(--n4);
+      padding: 60px 0 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand h3 {
+      font-size: 32px;
+      background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-brand p {
+      color: var(--mid);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .footer h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      color: var(--neon-cyan);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .footer ul { list-style: none; }
+    .footer ul li { margin-bottom: 8px; }
+    .footer ul a {
+      color: var(--w2);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .footer ul a:hover { color: var(--neon-pink); }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--neon-pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 18px;
+    }
+
+    .social-link:hover {
+      background: var(--neon-pink);
+      box-shadow: var(--glow-pink);
+      transform: translateY(-3px);
+    }
+
+    .footer-copy {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--n4);
+      color: var(--mid);
+      font-size: 13px;
+    }
+
+    .footer-copy a {
+      color: var(--neon-pink);
+      font-weight: 700;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       12. STICKY BAR MOBILE
+       ═══════════════════════════════════════════════════════ */
+    .mobile-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      background: var(--n);
+      border-top: 1px solid var(--neon-pink);
+      box-shadow: 0 -4px 20px rgba(255,20,147,0.3);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-bar-inner {
+      display: flex;
+      height: 60px;
+    }
+
+    .mobile-bar-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.03em;
+    }
+
+    .mobile-bar-btn.call { color: var(--neon-pink); }
+    .mobile-bar-btn.wa { background: var(--wa); color: white; }
+
+    /* ═══════════════════════════════════════════════════════
+       13. WIDGET PANIER FLOTTANT
+       ═══════════════════════════════════════════════════════ */
+    .cart-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--neon-pink);
+      box-shadow: var(--glow-pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 70;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .cart-widget:hover { transform: scale(1.08); }
+    .cart-widget.bump { animation: cart-bump 0.4s ease; }
+
+    @keyframes cart-bump {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      color: var(--n);
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,255,255,0.6);
+    }
+
+    .cart-panel {
+      position: fixed;
+      bottom: 96px;
+      right: 24px;
+      width: 360px;
+      max-width: calc(100vw - 48px);
+      max-height: 70vh;
+      background: var(--n2);
+      border: 1px solid var(--neon-pink);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5), var(--glow-pink);
+      z-index: 75;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cart-panel.open {
+      display: flex;
+      animation: cart-slide-in 0.3s ease;
+    }
+
+    @keyframes cart-slide-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cart-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--n4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--neon-pink);
+      letter-spacing: 0.05em;
+    }
+
+    .cart-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--n4);
+      color: var(--w);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--mid);
+      padding: 32px 0;
+      font-size: 14px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,20,147,0.1);
+      gap: 12px;
+    }
+
+    .cart-item:last-child { border-bottom: none; }
+
+    .cart-item-info { flex: 1; }
+    .cart-item-name {
+      font-weight: 700;
+      color: var(--w);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .cart-item-price {
+      color: var(--neon-cyan);
+      font-size: 13px;
+    }
+
+    .cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--n3);
+      border: 1px solid var(--n4);
+      color: var(--neon-pink);
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn:hover { border-color: var(--neon-pink); }
+
+    .cart-qty-num {
+      font-weight: 700;
+      color: var(--w);
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .cart-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--n4);
+      background: var(--n3);
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    .cart-total-amount {
+      color: var(--neon-pink);
+      text-shadow: var(--glow-pink);
+    }
+
+    .cart-send {
+      width: 100%;
+      background: var(--wa);
+      color: white;
+      padding: 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: var(--glow-green);
+      transition: transform 0.2s;
+    }
+
+    .cart-send:hover { transform: translateY(-2px); }
+    .cart-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ═══════════════════════════════════════════════════════
+       CURSEUR CUSTOM (desktop only)
+       ═══════════════════════════════════════════════════════ */
+    @media (hover: hover) and (min-width: 1025px) {
+      body { cursor: none; }
+      a, button, .filter-pill, .product-card, .qty-btn, input, select { cursor: none; }
+
+      .cursor-dot, .cursor-circle {
+        position: fixed;
+        top: 0; left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+      }
+
+      .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--neon-pink);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--neon-pink);
+        transition: transform 0.1s ease;
+      }
+
+      .cursor-circle {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--neon-pink);
+        border-radius: 50%;
+        transition: width 0.3s, height 0.3s, border-color 0.3s, transform 0.15s ease-out;
+      }
+
+      .cursor-circle.hover {
+        width: 56px;
+        height: 56px;
+        border-color: var(--neon-cyan);
+        background: rgba(0,255,255,0.1);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE : 6 BREAKPOINTS
+       ═══════════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .combo-grid { grid-template-columns: 1fr; }
+      .review-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.mobile-open {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--n2);
+        flex-direction: column;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--neon-pink);
+      }
+      .burger { display: flex; }
+      .btn-wa-nav { display: none; }
+      .mobile-bar { display: block; }
+      body { padding-bottom: 60px; }
+      .cart-widget { bottom: 80px; }
+      .cart-panel { bottom: 150px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .palm-deco { width: 80px; }
+      section { padding: 60px 0; }
+    }
+
+    @media (max-width: 600px) {
+      .menu-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      body { cursor: auto; }
+      .cursor-dot, .cursor-circle { display: none; }
+      .container { padding: 0 16px; }
+      .menu-filters { gap: 8px; }
+      .filter-pill { padding: 8px 14px; font-size: 13px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-ctas { flex-direction: column; align-items: stretch; }
+      .btn-primary, .btn-secondary { padding: 14px 24px; font-size: 14px; }
+      .hero-trust { gap: 8px; font-size: 13px; }
+      .hero-trust span { padding: 4px 10px; }
+      .hero-content { padding: 60px 16px; }
+      .product-card { border-radius: 12px; }
+      .palm-deco { width: 60px; opacity: 0.25; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-title .line-1 { font-size: 22px; letter-spacing: 0.1em; }
+      .hero-title .line-2 { font-size: 56px; }
+      .hero-title .line-3 { font-size: 13px; letter-spacing: 0.2em; }
+      .section-title { font-size: 36px; }
+      .logo { font-size: 22px; }
+      .cart-panel { width: calc(100vw - 32px); right: 16px; }
+    }
+
+    /* Réduction des animations si préféré */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Curseur custom (desktop only) -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-circle" id="cursor-circle"></div>
+
+  <!-- ═══════════════════════════════════════════════
+       1. TRUST BAR
+       ═══════════════════════════════════════════════ -->
+  <div class="trustbar">
+    <div class="container trustbar-inner">
+      <span>📱 <a href="#" id="tb-wa">Commande WhatsApp</a></span>
+      <span>⚡ Livraison 30 min</span>
+      <span>📍 Lille</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       2. HEADER NAVIGATION
+       ═══════════════════════════════════════════════ -->
+  <header class="header" id="header">
+    <div class="container nav">
+      <a href="#" class="logo">CALIFORNIA BURGER</a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#why">Pourquoi nous</a></li>
+        <li><a href="#contact">Localisation</a></li>
+        <li><a href="#cta-final">Contact</a></li>
+      </ul>
+
+      <a href="#" class="btn-wa-nav" id="nav-wa">📱 Commander</a>
+
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       3. HERO
+       ═══════════════════════════════════════════════ -->
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline poster="">
+      <source src="hero-video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-bg-fallback"></div>
+    <div class="hero-overlay"></div>
+
+    <!-- Palmiers décoratifs SVG -->
+    <svg class="palm-deco palm-left" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 280 Q95 200 100 100 Q105 200 100 280" stroke="#ff1493" stroke-width="3" fill="none"/>
+      <path d="M100 100 Q40 80 20 50 Q70 70 100 100" fill="#ff1493" opacity="0.7"/>
+      <path d="M100 100 Q160 80 180 50 Q130 70 100 100" fill="#ff1493" opacity="0.7"/>
+      <path d="M100 100 Q60 60 30 20 Q80 50 100 100" fill="#ff1493" opacity="0.6"/>
+      <path d="M100 100 Q140 60 170 20 Q120 50 100 100" fill="#ff1493" opacity="0.6"/>
+      <path d="M100 100 Q90 40 80 10 Q100 50 100 100" fill="#ff1493" opacity="0.5"/>
+    </svg>
+    <svg class="palm-deco palm-right" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 280 Q95 200 100 100 Q105 200 100 280" stroke="#00ffff" stroke-width="3" fill="none"/>
+      <path d="M100 100 Q40 80 20 50 Q70 70 100 100" fill="#00ffff" opacity="0.7"/>
+      <path d="M100 100 Q160 80 180 50 Q130 70 100 100" fill="#00ffff" opacity="0.7"/>
+      <path d="M100 100 Q60 60 30 20 Q80 50 100 100" fill="#00ffff" opacity="0.6"/>
+      <path d="M100 100 Q140 60 170 20 Q120 50 100 100" fill="#00ffff" opacity="0.6"/>
+      <path d="M100 100 Q90 40 80 10 Q100 50 100 100" fill="#00ffff" opacity="0.5"/>
+    </svg>
+
+    <div class="hero-content">
+      <div class="hero-content-inner">
+        <h1 class="hero-title">
+          <span class="line-1">Bienvenue à</span>
+          <span class="line-2">VICE BEACH</span>
+          <span class="line-3">Burgers · Néon · Miami</span>
+        </h1>
+        <p class="hero-subtitle">
+          Le diner mythique de Lille. Burgers de fou, vibe Miami 80s, livraison express.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary" id="hero-wa">📱 Commander maintenant</a>
+          <a href="#menu" class="btn-secondary">🍔 Voir le menu</a>
+        </div>
+        <div class="hero-trust">
+          <span>🔥 Ouvert maintenant</span>
+          <span>⚡ Livraison 30 min</span>
+          <span>🌴 Made in Cali</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       4. MENU
+       ═══════════════════════════════════════════════ -->
+  <section id="menu">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="neon-pink">NOS</span> <span class="neon-cyan">BURGERS</span></h2>
+      <p class="section-subtitle reveal">Choisis ton vibe. On s'occupe du reste.</p>
+
+      <div class="menu-filters reveal">
+        <button class="filter-pill active" data-filter="all">🍔 Tout</button>
+        <button class="filter-pill" data-filter="classics">🌶️ Classics</button>
+        <button class="filter-pill" data-filter="spicy">🔥 Spicy</button>
+        <button class="filter-pill" data-filter="veggie">🌱 Veggie</button>
+        <button class="filter-pill" data-filter="boissons">🥤 Boissons</button>
+        <button class="filter-pill" data-filter="sides">🍟 Sides</button>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       5. COMBOS
+       ═══════════════════════════════════════════════ -->
+  <section class="combos">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="neon-cyan">TES POTES</span> <span class="neon-pink">KIFFENT AUSSI</span></h2>
+      <p class="section-subtitle reveal">Les combos qui claquent.</p>
+
+      <div class="combo-grid">
+        <div class="combo-card reveal">
+          <div class="combo-emojis">🍔 🍟 🥤</div>
+          <h3 class="combo-title">Menu Solo</h3>
+          <p class="combo-desc">1 Burger + Frites + Soft</p>
+          <span class="combo-price">−2€</span>
+        </div>
+        <div class="combo-card reveal">
+          <div class="combo-emojis">🍔🍔 🍟 🥤🥤</div>
+          <h3 class="combo-title">Menu Duo</h3>
+          <p class="combo-desc">2 Burgers + Frites + 2 Softs</p>
+          <span class="combo-price">22.90€</span>
+        </div>
+        <div class="combo-card reveal">
+          <div class="combo-emojis">🎉 🍔🍔🍔🍔</div>
+          <h3 class="combo-title">Pack Anniv</h3>
+          <p class="combo-desc">4 Burgers + 4 Frites + 4 Sodas</p>
+          <span class="combo-price">39.90€</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       6. POURQUOI NOUS
+       ═══════════════════════════════════════════════ -->
+  <section id="why" class="why">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="neon-pink">POURQUOI</span> <span class="neon-cyan">NOUS ?</span></h2>
+      <p class="section-subtitle reveal">Pas comme les autres. Vraiment.</p>
+
+      <div class="why-grid">
+        <div class="why-card reveal">
+          <span class="why-icon">🍔</span>
+          <h3 class="why-title">100% frais</h3>
+          <p class="why-desc">Préparé à la commande, jamais avant.</p>
+        </div>
+        <div class="why-card reveal">
+          <span class="why-icon">⚡</span>
+          <h3 class="why-title">Livraison 30 min</h3>
+          <p class="why-desc">Zone Lille et alentours, c'est rapide.</p>
+        </div>
+        <div class="why-card reveal">
+          <span class="why-icon">🌶️</span>
+          <h3 class="why-title">Made in Cali</h3>
+          <p class="why-desc">Recettes Miami signature, sauce maison.</p>
+        </div>
+        <div class="why-card reveal">
+          <span class="why-icon">🌴</span>
+          <h3 class="why-title">Vibe Vice</h3>
+          <p class="why-desc">Une ambiance unique dans le Nord.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       7. PROMO TICKER
+       ═══════════════════════════════════════════════ -->
+  <section class="promo">
+    <div class="promo-ticker">
+      <span class="promo-text">🔥 −10% SUR TA PREMIÈRE COMMANDE WHATSAPP · CODE : VICEFIRST · 🔥 −10% SUR TA PREMIÈRE COMMANDE WHATSAPP · CODE : VICEFIRST · 🔥 −10% SUR TA PREMIÈRE COMMANDE · CODE : VICEFIRST · 🔥 −10% SUR TA PREMIÈRE COMMANDE · CODE : VICEFIRST · </span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       8. AVIS
+       ═══════════════════════════════════════════════ -->
+  <section class="reviews">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="neon-cyan">ILS NOUS ONT</span> <span class="neon-pink">TESTÉ</span></h2>
+      <p class="section-subtitle reveal">Et ils sont revenus.</p>
+
+      <div class="review-grid">
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Le meilleur burger de la ville. La sauce Cali, c'est une tuerie."</p>
+          <div class="review-author">
+            <div class="review-avatar">K</div>
+            <div>
+              <div class="review-name">Karim</div>
+              <div class="review-date">Avis Google · Il y a 2 semaines</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Vibe Miami à fond, burger qui claque. J'y retourne."</p>
+          <div class="review-author">
+            <div class="review-avatar">S</div>
+            <div>
+              <div class="review-name">Sarah</div>
+              <div class="review-date">Avis Google · Il y a 1 mois</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Commande WhatsApp ultra rapide. Livraison 25 min. Top."</p>
+          <div class="review-author">
+            <div class="review-avatar">M</div>
+            <div>
+              <div class="review-name">Mehdi</div>
+              <div class="review-date">Avis Google · Il y a 3 semaines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews-cta reveal">
+        <a href="#" class="btn-secondary">⭐ Voir tous les avis Google</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       9. CONTACT
+       ═══════════════════════════════════════════════ -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2 class="section-title reveal"><span class="neon-pink">OÙ NOUS</span> <span class="neon-cyan">TROUVER</span></h2>
+      <p class="section-subtitle reveal">Le diner Vice Beach t'attend.</p>
+
+      <div class="contact-grid">
+        <div class="contact-map reveal">
+          <div class="map-placeholder">
+            <div class="icon">📍</div>
+            <p>Carte Google Maps<br>(à intégrer)</p>
+          </div>
+        </div>
+        <div class="contact-info reveal">
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-label">Adresse</div>
+              <div class="contact-value">Lille, Nord</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <div class="contact-label">Téléphone</div>
+              <div class="contact-value"><a href="tel:+33768789800">07 68 78 98 00</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📱</div>
+            <div>
+              <div class="contact-label">WhatsApp</div>
+              <div class="contact-value"><a href="#" id="contact-wa">07 68 78 98 00</a></div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🕐</div>
+            <div>
+              <div class="contact-label">Horaires</div>
+              <div class="contact-value">11h - 23h, tous les jours</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🚗</div>
+            <div>
+              <div class="contact-label">Parking</div>
+              <div class="contact-value">Gratuit à proximité</div>
+            </div>
+          </div>
+          <div class="contact-cta">
+            <a href="#" class="btn-secondary" id="maps-btn">🗺️ Voir l'itinéraire</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       10. CTA FINAL
+       ═══════════════════════════════════════════════ -->
+  <section id="cta-final" class="cta-final">
+    <div class="container">
+      <h2 class="cta-final-title">Prêt à commander ?</h2>
+      <p class="cta-final-sub">Clique. Écris. Mange. C'est tout.</p>
+      <a href="#" class="btn-giant" id="final-wa">📱 Ouvrir WhatsApp</a>
+      <p class="cta-final-mention">Réponse en 5 minutes · Livraison 30 min</p>
+      <div class="cta-final-trust">
+        <span>🔒 Paiement sur place</span>
+        <span>🚀 Sans création de compte</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       11. FOOTER
+       ═══════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>CALIFORNIA BURGER</h3>
+          <p>Bienvenue à Vice Beach 🌴<br>Le diner Miami de Lille. Burgers de fou, vibe 80s, livraison express.</p>
+        </div>
+        <div>
+          <h4>Liens</h4>
+          <ul>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Nous trouver</a></li>
+            <li><a href="#cta-final">Contact</a></li>
+            <li><a href="#">Mentions légales</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Réseaux</h4>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Instagram">📷</a>
+            <a href="#" class="social-link" aria-label="TikTok">🎵</a>
+            <a href="#" class="social-link" aria-label="Facebook">f</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copy">
+        © 2026 California Burger · Site by <a href="https://tar5950.github.io/tk-digital" target="_blank" rel="noopener">TK Digital</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════
+       12. STICKY BAR MOBILE
+       ═══════════════════════════════════════════════ -->
+  <div class="mobile-bar">
+    <div class="mobile-bar-inner">
+      <a href="tel:+33768789800" class="mobile-bar-btn call">📞 Appeler</a>
+      <a href="#" class="mobile-bar-btn wa" id="mobile-wa">📱 WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       13. WIDGET PANIER
+       ═══════════════════════════════════════════════ -->
+  <button class="cart-widget" id="cartWidget" aria-label="Panier">
+    🛒
+    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+  </button>
+
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <div class="cart-title">Ta commande</div>
+      <button class="cart-close" id="cartClose" aria-label="Fermer">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">Ton panier est vide.<br>Ajoute ton premier burger 🍔</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span class="cart-total-amount" id="cartTotal">0.00€</span>
+      </div>
+      <button class="cart-send" id="cartSend" disabled>📱 Envoyer ma commande WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       JAVASCRIPT
+       ═══════════════════════════════════════════════ -->
+  <script>
+    /* ═══════════════════════════════════════════════
+       CONFIG (à personnaliser)
+       ═══════════════════════════════════════════════ */
+    const CONFIG = {
+      whatsapp: '33768789800',
+      phone: '+33768789800',
+      city: 'Lille',
+      hours: '11h - 23h tous les jours',
+      deliveryTime: '30 minutes',
+      instagram: 'californiaburger',
+      tiktok: 'californiaburger',
+      facebook: 'californiaburger',
+      googleMapsUrl: 'https://maps.google.com/?q=California+Burger+Lille',
+      promoCode: 'VICEFIRST',
+      promoDiscount: 10
+    };
+
+    /* ═══════════════════════════════════════════════
+       MENU PRODUITS
+       ═══════════════════════════════════════════════ */
+    const PRODUCTS = [
+      // Classics
+      { id: 'classic-cali', cat: 'classics', name: 'Classic Cali', emoji: '🍔', price: 9.90,
+        desc: 'Double cheese, bacon, sauce Cali maison',
+        ings: ['🥓 Bacon', '🧀 Cheddar', '🥩 Beef'], tag: null },
+      { id: 'royal-cali', cat: 'classics', name: 'Royal Cali', emoji: '👑', price: 12.90,
+        desc: 'Triple steak, double cheese, oignons caramélisés',
+        ings: ['🥩 Triple', '🧀 Cheddar', '🧅 Onions'], tag: null },
+      { id: 'bacon-master', cat: 'classics', name: 'Bacon Master', emoji: '🥓', price: 11.90,
+        desc: '100% bacon, sauce BBQ fumée, cheddar fondu',
+        ings: ['🥓 Extra', '🔥 BBQ'], tag: null },
+
+      // Spicy
+      { id: 'spicy-vice', cat: 'spicy', name: 'Spicy Vice', emoji: '🔥', price: 11.90,
+        desc: 'Chicken croustillant, jalapeños, sauce piquante',
+        ings: ['🔥 Hot', '🌶️ Jalapeño', '🍗 Chicken'], tag: 'spicy' },
+      { id: 'inferno', cat: 'spicy', name: 'Inferno', emoji: '😈', price: 13.90,
+        desc: 'Le plus piquant. Habanero, sauce diablo. Pour les braves.',
+        ings: ['🌶️🌶️🌶️ Triple Hot'], tag: 'spicy' },
+
+      // Veggie
+      { id: 'veggie-wave', cat: 'veggie', name: 'Veggie Wave', emoji: '🥑', price: 10.90,
+        desc: 'Beyond Meat, avocat, pousses fraîches, sauce vegan',
+        ings: ['🌱 Vegan', '🥑 Avocat'], tag: 'veggie' },
+      { id: 'green-power', cat: 'veggie', name: 'Green Power', emoji: '🌱', price: 11.90,
+        desc: 'Steak végétal, mozza, légumes grillés',
+        ings: ['🌱 Veggie', '🧀 Mozza'], tag: 'veggie' },
+
+      // Sides
+      { id: 'frites', cat: 'sides', name: 'Frites Maison', emoji: '🍟', price: 3.50,
+        desc: 'Fraîchement coupées, double cuisson',
+        ings: ['🥔 Fresh'], tag: null },
+      { id: 'onion-rings', cat: 'sides', name: 'Onion Rings', emoji: '🧅', price: 4.50,
+        desc: 'Croustillants, sauce Cali',
+        ings: ['🧅 Crispy'], tag: null },
+
+      // Boissons
+      { id: 'softs', cat: 'boissons', name: 'Softs', emoji: '🥤', price: 2.50,
+        desc: 'Coca / Fanta / Sprite / Ice Tea',
+        ings: ['🥤 33cl'], tag: null },
+      { id: 'milkshake', cat: 'boissons', name: 'Milkshake Oreo', emoji: '🍦', price: 5.90,
+        desc: 'Onctueux, oreo concassé',
+        ings: ['🍦 Vanille', '🍪 Oreo'], tag: null },
+      { id: 'mojito', cat: 'boissons', name: 'Mojito Beach', emoji: '🌿', price: 4.90,
+        desc: 'Sans alcool. Menthe fraîche, citron vert, sucre de canne',
+        ings: ['🌿 Menthe', '🍋 Citron'], tag: null }
+    ];
+
+    /* ═══════════════════════════════════════════════
+       RENDER MENU
+       ═══════════════════════════════════════════════ */
+    const menuGrid = document.getElementById('menuGrid');
+
+    function renderMenu() {
+      menuGrid.innerHTML = PRODUCTS.map(p => `
+        <article class="product-card reveal" data-cat="${p.cat}">
+          <div class="product-image">
+            ${p.emoji}
+            ${p.tag === 'spicy' ? '<span class="product-tag spicy">🌶️ Spicy</span>' : ''}
+            ${p.tag === 'veggie' ? '<span class="product-tag veggie">🌱 Vegan</span>' : ''}
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">${p.name}</h3>
+            <p class="product-desc">${p.desc}</p>
+            <div class="product-ingredients">
+              ${p.ings.map(i => `<span class="ing-pill">${i}</span>`).join('')}
+            </div>
+            <div class="product-footer">
+              <div class="product-price">${p.price.toFixed(2)}€</div>
+              <button class="add-btn" data-id="${p.id}">+ Ajouter</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      // Re-attach listeners
+      document.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', () => addToCart(btn.dataset.id, btn));
+      });
+
+      // Re-trigger reveal
+      observeReveals();
+    }
+
+    /* ═══════════════════════════════════════════════
+       FILTRES MENU
+       ═══════════════════════════════════════════════ */
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const filter = pill.dataset.filter;
+
+        document.querySelectorAll('.product-card').forEach(card => {
+          if (filter === 'all' || card.dataset.cat === filter) {
+            card.classList.remove('is-hidden');
+          } else {
+            card.classList.add('is-hidden');
+          }
+        });
+      });
+    });
+
+    /* ═══════════════════════════════════════════════
+       PANIER
+       ═══════════════════════════════════════════════ */
+    let cart = JSON.parse(localStorage.getItem('cb-cart') || '[]');
+
+    function saveCart() {
+      localStorage.setItem('cb-cart', JSON.stringify(cart));
+    }
+
+    function addToCart(productId, btn) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ id: productId, name: product.name, price: product.price, qty: 1 });
+      }
+      saveCart();
+      updateCartUI();
+
+      // Feedback bouton
+      if (btn) {
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Ajouté';
+        btn.classList.add('added');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('added');
+        }, 1200);
+      }
+
+      // Animation panier
+      const widget = document.getElementById('cartWidget');
+      widget.classList.remove('bump');
+      void widget.offsetWidth;
+      widget.classList.add('bump');
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      }
+      saveCart();
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      const badge = document.getElementById('cartBadge');
+      badge.textContent = totalQty;
+      badge.style.display = totalQty > 0 ? 'flex' : 'none';
+
+      const cartItems = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<div class="cart-empty">Ton panier est vide.<br>Ajoute ton premier burger 🍔</div>';
+      } else {
+        cartItems.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${item.price.toFixed(2)}€ × ${item.qty}</div>
+            </div>
+            <div class="cart-qty">
+              <button class="qty-btn" data-act="dec" data-id="${item.id}">−</button>
+              <span class="cart-qty-num">${item.qty}</span>
+              <button class="qty-btn" data-act="inc" data-id="${item.id}">+</button>
+            </div>
+          </div>
+        `).join('');
+
+        cartItems.querySelectorAll('.qty-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const delta = btn.dataset.act === 'inc' ? 1 : -1;
+            changeQty(btn.dataset.id, delta);
+          });
+        });
+      }
+
+      document.getElementById('cartTotal').textContent = totalPrice.toFixed(2) + '€';
+      document.getElementById('cartSend').disabled = cart.length === 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       OUVERTURE / FERMETURE PANIER
+       ═══════════════════════════════════════════════ */
+    const cartPanel = document.getElementById('cartPanel');
+    document.getElementById('cartWidget').addEventListener('click', () => {
+      cartPanel.classList.toggle('open');
+    });
+    document.getElementById('cartClose').addEventListener('click', () => {
+      cartPanel.classList.remove('open');
+    });
+
+    /* ═══════════════════════════════════════════════
+       MESSAGE WHATSAPP
+       ═══════════════════════════════════════════════ */
+    function buildWhatsAppMessage() {
+      if (cart.length === 0) {
+        return `Salam 👋\n\nJe voudrais en savoir plus sur California Burger.`;
+      }
+
+      let msg = `Salam 👋\n\nJe voudrais commander :\n`;
+      cart.forEach(item => {
+        msg += `- ${item.qty}x ${item.name} (${item.price.toFixed(2)}€)\n`;
+      });
+      const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      msg += `\nTotal : ${total.toFixed(2)}€\n\n`;
+      msg += `Pour : [ ] Livraison [ ] Sur place [ ] À emporter\n\n`;
+      msg += `Mon adresse (si livraison) :\n...`;
+      return msg;
+    }
+
+    function openWhatsApp(customMsg) {
+      const msg = customMsg || buildWhatsAppMessage();
+      const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    document.getElementById('cartSend').addEventListener('click', () => openWhatsApp());
+
+    // Tous les boutons WhatsApp génériques
+    ['tb-wa', 'nav-wa', 'hero-wa', 'final-wa', 'mobile-wa', 'contact-wa'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('click', (e) => {
+        e.preventDefault();
+        openWhatsApp();
+      });
+    });
+
+    // Bouton Maps
+    document.getElementById('maps-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(CONFIG.googleMapsUrl, '_blank');
+    });
+
+    /* ═══════════════════════════════════════════════
+       BURGER MENU MOBILE
+       ═══════════════════════════════════════════════ */
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      navLinks.classList.toggle('mobile-open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        navLinks.classList.remove('mobile-open');
+      });
+    });
+
+    /* ═══════════════════════════════════════════════
+       STICKY HEADER + SCROLL
+       ═══════════════════════════════════════════════ */
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    /* ═══════════════════════════════════════════════
+       REVEAL ON SCROLL (Intersection Observer)
+       ═══════════════════════════════════════════════ */
+    let revealObserver;
+    function observeReveals() {
+      if (revealObserver) revealObserver.disconnect();
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('is-visible'), i * 80);
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
+        revealObserver.observe(el);
+      });
+    }
+
+    /* ═══════════════════════════════════════════════
+       CURSEUR CUSTOM (desktop only)
+       ═══════════════════════════════════════════════ */
+    if (window.matchMedia('(min-width: 1025px) and (hover: hover)').matches) {
+      const dot = document.getElementById('cursor-dot');
+      const circle = document.getElementById('cursor-circle');
+      let mouseX = 0, mouseY = 0;
+      let circleX = 0, circleY = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.left = mouseX + 'px';
+        dot.style.top = mouseY + 'px';
+      });
+
+      function animateCircle() {
+        circleX += (mouseX - circleX) * 0.18;
+        circleY += (mouseY - circleY) * 0.18;
+        circle.style.left = circleX + 'px';
+        circle.style.top = circleY + 'px';
+        requestAnimationFrame(animateCircle);
+      }
+      animateCircle();
+
+      document.querySelectorAll('a, button, .filter-pill').forEach(el => {
+        el.addEventListener('mouseenter', () => circle.classList.add('hover'));
+        el.addEventListener('mouseleave', () => circle.classList.remove('hover'));
+      });
+    }
+
+    /* ═══════════════════════════════════════════════
+       INIT
+       ═══════════════════════════════════════════════ */
+    renderMenu();
+    updateCartUI();
+    observeReveals();
+  </script>
+
+</body>
+</html>
