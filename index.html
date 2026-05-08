@@ -1549,6 +1549,226 @@
     .crosssell-close:hover { color: var(--warm); }
 
     /* ─────────────────────────────────────────────────────────
+       F3-UPSELL. THRESHOLD BAR
+       ───────────────────────────────────────────────────────── */
+    .cart-threshold {
+      padding: 10px 14px 8px;
+      border-bottom: 1px solid var(--rule);
+      display: none;
+    }
+    .cart-threshold.show { display: block; }
+    .threshold-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .threshold-label strong { color: var(--warm); }
+    .threshold-label.free-delivery {
+      color: var(--wa);
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .threshold-bar-track {
+      height: 3px;
+      background: var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .threshold-bar-fill {
+      height: 100%;
+      background: var(--neon);
+      border-radius: 2px;
+      transition: width .4s ease;
+      box-shadow: 0 0 6px rgba(255,45,120,.5);
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       F3-UPSELL. COMBO BANNER
+       ───────────────────────────────────────────────────────── */
+    .combo-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,45,120,.07);
+      border-top: 1px solid rgba(255,45,120,.25);
+      border-bottom: 1px solid rgba(255,45,120,.25);
+      padding: 10px 14px;
+    }
+    .combo-banner.show { display: flex; animation: fadeDown .3s ease; }
+    .combo-banner-text {
+      font-size: 12px;
+      color: var(--warm);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .combo-banner-text strong { color: var(--neon); font-weight: 700; }
+    .combo-activate {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--ink);
+      background: var(--neon);
+      border-radius: 1px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      transition: opacity .2s;
+      flex-shrink: 0;
+    }
+    .combo-activate:hover { opacity: .85; }
+    .combo-activated-badge {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,45,120,.07);
+      border-top: 1px solid rgba(255,45,120,.25);
+      border-bottom: 1px solid rgba(255,45,120,.25);
+      padding: 9px 14px;
+      font-size: 12px;
+      color: var(--neon);
+      font-weight: 700;
+    }
+    .combo-activated-badge.show { display: flex; }
+    .combo-deactivate {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted2);
+      text-decoration: underline;
+      text-decoration-color: rgba(77,68,89,.5);
+    }
+    .combo-deactivate:hover { color: var(--warm); }
+
+    /* ─────────────────────────────────────────────────────────
+       F3-UPSELL. SUGGEST SECTION (bas du panier)
+       ───────────────────────────────────────────────────────── */
+    .suggest-section {
+      display: none;
+      border-top: 1px solid var(--rule);
+      padding: 12px 14px 10px;
+      flex-shrink: 0;
+    }
+    .suggest-section.show { display: block; }
+    .suggest-label {
+      font-family: var(--type-display);
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--neon);
+      margin-bottom: 10px;
+      opacity: .8;
+    }
+    .suggest-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .suggest-scroll::-webkit-scrollbar { display: none; }
+    .suggest-card {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--ink3);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 8px 10px;
+      min-width: 148px;
+      transition: border-color .2s;
+    }
+    .suggest-card:hover { border-color: rgba(255,45,120,.35); }
+    .suggest-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 2px;
+      background: var(--ink2);
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .suggest-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .suggest-info { flex: 1; min-width: 0; }
+    .suggest-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--warm);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .suggest-price {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .suggest-add {
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(255,45,120,.5);
+      border-radius: 1px;
+      color: var(--neon);
+      font-size: 16px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s, transform .1s;
+    }
+    .suggest-add:hover { background: var(--neon); color: var(--ink); transform: scale(1.1); }
+    .suggest-add.pulse {
+      animation: suggestPulse .3s ease;
+    }
+    @keyframes suggestPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       F3-UPSELL. MINI-STRIPS BURGER (Couche 4)
+       ───────────────────────────────────────────────────────── */
+    .product-addons {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .addon-btn {
+      border: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      padding: 5px 10px;
+      border-radius: 1px;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .addon-btn:hover {
+      border-color: rgba(255,45,120,.4);
+      color: var(--warm);
+      background: rgba(255,45,120,.05);
+    }
+    .addon-btn.added-flash {
+      border-color: var(--wa);
+      color: var(--wa);
+      animation: addonFlash .5s ease;
+    }
+    @keyframes addonFlash {
+      0%,100% { opacity: 1; }
+      50% { opacity: .6; }
+    }
+
+    /* ─────────────────────────────────────────────────────────
        F3. SOCIAL PROOF TOASTS
        ───────────────────────────────────────────────────────── */
     .sp-toast {
@@ -2003,7 +2223,28 @@
       <p class="cart-panel-title">Ta commande</p>
       <button class="cart-close" id="cartClose" aria-label="Fermer">&#10005;</button>
     </div>
-    <!-- Cross-sell toast — juste au-dessus des items -->
+
+    <!-- Couche 3 — Threshold bar -->
+    <div class="cart-threshold" id="cartThreshold">
+      <p class="threshold-label" id="thresholdLabel"></p>
+      <div class="threshold-bar-track">
+        <div class="threshold-bar-fill" id="thresholdFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Couche 2 — Combo banner (détecté, non activé) -->
+    <div class="combo-banner" id="comboBanner">
+      <span class="combo-banner-text" id="comboBannerText"></span>
+      <button class="combo-activate" id="comboActivateBtn">Activer</button>
+    </div>
+
+    <!-- Couche 2 — Combo activé -->
+    <div class="combo-activated-badge" id="comboActivatedBadge">
+      <span id="comboActivatedLabel"></span>
+      <button class="combo-deactivate" id="comboDeactivateBtn">Retirer</button>
+    </div>
+
+    <!-- Cross-sell toast — Feature 2 existante -->
     <div class="crosssell-toast" id="crosssellToast">
       <span class="crosssell-text" id="crosssellText"></span>
       <button class="crosssell-add" id="crosssellAdd"></button>
@@ -2013,6 +2254,13 @@
     <div class="cart-items" id="cartItems">
       <div class="cart-empty">Ton panier est vide.<br>Ajoute ton premier burger.</div>
     </div>
+
+    <!-- Couche 1 — On vous suggère -->
+    <div class="suggest-section" id="suggestSection">
+      <p class="suggest-label">On vous suggere</p>
+      <div class="suggest-scroll" id="suggestScroll"></div>
+    </div>
+
     <div class="cart-footer">
       <div class="cart-total">
         <span>Total</span>
@@ -2089,8 +2337,20 @@
     /* ─── RENDER MENU ─── */
     const menuGrid = document.getElementById('menuGrid');
 
+    const BURGER_CATS = ['classics', 'spicy', 'veggie'];
+    const SIDE_IDS    = ['frites', 'onion-rings'];
+    const DRINK_IDS   = ['softs', 'milkshake', 'mojito'];
+
     function renderMenu() {
-      menuGrid.innerHTML = PRODUCTS.map(p => `
+      menuGrid.innerHTML = PRODUCTS.map(p => {
+        const isBurger = BURGER_CATS.includes(p.cat);
+        const addonStrip = isBurger ? `
+          <div class="product-addons">
+            <button class="addon-btn" data-id="frites" data-label="Frites">+ Frites 3.50€</button>
+            <button class="addon-btn" data-id="softs"  data-label="Soda">+ Soda 2.50€</button>
+          </div>` : '';
+
+        return `
         <article class="product-card reveal" data-cat="${p.cat}">
           <div class="product-thumb${p.image ? '' : ' no-photo'}">
             ${p.image
@@ -2109,12 +2369,31 @@
             <span class="product-price">${p.price.toFixed(2)}€</span>
             <button class="add-btn" data-id="${p.id}">+ Ajouter</button>
           </div>
+          ${addonStrip}
         </article>
-      `).join('');
+      `;}).join('');
 
       document.querySelectorAll('.add-btn').forEach(btn => {
         btn.addEventListener('click', () => addToCart(btn.dataset.id, btn));
       });
+
+      /* Addon strips — ajoute le side/boisson indépendamment du burger */
+      document.querySelectorAll('.addon-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          addToCart(btn.dataset.id, null);
+          btn.classList.add('added-flash');
+          const orig = btn.textContent;
+          btn.textContent = '✓ Ajoute';
+          setTimeout(() => {
+            btn.textContent = orig;
+            btn.classList.remove('added-flash');
+          }, 1200);
+          /* Ouvre le panier pour que l'user voit ce qui se passe */
+          cartPanel.classList.add('open');
+        });
+      });
+
       observeReveals();
     }
 
@@ -2133,7 +2412,22 @@
     /* ─── PANIER ─── */
     let cart = JSON.parse(localStorage.getItem('cb-cart') || '[]');
 
-    function saveCart() { localStorage.setItem('cb-cart', JSON.stringify(cart)); }
+    /* Combo state — séparé du cart pour ne pas polluer la structure items */
+    const COMBO_KEY = 'cb-combo';
+    let comboState = { applied: null }; // 'solo' | 'duo' | 'anniv' | null
+    try { comboState = JSON.parse(localStorage.getItem(COMBO_KEY)) || { applied: null }; } catch {}
+
+    function saveCart() {
+      localStorage.setItem('cb-cart', JSON.stringify(cart));
+      localStorage.setItem(COMBO_KEY, JSON.stringify(comboState));
+    }
+
+    /* Combos définition */
+    const COMBOS = {
+      solo:  { label: 'Menu Solo',  discount: 2,     fixedPrice: null,  burgers: 1, sides: 1, drinks: 1 },
+      duo:   { label: 'Menu Duo',   discount: null,   fixedPrice: 22.90, burgers: 2, sides: 1, drinks: 2 },
+      anniv: { label: 'Pack Anniv', discount: null,   fixedPrice: 39.90, burgers: 4, sides: 4, drinks: 4 }
+    };
 
     function addToCart(id, btn) {
       const p = PRODUCTS.find(x => x.id === id);
@@ -2167,13 +2461,183 @@
       if (!item) return;
       item.qty += delta;
       if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+      /* Si on retire un item, re-vérifier si le combo appliqué tient toujours */
+      if (comboState.applied && !detectComboMatch(comboState.applied)) {
+        comboState.applied = null;
+      }
       saveCart();
       updateCartUI();
     }
 
+    /* ─── COMBO DETECTION ─── */
+    function cartBurgerQty() {
+      return cart.filter(x => { const p = PRODUCTS.find(pp => pp.id === x.id); return p && BURGER_CATS.includes(p.cat); })
+                 .reduce((s, x) => s + x.qty, 0);
+    }
+    function cartSideQty()  { return cart.filter(x => SIDE_IDS.includes(x.id)).reduce((s,x) => s + x.qty, 0); }
+    function cartDrinkQty() { return cart.filter(x => DRINK_IDS.includes(x.id)).reduce((s,x) => s + x.qty, 0); }
+
+    function detectComboMatch(key) {
+      const c = COMBOS[key];
+      return cartBurgerQty() >= c.burgers && cartSideQty() >= c.sides && cartDrinkQty() >= c.drinks;
+    }
+
+    function detectBestCombo() {
+      /* priorité : anniv > duo > solo */
+      for (const key of ['anniv', 'duo', 'solo']) {
+        if (detectComboMatch(key)) return key;
+      }
+      return null;
+    }
+
+    function getTotal() {
+      const raw = cart.reduce((s, x) => s + x.price * x.qty, 0);
+      if (!comboState.applied) return raw;
+      const c = COMBOS[comboState.applied];
+      if (c.fixedPrice !== null) return c.fixedPrice;
+      return Math.max(0, raw - c.discount);
+    }
+
+    /* ─── THRESHOLD RENDER (Couche 3) ─── */
+    function renderThreshold(total) {
+      const el    = document.getElementById('cartThreshold');
+      const label = document.getElementById('thresholdLabel');
+      const fill  = document.getElementById('thresholdFill');
+
+      if (total === 0) { el.classList.remove('show'); return; }
+
+      const SOLO_TARGET = 22.90; /* seuil Menu Solo — combo le plus proche */
+      const FREE_TARGET = 30;
+
+      if (total >= FREE_TARGET) {
+        label.className = 'threshold-label free-delivery';
+        label.innerHTML = '🎉 Livraison gratuite debloquee !';
+        fill.style.width = '100%';
+        el.classList.add('show');
+      } else if (total >= SOLO_TARGET) {
+        /* combo zone — le bandeau combo prend le relais, on masque la bar */
+        el.classList.remove('show');
+      } else {
+        const gap = (SOLO_TARGET - total).toFixed(2);
+        label.className = 'threshold-label';
+        label.innerHTML = `Plus que <strong>${gap}€</strong> pour le Menu Solo (-2€)`;
+        const pct = Math.min((total / SOLO_TARGET) * 100, 100);
+        fill.style.width = pct + '%';
+        el.classList.add('show');
+      }
+    }
+
+    /* ─── COMBO BANNER RENDER (Couche 2) ─── */
+    function renderComboBanner() {
+      const banner    = document.getElementById('comboBanner');
+      const bannerTxt = document.getElementById('comboBannerText');
+      const activated = document.getElementById('comboActivatedBadge');
+      const actLabel  = document.getElementById('comboActivatedLabel');
+
+      if (comboState.applied) {
+        banner.classList.remove('show');
+        const c = COMBOS[comboState.applied];
+        const saving = c.fixedPrice !== null
+          ? `Prix fixe ${c.fixedPrice.toFixed(2)}€`
+          : `Economie 2€`;
+        actLabel.textContent = `✓ ${c.label} active — ${saving}`;
+        activated.classList.add('show');
+        return;
+      }
+      activated.classList.remove('show');
+
+      const detected = detectBestCombo();
+      if (!detected) { banner.classList.remove('show'); return; }
+
+      const c = COMBOS[detected];
+      const savingTxt = c.fixedPrice !== null
+        ? `Prix fixe ${c.fixedPrice.toFixed(2)}€`
+        : `Economise 2€`;
+      bannerTxt.innerHTML = `💡 <strong>${c.label}</strong> detecte · ${savingTxt}`;
+
+      /* Store detected key on button for activation */
+      document.getElementById('comboActivateBtn').dataset.combo = detected;
+      banner.classList.add('show');
+    }
+
+    /* ─── SUGGEST SECTION (Couche 1) ─── */
+    function renderSuggest() {
+      const section = document.getElementById('suggestSection');
+      const scroll  = document.getElementById('suggestScroll');
+      if (cart.length === 0) { section.classList.remove('show'); return; }
+
+      const hasSide  = cartSideQty() > 0;
+      const hasDrink = cartDrinkQty() > 0;
+
+      /* Logique de pioche */
+      const candidates = [];
+
+      /* 1. Side prioritaire si absent */
+      if (!hasSide) {
+        const p = PRODUCTS.find(x => x.id === 'frites');
+        if (p) candidates.push(p);
+      }
+      /* 2. Boisson prioritaire si absente */
+      if (!hasDrink) {
+        const p = PRODUCTS.find(x => x.id === 'softs');
+        if (p) candidates.push(p);
+      }
+      /* 3. Premium non-burger non déjà dans le panier */
+      const premiumOrder = ['milkshake', 'mojito', 'onion-rings'];
+      for (const pid of premiumOrder) {
+        if (candidates.length >= 3) break;
+        if (cart.find(x => x.id === pid)) continue;
+        if (candidates.find(x => x.id === pid)) continue;
+        const p = PRODUCTS.find(x => x.id === pid);
+        if (p) candidates.push(p);
+      }
+      /* Remplissage si encore < 3 — sides restants */
+      const fallback = ['onion-rings', 'frites', 'softs', 'mojito'];
+      for (const pid of fallback) {
+        if (candidates.length >= 3) break;
+        if (candidates.find(x => x.id === pid)) continue;
+        const p = PRODUCTS.find(x => x.id === pid);
+        if (p) candidates.push(p);
+      }
+
+      const shown = candidates.slice(0, 3);
+      if (shown.length === 0) { section.classList.remove('show'); return; }
+
+      const ICONS = { sides: '🍟', boissons: '🥤' };
+
+      scroll.innerHTML = shown.map(p => {
+        const icon = ICONS[p.cat] || '⭐';
+        const imgHtml = p.image
+          ? `<img src="${p.image}" alt="${p.name}">`
+          : icon;
+        return `
+          <div class="suggest-card">
+            <div class="suggest-thumb">${imgHtml}</div>
+            <div class="suggest-info">
+              <div class="suggest-name">${p.name}</div>
+              <div class="suggest-price">${p.price.toFixed(2)}€</div>
+            </div>
+            <button class="suggest-add" data-id="${p.id}" aria-label="Ajouter ${p.name}">+</button>
+          </div>
+        `;
+      }).join('');
+
+      scroll.querySelectorAll('.suggest-add').forEach(btn => {
+        btn.addEventListener('click', () => {
+          addToCart(btn.dataset.id, null);
+          btn.classList.add('pulse');
+          btn.textContent = '✓';
+          setTimeout(() => { btn.textContent = '+'; btn.classList.remove('pulse'); }, 1000);
+        });
+      });
+
+      section.classList.add('show');
+    }
+
+    /* ─── UPDATE CART UI (refonte) ─── */
     function updateCartUI() {
-      const totalQty = cart.reduce((s, x) => s + x.qty, 0);
-      const totalPrice = cart.reduce((s, x) => s + x.price * x.qty, 0);
+      const totalQty   = cart.reduce((s, x) => s + x.qty, 0);
+      const totalPrice = getTotal();
 
       const badge = document.getElementById('cartBadge');
       badge.textContent = totalQty;
@@ -2201,9 +2665,26 @@
         });
       }
 
+      const rawTotal = cart.reduce((s, x) => s + x.price * x.qty, 0);
       document.getElementById('cartTotal').textContent = totalPrice.toFixed(2) + '€';
       document.getElementById('cartSend').disabled = cart.length === 0;
+
+      renderThreshold(rawTotal);
+      renderComboBanner();
+      renderSuggest();
     }
+
+    /* ─── COMBO LISTENERS ─── */
+    document.getElementById('comboActivateBtn').addEventListener('click', function() {
+      comboState.applied = this.dataset.combo || null;
+      saveCart();
+      updateCartUI();
+    });
+    document.getElementById('comboDeactivateBtn').addEventListener('click', () => {
+      comboState.applied = null;
+      saveCart();
+      updateCartUI();
+    });
 
     /* ─── PANIER TOGGLE ─── */
     const cartPanel = document.getElementById('cartPanel');
@@ -2217,8 +2698,11 @@
       cart.forEach(item => {
         msg += `- ${item.qty}x ${item.name} (${item.price.toFixed(2)}€)\n`;
       });
-      const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
-      msg += `\nTotal : ${total.toFixed(2)}€\n\n`;
+      if (comboState.applied) {
+        const c = COMBOS[comboState.applied];
+        msg += `\n[Formule : ${c.label}]`;
+      }
+      msg += `\nTotal : ${getTotal().toFixed(2)}€\n\n`;
       msg += `Pour : [ ] Livraison  [ ] Sur place  [ ] A emporter\n\nAdresse (si livraison) :\n...`;
       return msg;
     }
@@ -2372,9 +2856,6 @@
     /* ─────────────────────────────────────────────────────────
        F2. CROSS-SELL
        ───────────────────────────────────────────────────────── */
-    const BURGER_CATS = ['classics', 'spicy', 'veggie'];
-    const SIDE_IDS    = ['frites', 'onion-rings'];
-    const DRINK_IDS   = ['softs', 'milkshake', 'mojito'];
 
     let crosssellTimer = null;
 
