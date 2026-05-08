@@ -216,12 +216,13 @@
       overflow: hidden;
     }
 
-    /* Vidéo */
-    .hero-video {
+    /* Image hero */
+    .hero-image {
       position: absolute;
       inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
+      object-position: center;
       z-index: 0;
     }
 
@@ -272,11 +273,11 @@
       -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
     }
 
-    /* Overlay sombre sur vidéo */
+    /* Overlay : voile bas pour la lisibilité du texte, image préservée en haut */
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to right, rgba(12,11,16,.92) 0%, rgba(12,11,16,.55) 50%, rgba(12,11,16,.3) 100%);
+      background: linear-gradient(to bottom, rgba(12,11,16,.15) 0%, rgba(12,11,16,.4) 50%, rgba(12,11,16,.92) 100%);
       z-index: 1;
     }
 
@@ -1578,15 +1579,8 @@
   </header>
 
   <!-- HERO -->
-  <section class="hero">
-    <video class="hero-video" autoplay muted loop playsinline>
-      <source src="hero-video.mp4" type="video/mp4">
-    </video>
-
-    <!-- Fallback visuel — actif tant que la vidéo n'est pas chargée -->
-    <div class="hero-fallback" id="heroFallback">
-      <div class="hero-grid"></div>
-    </div>
+  <section class="hero hero--image">
+    <img class="hero-image" src="hero-image.jpg" alt="California Burger · Vice Beach diner Miami à Lille" loading="eager" fetchpriority="high">
 
     <div class="hero-overlay"></div>
     <div class="hero-scanlines"></div>
@@ -1595,13 +1589,8 @@
       <div class="container">
         <div class="hero-content-inner">
           <p class="hero-eyebrow">Lille · Depuis 2022 · Vice Beach Diner</p>
-          <h1 class="hero-title">
-            Le burger<br>
-            <em>qui reste.</em>
-          </h1>
           <p class="hero-tagline">
             Recettes Miami. Viande fraiche. Livraison 30 min.
-            Pas de fioritures — juste ce qui compte dans l'assiette.
           </p>
           <div class="hero-ctas">
             <a href="#" class="btn-primary" id="hero-wa">
@@ -2220,14 +2209,6 @@
       });
     }
 
-    /* ─── FALLBACK VIDEO : cache le fallback quand la vidéo joue ─── */
-    const heroVideo = document.querySelector('.hero-video');
-    if (heroVideo) {
-      heroVideo.addEventListener('playing', () => {
-        document.getElementById('heroFallback').style.opacity = '0';
-        document.getElementById('heroFallback').style.transition = 'opacity 1s';
-      });
-    }
 
     /* ─────────────────────────────────────────────────────────
        F1. FIDÉLITÉ
