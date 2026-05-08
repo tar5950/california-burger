@@ -1287,6 +1287,261 @@
         transition-duration: .01ms !important;
       }
     }
+
+    /* ─────────────────────────────────────────────────────────
+       F1. FIDÉLITÉ — widget + panneau
+       ───────────────────────────────────────────────────────── */
+    .loyalty-widget {
+      position: fixed;
+      bottom: 28px; left: 24px;
+      width: 54px; height: 54px;
+      border-radius: 2px;
+      border: 1px solid rgba(255,45,120,.45);
+      background: var(--ink2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      cursor: pointer;
+      transition: border-color .2s, transform .2s;
+    }
+    .loyalty-widget:hover { border-color: var(--neon); transform: translateY(-2px); }
+    .loyalty-widget svg { width: 22px; height: 22px; fill: none; stroke: var(--neon); stroke-width: 1.5; }
+
+    .loyalty-panel {
+      position: fixed;
+      bottom: 96px; left: 24px;
+      width: 300px;
+      max-width: calc(100vw - 32px);
+      background: var(--ink2);
+      border: 1px solid var(--rule);
+      border-top: 2px solid var(--neon);
+      border-radius: 2px;
+      z-index: 310;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.6);
+    }
+    .loyalty-panel.open { display: flex; animation: panelIn .25s ease; }
+
+    .loyalty-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .loyalty-title {
+      font-family: var(--type-display);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
+    .loyalty-close {
+      width: 26px; height: 26px;
+      border: 1px solid var(--rule);
+      border-radius: 1px;
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, color .2s;
+    }
+    .loyalty-close:hover { border-color: var(--neon); color: var(--neon); }
+
+    .loyalty-body { padding: 18px; }
+
+    .loyalty-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .loyalty-stamps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .stamp {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(255,45,120,.3);
+      background: transparent;
+      transition: background .3s, box-shadow .3s;
+      position: relative;
+    }
+    .stamp.filled {
+      background: var(--neon);
+      box-shadow: 0 0 10px rgba(255,45,120,.5);
+    }
+    .stamp.glow-anim {
+      animation: stampGlow .6s ease forwards;
+    }
+    @keyframes stampGlow {
+      0%   { box-shadow: 0 0 0 rgba(255,45,120,0); }
+      40%  { box-shadow: 0 0 22px rgba(255,45,120,.8), 0 0 40px rgba(255,45,120,.4); }
+      100% { box-shadow: 0 0 10px rgba(255,45,120,.5); }
+    }
+
+    .loyalty-progress {
+      font-size: 11px;
+      color: var(--muted2);
+      letter-spacing: .05em;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .loyalty-reward {
+      display: none;
+      background: var(--neon-lo);
+      border: 1px solid rgba(255,45,120,.3);
+      border-radius: 2px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .loyalty-reward.show { display: block; }
+    .loyalty-reward-code {
+      font-family: var(--type-display);
+      font-size: 18px;
+      color: var(--neon);
+      letter-spacing: .12em;
+      margin-bottom: 6px;
+    }
+    .loyalty-reward-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .loyalty-reset {
+      font-size: 11px;
+      color: var(--muted2);
+      text-decoration: underline;
+      text-decoration-color: rgba(122,111,134,.4);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .loyalty-reset:hover { color: var(--neon); }
+
+    @media (max-width: 768px) {
+      .loyalty-widget { bottom: 76px; }
+      .loyalty-panel  { bottom: 140px; }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       F2. CROSS-SELL TOAST (dans le panier)
+       ───────────────────────────────────────────────────────── */
+    .crosssell-toast {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--ink3);
+      border-top: 1px solid rgba(255,45,120,.2);
+      border-bottom: 1px solid rgba(255,45,120,.2);
+      padding: 10px 12px;
+      animation: fadeDown .3s ease;
+    }
+    .crosssell-toast.show { display: flex; }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .crosssell-text {
+      font-size: 12px;
+      color: var(--warm);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .crosssell-text strong { color: var(--neon); font-weight: 700; }
+    .crosssell-add {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--neon);
+      border: 1px solid rgba(255,45,120,.45);
+      border-radius: 1px;
+      padding: 5px 10px;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .crosssell-add:hover { background: var(--neon); color: var(--ink); }
+    .crosssell-close {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1;
+      padding: 2px 4px;
+      flex-shrink: 0;
+    }
+    .crosssell-close:hover { color: var(--warm); }
+
+    /* ─────────────────────────────────────────────────────────
+       F3. SOCIAL PROOF TOASTS
+       ───────────────────────────────────────────────────────── */
+    .sp-toast {
+      position: fixed;
+      bottom: 158px; left: 24px;
+      width: 240px;
+      background: var(--ink2);
+      border: 1px solid var(--rule);
+      border-left: 2px solid var(--neon);
+      border-radius: 2px;
+      padding: 12px 14px;
+      z-index: 295;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transform: translateX(-120%);
+      opacity: 0;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+      pointer-events: none;
+    }
+    .sp-toast.visible {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .sp-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--neon-lo);
+      border: 1px solid rgba(255,45,120,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--type-display);
+      font-size: 13px;
+      color: var(--neon);
+      flex-shrink: 0;
+    }
+    .sp-body {}
+    .sp-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--warm);
+      margin-bottom: 2px;
+    }
+    .sp-product {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .sp-product em {
+      font-style: normal;
+      color: var(--warm);
+    }
+    @media (max-width: 768px) {
+      .sp-toast { bottom: 210px; }
+    }
+    @media (max-width: 480px) {
+      .sp-toast { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -1646,6 +1901,39 @@
     </div>
   </div>
 
+  <!-- FIDÉLITÉ -->
+  <button class="loyalty-widget" id="loyaltyWidget" aria-label="Carte fidélité">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+  </button>
+
+  <div class="loyalty-panel" id="loyaltyPanel">
+    <div class="loyalty-header">
+      <p class="loyalty-title">Carte Fidélité</p>
+      <button class="loyalty-close" id="loyaltyClose">&#10005;</button>
+    </div>
+    <div class="loyalty-body">
+      <p class="loyalty-sub">1 burger commandé = 1 tampon.<br>10 tampons = 1 burger offert.</p>
+      <div class="loyalty-stamps" id="loyaltyStamps"></div>
+      <p class="loyalty-progress" id="loyaltyProgress"></p>
+      <div class="loyalty-reward" id="loyaltyReward">
+        <div class="loyalty-reward-code" id="loyaltyCode"></div>
+        <p class="loyalty-reward-label">Montre ce code en caisse ou dans ta commande WhatsApp.</p>
+        <button class="loyalty-reset" id="loyaltyReset">Réinitialiser ma carte</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL PROOF -->
+  <div class="sp-toast" id="spToast">
+    <div class="sp-avatar" id="spAvatar"></div>
+    <div class="sp-body">
+      <p class="sp-name" id="spName"></p>
+      <p class="sp-product" id="spProduct"></p>
+    </div>
+  </div>
+
   <!-- PANIER -->
   <button class="cart-widget" id="cartWidget" aria-label="Panier">
     &#128722;
@@ -1657,6 +1945,13 @@
       <p class="cart-panel-title">Ta commande</p>
       <button class="cart-close" id="cartClose" aria-label="Fermer">&#10005;</button>
     </div>
+    <!-- Cross-sell toast — juste au-dessus des items -->
+    <div class="crosssell-toast" id="crosssellToast">
+      <span class="crosssell-text" id="crosssellText"></span>
+      <button class="crosssell-add" id="crosssellAdd"></button>
+      <button class="crosssell-close" id="crosssellClose">&#10005;</button>
+    </div>
+
     <div class="cart-items" id="cartItems">
       <div class="cart-empty">Ton panier est vide.<br>Ajoute ton premier burger.</div>
     </div>
@@ -1786,6 +2081,12 @@
       w.classList.remove('bump');
       void w.offsetWidth;
       w.classList.add('bump');
+
+      /* hooks features */
+      if (p && ['classics','spicy','veggie'].includes(p.cat)) {
+        // cross-sell — différé 300ms pour laisser le panier se mettre à jour
+        setTimeout(() => _showCrosssell(), 300);
+      }
     }
 
     function changeQty(id, delta) {
@@ -1928,10 +2229,192 @@
       });
     }
 
+    /* ─────────────────────────────────────────────────────────
+       F1. FIDÉLITÉ
+       ───────────────────────────────────────────────────────── */
+    const LOYALTY_KEY = 'cb_loyalty';
+
+    function getLoyalty() {
+      try { return JSON.parse(localStorage.getItem(LOYALTY_KEY)) || { stamps: 0, code: null }; }
+      catch { return { stamps: 0, code: null }; }
+    }
+    function saveLoyalty(data) { localStorage.setItem(LOYALTY_KEY, JSON.stringify(data)); }
+
+    function genCode() {
+      return 'VICE-' + Math.random().toString(36).slice(2,6).toUpperCase();
+    }
+
+    function renderLoyalty(animNewStamps) {
+      const data = getLoyalty();
+      const stampsEl   = document.getElementById('loyaltyStamps');
+      const progressEl = document.getElementById('loyaltyProgress');
+      const rewardEl   = document.getElementById('loyaltyReward');
+      const codeEl     = document.getElementById('loyaltyCode');
+
+      const count = Math.min(data.stamps, 10);
+      stampsEl.innerHTML = Array.from({ length: 10 }, (_, i) => {
+        const filled = i < count;
+        return `<div class="stamp${filled ? ' filled' : ''}" data-idx="${i}"></div>`;
+      }).join('');
+
+      // animation glow sur les nouveaux tampons
+      if (animNewStamps && animNewStamps > 0) {
+        const allStamps = stampsEl.querySelectorAll('.stamp.filled');
+        const start = count - animNewStamps;
+        allStamps.forEach((s, i) => {
+          if (i >= start) {
+            setTimeout(() => s.classList.add('glow-anim'), i * 120);
+          }
+        });
+      }
+
+      if (data.stamps >= 10) {
+        progressEl.textContent = '';
+        rewardEl.classList.add('show');
+        if (!data.code) {
+          data.code = genCode();
+          saveLoyalty(data);
+        }
+        codeEl.textContent = data.code;
+      } else {
+        progressEl.textContent = `${count}/10 tampons`;
+        rewardEl.classList.remove('show');
+      }
+    }
+
+    function addLoyaltyStamps(n) {
+      const data = getLoyalty();
+      if (data.stamps >= 10) return; // déjà récompensé, attendre reset
+      const before = data.stamps;
+      data.stamps = Math.min(before + n, 10);
+      saveLoyalty(data);
+      const added = data.stamps - before;
+      renderLoyalty(added);
+    }
+
+    const loyaltyWidget = document.getElementById('loyaltyWidget');
+    const loyaltyPanel  = document.getElementById('loyaltyPanel');
+    loyaltyWidget.addEventListener('click', () => {
+      loyaltyPanel.classList.toggle('open');
+      if (loyaltyPanel.classList.contains('open')) renderLoyalty(0);
+    });
+    document.getElementById('loyaltyClose').addEventListener('click', () => loyaltyPanel.classList.remove('open'));
+    document.getElementById('loyaltyReset').addEventListener('click', () => {
+      saveLoyalty({ stamps: 0, code: null });
+      renderLoyalty(0);
+    });
+
+    /* ─────────────────────────────────────────────────────────
+       F2. CROSS-SELL
+       ───────────────────────────────────────────────────────── */
+    const BURGER_CATS = ['classics', 'spicy', 'veggie'];
+    const SIDE_IDS    = ['frites', 'onion-rings'];
+    const DRINK_IDS   = ['softs', 'milkshake', 'mojito'];
+
+    let crosssellTimer = null;
+
+    function hasCat(ids) {
+      return ids.some(id => cart.find(x => x.id === id && x.qty > 0));
+    }
+
+    function _showCrosssell() {
+      const toast   = document.getElementById('crosssellToast');
+      const textEl  = document.getElementById('crosssellText');
+      const addBtn  = document.getElementById('crosssellAdd');
+
+      const hasSide  = hasCat(SIDE_IDS);
+      const hasDrink = hasCat(DRINK_IDS);
+
+      let suggest = null;
+      if (!hasSide) {
+        suggest = PRODUCTS.find(p => p.id === 'frites');
+      } else if (!hasDrink) {
+        suggest = PRODUCTS.find(p => p.id === 'softs');
+      }
+
+      if (!suggest) return; // tout est déjà dans le panier
+
+      textEl.innerHTML = `Avec ton burger : <strong>${suggest.name}</strong> ?`;
+      addBtn.textContent = `+ Ajouter ${suggest.price.toFixed(2)}€`;
+
+      toast.classList.add('show');
+
+      if (crosssellTimer) clearTimeout(crosssellTimer);
+      crosssellTimer = setTimeout(() => toast.classList.remove('show'), 8000);
+
+      // handler bouton add — on réassocie à chaque affichage
+      addBtn.onclick = () => {
+        addToCart(suggest.id, null);
+        toast.classList.remove('show');
+      };
+    }
+
+    document.getElementById('crosssellClose').addEventListener('click', () => {
+      document.getElementById('crosssellToast').classList.remove('show');
+      if (crosssellTimer) clearTimeout(crosssellTimer);
+    });
+
+
+    /* Hook sur "Envoyer sur WhatsApp" pour créditer les tampons */
+    document.getElementById('cartSend').addEventListener('click', () => {
+      const burgerCount = cart
+        .filter(x => {
+          const p = PRODUCTS.find(pp => pp.id === x.id);
+          return p && BURGER_CATS.includes(p.cat);
+        })
+        .reduce((s, x) => s + x.qty, 0);
+      if (burgerCount > 0) addLoyaltyStamps(burgerCount);
+    }, true); // capture: true pour s'exécuter avant le handler WhatsApp
+
+    /* ─────────────────────────────────────────────────────────
+       F3. SOCIAL PROOF
+       ───────────────────────────────────────────────────────── */
+    const SP_NAMES    = ['Karim','Sarah','Mehdi','Léa','Yann','Lina','Hugo','Inès','Adam','Jade','Ryan','Camille'];
+    const SP_PRODUCTS = PRODUCTS.filter(p => BURGER_CATS.includes(p.cat) || p.cat === 'sides').map(p => p.name);
+
+    let spTimer = null;
+
+    function showSocialProof() {
+      if (window.innerWidth < 481) return;
+      if (document.hidden) return;
+      if (document.getElementById('cartPanel').classList.contains('open')) return;
+
+      const toast   = document.getElementById('spToast');
+      const name    = SP_NAMES[Math.floor(Math.random() * SP_NAMES.length)];
+      const product = SP_PRODUCTS[Math.floor(Math.random() * SP_PRODUCTS.length)];
+      const mins    = Math.floor(Math.random() * 14) + 1;
+
+      document.getElementById('spAvatar').textContent  = name[0];
+      document.getElementById('spName').textContent    = `${name} vient de commander`;
+      document.getElementById('spProduct').innerHTML   = `<em>1 ${product}</em> · il y a ${mins} min`;
+
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 6000);
+
+      // prochain toast : 45-90s
+      const next = (45 + Math.floor(Math.random() * 46)) * 1000;
+      spTimer = setTimeout(showSocialProof, next);
+    }
+
+    // Première apparition : 25-40s
+    const spFirst = (25 + Math.floor(Math.random() * 16)) * 1000;
+    spTimer = setTimeout(showSocialProof, spFirst);
+
+    // Pause si onglet caché
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && spTimer) {
+        clearTimeout(spTimer);
+        spTimer = null;
+      } else if (!document.hidden && !spTimer) {
+        spTimer = setTimeout(showSocialProof, 8000);
+      }
+    });
+
     /* ─── INIT ─── */
     renderMenu();
     updateCartUI();
     observeReveals();
+    renderLoyalty(0);
   </script>
 
 </body>
