@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>LE MISTRAL — Menuboard</title>
+  <meta name="description" content="Menuboard digital animé — LE MISTRAL, Waziers. Kebab, burgers, tacos, paninis. Halal.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══════════════════════════════════════════════════════
+       LE MISTRAL — MENUBOARD DIGITAL ANIMÉ
+       Style : signage food-court (écrans qui défilent)
+       Charte : NOIR #0b0b0d + OR #FFCC01 + blanc — couronne
+       Tout le contenu se modifie dans l'objet SCREENS (JS)
+       ══════════════════════════════════════════════════════ */
+
+    :root {
+      --ink:    #0b0b0d;    /* noir profond */
+      --ink2:   #131311;    /* surface */
+      --gold:   #FFCC01;    /* or Le Mistral */
+      --gold-d: #e0b400;    /* or foncé */
+      --white:  #ffffff;
+      --smoke:  #cfc8bd;    /* texte secondaire clair */
+      --type-display: 'Anton', 'Arial Narrow', sans-serif;
+      --type-body:    'DM Sans', system-ui, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--type-body);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* halos ambiance or */
+    .bg-glow { position: fixed; z-index: 0; border-radius: 50%; filter: blur(130px); pointer-events: none; }
+    .bg-glow.a { top: -18vw; right: -12vw; width: 55vw; height: 55vw; background: rgba(255,204,1,.16); }
+    .bg-glow.b { bottom: -22vw; left: -14vw; width: 50vw; height: 50vw; background: rgba(255,204,1,.07); }
+
+    /* voile scanlines effet "écran" */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 60; pointer-events: none;
+      background: repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.12) 2px 3px);
+      mix-blend-mode: multiply; opacity: .45;
+    }
+
+    .board {
+      position: relative; z-index: 1;
+      height: 100vh; height: 100dvh;
+      display: flex; flex-direction: column;
+      padding: clamp(12px,1.6vh,22px) clamp(14px,1.4vw,26px);
+      gap: clamp(10px,1.4vh,18px);
+    }
+
+    /* ─────────── HEADER ─────────── */
+    .head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: clamp(10px,1vw,18px); min-width: 0; }
+    .crown { width: clamp(34px,4.6vh,60px); height: auto; flex: 0 0 auto; filter: drop-shadow(0 0 14px rgba(255,204,1,.5)); }
+    .brand-txt { display: flex; flex-direction: column; line-height: 1; min-width: 0; }
+    .brand-txt h1 {
+      font-family: var(--type-display);
+      font-size: clamp(28px,5vh,62px); letter-spacing: 3px; color: var(--white);
+      text-shadow: 0 2px 0 #000, 0 0 26px rgba(255,204,1,.28);
+    }
+    .brand-txt .tag {
+      font-family: var(--type-display); letter-spacing: 6px;
+      font-size: clamp(9px,1.25vh,14px); color: var(--gold); margin-top: 3px;
+    }
+    .head-right { display: flex; align-items: center; gap: clamp(10px,1.3vw,24px); }
+    .halal {
+      font-family: var(--type-display); letter-spacing: 3px;
+      font-size: clamp(11px,1.6vh,18px); color: var(--ink);
+      background: var(--gold); padding: 6px 14px; border-radius: 6px;
+      box-shadow: 0 0 20px rgba(255,204,1,.35);
+    }
+    .status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--type-display);
+      letter-spacing: 2px; font-size: clamp(11px,1.6vh,18px); }
+    .status .dot { width: 11px; height: 11px; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+    .status.open  { color: var(--gold); }
+    .status.open .dot  { background: var(--gold);  box-shadow: 0 0 14px var(--gold); }
+    .status.closed { color: #ff5a5a; }
+    .status.closed .dot { background: #ff5a5a; box-shadow: 0 0 14px #ff5a5a; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.35;transform:scale(.65);} }
+    .clock { font-family: var(--type-display); font-size: clamp(20px,3.2vh,42px);
+      letter-spacing: 2px; color: var(--white); font-variant-numeric: tabular-nums; }
+
+    /* ─────────── RANGÉE D'ÉCRANS ─────────── */
+    .screens { flex: 1 1 auto; min-height: 0; display: grid;
+      grid-template-columns: repeat(4, 1fr); gap: clamp(10px,1vw,18px); }
+
+    .screen {
+      position: relative; min-height: 0; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 0 0 3px rgba(0,0,0,.7), 0 22px 50px rgba(0,0,0,.55);
+      isolation: isolate;
+    }
+    .screen.dark { background: linear-gradient(165deg,#181613,#0a0a0c); color: var(--white); --acc: var(--gold); --on:#0b0b0d; }
+    .screen.gold { background: linear-gradient(165deg,#ffd83a,#f2b900); color: var(--ink); --acc: #0b0b0d; --on: var(--gold); }
+
+    /* liseré */
+    .screen::after { content:""; position:absolute; inset:0; border-radius:16px; z-index:6; pointer-events:none; }
+    .screen.dark::after { box-shadow: inset 0 0 0 2px rgba(255,204,1,.55), inset 0 0 26px -6px rgba(255,204,1,.5); animation: breathe 4s ease-in-out infinite; }
+    .screen.gold::after { box-shadow: inset 0 0 0 3px rgba(0,0,0,.85); }
+    @keyframes breathe { 0%,100%{opacity:.55;} 50%{opacity:1;} }
+
+    /* brush stroke décoratif (comme le logo) */
+    .screen .brush {
+      position: absolute; z-index: 1; left: -6%; right: -6%; height: 26%;
+      bottom: -4%; transform: rotate(-3deg);
+      background: var(--acc); opacity: .10;
+      clip-path: polygon(0 55%, 12% 35%, 30% 50%, 48% 30%, 66% 52%, 84% 33%, 100% 50%, 100% 100%, 0 100%);
+    }
+
+    /* bandeau catégorie */
+    .screen-tag {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 7;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: clamp(9px,1.4vh,16px) clamp(11px,1vw,18px);
+      font-family: var(--type-display); letter-spacing: 3px;
+      font-size: clamp(13px,2vh,24px);
+    }
+    .screen.dark .screen-tag { color: var(--gold); text-shadow: 0 0 16px rgba(255,204,1,.4); }
+    .screen.gold .screen-tag { color: var(--ink); }
+    .screen-tag .idx { font-size: .62em; opacity: .7; }
+    .screen-tag .nouveau {
+      font-size: .6em; letter-spacing: 2px; padding: 3px 8px; border-radius: 5px;
+      background: var(--acc); color: var(--on); animation: blink 1.4s steps(1) infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+    /* pile de slides */
+    .slides { position: absolute; inset: 0; }
+    .slide {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: clamp(44px,7vh,74px) clamp(12px,1.4vw,22px) clamp(14px,2vh,24px);
+      opacity: 0; visibility: hidden; transform: translateY(7%) scale(1.04);
+      transition: opacity .7s ease, transform .8s cubic-bezier(.16,.84,.3,1), visibility .7s;
+    }
+    .slide.active { opacity: 1; visibility: visible; transform: none; z-index: 3; }
+    .slide.leaving { opacity: 0; visibility: visible; transform: translateY(-5%) scale(.99); z-index: 2;
+      transition: opacity .55s ease, transform .7s ease; }
+
+    /* visuel héro (spot + emoji) */
+    .hero {
+      position: relative; display: grid; place-items: center;
+      width: clamp(90px,17vh,190px); height: clamp(90px,17vh,190px);
+      border-radius: 50%; margin-bottom: clamp(8px,1.4vh,18px);
+      background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 68%);
+    }
+    .hero::before {
+      content:""; position:absolute; inset:6%; border-radius:50%;
+      border: 2px dashed color-mix(in srgb, var(--acc) 45%, transparent);
+      animation: spin 22s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hero .emoji { font-size: clamp(52px,11vh,120px); line-height:1; filter: drop-shadow(0 10px 22px rgba(0,0,0,.45)); }
+    .slide.active .hero .emoji { animation: floatE 4.5s ease-in-out infinite; }
+    @keyframes floatE { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-9px) rotate(3deg);} }
+
+    .name {
+      font-family: var(--type-display); letter-spacing: 1px; line-height: .96;
+      font-size: clamp(22px,4vh,50px);
+      transform: translateY(16px); opacity: 0;
+    }
+    .slide.active .name { animation: rise .6s .1s cubic-bezier(.16,.84,.3,1) forwards; }
+    .screen.dark .name { color: var(--white); text-shadow: 0 0 22px rgba(255,204,1,.25); }
+    .screen.gold .name { color: var(--ink); }
+
+    .desc { margin-top: 7px; max-width: 94%; font-size: clamp(11px,1.5vh,16px); line-height: 1.3; font-weight: 500;
+      transform: translateY(16px); opacity: 0; }
+    .slide.active .desc { animation: rise .6s .2s cubic-bezier(.16,.84,.3,1) forwards; }
+    .screen.dark .desc { color: var(--smoke); }
+    .screen.gold .desc { color: rgba(11,11,13,.8); }
+
+    /* PRIX simple (style français : 7€00) */
+    .price {
+      font-family: var(--type-display); line-height: 1; margin-top: clamp(10px,1.6vh,20px);
+      display: inline-flex; align-items: flex-start;
+      padding: clamp(8px,1.2vh,14px) clamp(12px,1.4vw,20px); border-radius: 12px;
+      background: var(--acc); color: var(--on);
+      font-size: clamp(30px,5.4vh,66px);
+      transform: translateY(20px) scale(.85); opacity: 0;
+      box-shadow: 0 10px 26px rgba(0,0,0,.4);
+    }
+    .slide.active .price { animation: pricePop .7s .3s cubic-bezier(.2,1.5,.4,1) forwards; }
+    @keyframes pricePop { to { transform: none; opacity: 1; } }
+    .price .cur { font-size: .5em; margin: .12em .04em 0; }
+    .price .cts { font-size: .42em; margin-top: .1em; }
+    .price .from { font-size: .34em; align-self: center; margin-right: .5em; letter-spacing: 1px; opacity: .85; }
+
+    /* PRIX par paliers (assiettes / bouchées) */
+    .tiers { display: flex; gap: clamp(6px,.7vw,14px); margin-top: clamp(10px,1.6vh,18px); flex-wrap: wrap; justify-content: center;
+      transform: translateY(18px); opacity: 0; }
+    .slide.active .tiers { animation: rise .6s .3s cubic-bezier(.16,.84,.3,1) forwards; }
+    .tier {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: clamp(6px,.9vh,11px) clamp(9px,1vw,16px); border-radius: 10px; min-width: clamp(56px,7vw,92px);
+    }
+    .screen.dark .tier { background: rgba(255,204,1,.12); border: 1px solid rgba(255,204,1,.3); }
+    .screen.gold .tier { background: rgba(11,11,13,.9); }
+    .tier .t-lab { font-size: clamp(9px,1.15vh,12px); font-weight: 800; letter-spacing: .5px; }
+    .screen.dark .tier .t-lab { color: var(--smoke); }
+    .screen.gold .tier .t-lab { color: var(--gold); }
+    .tier .t-price { font-family: var(--type-display); font-size: clamp(18px,2.9vh,34px); line-height: 1; }
+    .screen.dark .tier .t-price { color: var(--gold); }
+    .screen.gold .tier .t-price { color: var(--white); }
+    .tier .t-price .cur { font-size: .55em; }
+    .tier .t-price .cts { font-size: .5em; vertical-align: super; }
+
+    @keyframes rise { to { transform: none; opacity: 1; } }
+
+    /* ruban HALAL / NOUVEAU coin */
+    .corner {
+      position: absolute; z-index: 8; top: clamp(40px,6.2vh,66px); left: -2px;
+      font-family: var(--type-display); letter-spacing: 2px; font-size: clamp(10px,1.4vh,15px);
+      padding: 5px 12px 5px 10px; border-radius: 0 6px 6px 0; background: var(--acc); color: var(--on);
+      transform: translateX(-110%); box-shadow: 0 6px 16px rgba(0,0,0,.4);
+    }
+    .slide.active .corner { animation: slideIn .55s .42s cubic-bezier(.16,.84,.3,1) forwards; }
+    @keyframes slideIn { to { transform: none; } }
+
+    /* dots */
+    .dots { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); bottom: clamp(8px,1.2vh,14px);
+      display: flex; gap: 6px; }
+    .dots i { width: 7px; height: 7px; border-radius: 50%; transition: .4s; }
+    .screen.dark .dots i { background: rgba(255,204,1,.28); }
+    .screen.gold .dots i { background: rgba(11,11,13,.3); }
+    .dots i.on { width: 20px; border-radius: 4px; }
+    .screen.dark .dots i.on { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+    .screen.gold .dots i.on { background: var(--ink); }
+
+    /* ─────────── TICKER ─────────── */
+    .ticker { flex: 0 0 auto; overflow: hidden; white-space: nowrap; border-radius: 12px;
+      background: var(--gold); box-shadow: 0 0 26px rgba(255,204,1,.25); }
+    .ticker-track { display: inline-flex; align-items: center; padding: clamp(8px,1.2vh,13px) 0;
+      font-family: var(--type-display); letter-spacing: 3px; font-size: clamp(12px,1.75vh,21px);
+      color: var(--ink); animation: marquee 30s linear infinite; will-change: transform; }
+    .ticker-track span { padding: 0 clamp(20px,3vw,54px); display: inline-flex; align-items: center; gap: 10px; }
+    .ticker-track .sep { color: rgba(11,11,13,.4); }
+    @keyframes marquee { from { transform: translateX(0);} to { transform: translateX(-50%);} }
+
+    /* bouton plein écran */
+    .fs-btn { position: fixed; z-index: 70; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(0,0,0,.45); border: 1px solid rgba(255,204,1,.25); color: var(--gold); font-size: 18px;
+      opacity: .3; transition: .25s; display: grid; place-items: center; }
+    .fs-btn:hover { opacity: 1; border-color: var(--gold); }
+
+    /* responsive */
+    @media (max-width: 1100px) { .screens { grid-template-columns: repeat(2,1fr); grid-auto-rows: 1fr; } }
+    @media (max-width: 560px) {
+      body { overflow-y: auto; }
+      .board { height: auto; min-height: 100dvh; }
+      .screens { grid-template-columns: 1fr; }
+      .screen { min-height: 60vh; }
+      .head { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide,.name,.desc,.price,.tiers,.corner,.hero .emoji,.hero::before,.ticker-track,.screen.dark::after,.bg-glow {
+        animation: none !important; transition: opacity .3s ease !important; }
+      .name,.desc,.price,.tiers,.corner { transform: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow a"></div>
+  <div class="bg-glow b"></div>
+  <button class="fs-btn" id="fsBtn" title="Plein écran (F)" aria-label="Plein écran">⛶</button>
+
+  <div class="board">
+    <header class="head">
+      <div class="brand">
+        <svg class="crown" viewBox="0 0 120 90" aria-hidden="true">
+          <path fill="#FFCC01" d="M6 84 L18 34 L38 58 L60 12 L82 58 L102 34 L114 84 Z"/>
+        </svg>
+        <div class="brand-txt">
+          <h1>LE&nbsp;MISTRAL</h1>
+          <span class="tag">BURGER · KEBAB · TACOS</span>
+        </div>
+      </div>
+      <div class="head-right">
+        <span class="halal">✔ HALAL</span>
+        <span class="status" id="status"><span class="dot"></span><span id="statusTxt">—</span></span>
+        <span class="clock" id="clock">--:--</span>
+      </div>
+    </header>
+
+    <main class="screens" id="screens"></main>
+
+    <footer class="ticker"><div class="ticker-track" id="ticker"></div></footer>
+  </div>
+
+  <div class="scanlines"></div>
+
+  <script>
+  /* ══════════════════════════════════════════
+     CONFIG — infos établissement
+     ══════════════════════════════════════════ */
+  const CONFIG = {
+    address: '15 Place Jean Jaurès, 59119 Waziers',
+    // horaires pour le statut OUVERT/FERMÉ (0=dim … 6=sam)
+    // lun–sam : 11h30–14h30 & 18h30–23h30 · dim : 18h30–23h30
+    hours: {
+      1:[['11:30','14:30'],['18:30','23:30']], 2:[['11:30','14:30'],['18:30','23:30']],
+      3:[['11:30','14:30'],['18:30','23:30']], 4:[['11:30','14:30'],['18:30','23:30']],
+      5:[['11:30','14:30'],['18:30','23:30']], 6:[['18:30','23:30']], 0:[['18:30','23:30']]
+    }
+  };
+
+  /* ══════════════════════════════════════════
+     SCREENS — contenu qui défile (vraie carte)
+     theme : 'dark' (noir) | 'gold' (or)
+     slide : { emoji, name, desc?, price? | tiers?, corner?, nouveau? }
+     ══════════════════════════════════════════ */
+  const SCREENS = [
+    {
+      label: 'LE BURGER', theme: 'gold',
+      slides: [
+        { emoji:'🍔', name:'Le Mistral', desc:'Triple steak · triple cheddar · cornichons · sauce maison', price:8.50, corner:'BEST-SELLER' },
+        { emoji:'🥙', name:'Box Kebab', desc:'Viande kebab + frites', price:4.00 },
+        { emoji:'🍔', name:'Menu Kid', desc:'Petit hamburger ou nuggets + frites + Capri-Sun + compote', price:4.90 }
+      ]
+    },
+    {
+      label: 'NOS ASSIETTES', theme: 'dark',
+      slides: [
+        { emoji:'🍽️', name:'Assiette Kebab',      desc:'Servie avec frites & salade', tiers:'VIANDES' },
+        { emoji:'🍗', name:'Chicken Mariné',       desc:'Servie avec frites & salade', tiers:'VIANDES' },
+        { emoji:'🌭', name:'Merguez',              desc:'Servie avec frites & salade', tiers:'VIANDES' },
+        { emoji:'🥩', name:'Steak',                desc:'Servie avec frites & salade', tiers:'VIANDES' },
+        { emoji:'🍖', name:'Kefta',                desc:'Viande hachée · frites & salade', tiers:'VIANDES' },
+        { emoji:'👨‍🍳', name:'Chicken du Chef',   desc:'Crème fraîche · champignons · cheddar', tiers:'VIANDES' }
+      ]
+    },
+    {
+      label: 'NOS BOUCHÉES', theme: 'gold',
+      slides: [
+        { emoji:'🍗', name:'Chicken Wings', tiers:[{label:'x4',price:4.00},{label:'x9',price:7.00}] },
+        { emoji:'🍤', name:'Nuggets',       tiers:[{label:'x4',price:2.50},{label:'x6',price:4.00},{label:'x9',price:5.30}] },
+        { emoji:'🍟', name:'Tenders',       tiers:[{label:'x4',price:3.00},{label:'x6',price:5.00},{label:'x9',price:6.00}] },
+        { emoji:'🧀', name:'Mozzarella Sticks', tiers:[{label:'x3',price:2.90},{label:'x5',price:3.90},{label:'x10',price:6.90}] }
+      ]
+    },
+    {
+      label: 'NOUVEAU', theme: 'dark', nouveau: true,
+      slides: [
+        { emoji:'🌮', name:'Tacos',   desc:'Le nouveau tacos du Mistral', corner:'NOUVEAU' },
+        { emoji:'🥙', name:'Kapsalon', desc:'Frites · viande · cheddar fondu · salade', corner:'NOUVEAU' },
+        { emoji:'🥪', name:'Panini Chicken', desc:'Aussi : Steak · Kefta · Kebab · 3 Fromages', price:4.50, corner:'dès' },
+        { emoji:'🍰', name:'Desserts', desc:'Tarte au Daim · Tiramisu', price:2.50 }
+      ]
+    }
+  ];
+
+  const INTERVALS   = [5200, 4400, 4800, 5000];
+  const START_DELAY = [0, 700, 1400, 400];
+  const VIANDE_TIERS = [{label:'1 VIANDE',price:7.00},{label:'2 VIANDES',price:9.00},{label:'3 VIANDES',price:10.50}];
+
+  /* ─── utils prix (style 7€00) ─── */
+  function priceHTML(p, from) {
+    const euros = Math.floor(p + 1e-6);
+    const cts = Math.round((p - euros) * 100).toString().padStart(2,'0');
+    const pre = from ? `<span class="from">${from}</span>` : '';
+    return `${pre}${euros}<span class="cur">€</span><span class="cts">${cts}</span>`;
+  }
+  function tierHTML(t) {
+    const euros = Math.floor(t.price + 1e-6);
+    const cts = Math.round((t.price - euros) * 100).toString().padStart(2,'0');
+    return `<div class="tier"><span class="t-lab">${t.label}</span>
+      <span class="t-price">${euros}<span class="cur">€</span><span class="cts">${cts}</span></span></div>`;
+  }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function slideHTML(s) {
+    let priceBlock = '';
+    if (s.tiers === 'VIANDES') {
+      priceBlock = `<div class="tiers">${VIANDE_TIERS.map(tierHTML).join('')}</div>`;
+    } else if (Array.isArray(s.tiers)) {
+      priceBlock = `<div class="tiers">${s.tiers.map(tierHTML).join('')}</div>`;
+    } else if (typeof s.price === 'number') {
+      const from = s.corner === 'dès' ? 'DÈS' : null;
+      priceBlock = `<div class="price">${priceHTML(s.price, from)}</div>`;
+    }
+    const corner = (s.corner && s.corner !== 'dès') ? `<div class="corner">${esc(s.corner)}</div>` : '';
+    const desc = s.desc ? `<div class="desc">${esc(s.desc)}</div>` : '';
+    return `<div class="slide">
+        ${corner}
+        <div class="hero"><span class="emoji">${s.emoji || '🍔'}</span></div>
+        <div class="name">${esc(s.name)}</div>
+        ${desc}
+        ${priceBlock}
+      </div>`;
+  }
+
+  function buildScreens() {
+    const root = document.getElementById('screens');
+    root.innerHTML = SCREENS.map((sc,i) => {
+      const slides = sc.slides.map(slideHTML).join('');
+      const dots = sc.slides.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('');
+      const nouveau = sc.nouveau ? `<span class="nouveau">✦ NEW</span>` : `<span class="idx">${String(i+1).padStart(2,'0')}</span>`;
+      return `<section class="screen ${sc.theme}" data-i="${i}">
+          <div class="brush"></div>
+          <div class="screen-tag">${esc(sc.label)} ${nouveau}</div>
+          <div class="slides">${slides}</div>
+          <div class="dots">${dots}</div>
+        </section>`;
+    }).join('');
+
+    document.querySelectorAll('.screen').forEach((screen,i) => {
+      const slides = [...screen.querySelectorAll('.slide')];
+      const dots = [...screen.querySelectorAll('.dots i')];
+      if (!slides.length) return;
+      let cur = 0; slides[0].classList.add('active');
+      const advance = () => {
+        if (slides.length < 2) return;
+        const prev = cur; cur = (cur+1) % slides.length;
+        slides[prev].classList.remove('active'); slides[prev].classList.add('leaving');
+        setTimeout(()=>slides[prev].classList.remove('leaving'), 800);
+        slides[cur].classList.add('active');
+        dots.forEach((d,k)=>d.classList.toggle('on', k===cur));
+      };
+      const iv = INTERVALS[i % INTERVALS.length];
+      setTimeout(()=>{ advance(); setInterval(advance, iv); }, START_DELAY[i % START_DELAY.length] + iv);
+    });
+  }
+
+  function buildTicker() {
+    const items = [
+      `<span>🌴 LE MISTRAL — WAZIERS</span>`,
+      `<span class="sep">◆</span><span>✔ 100% HALAL</span>`,
+      `<span class="sep">◆</span><span>✦ NOUVEAU : TACOS &amp; KAPSALON</span>`,
+      `<span class="sep">◆</span><span>📍 ${esc(CONFIG.address)}</span>`,
+      `<span class="sep">◆</span><span>LUN–SAM 11H30–14H30 · 18H30–23H30</span>`,
+      `<span class="sep">◆</span><span>DIM 18H30–23H30</span>`
+    ].join('');
+    document.getElementById('ticker').innerHTML = items + items;
+  }
+
+  /* ─── horloge + statut ouvert/fermé ─── */
+  function toMin(hhmm){ const [h,m]=hhmm.split(':').map(Number); return h*60+m; }
+  function refresh() {
+    const d = new Date();
+    document.getElementById('clock').textContent =
+      String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const now = d.getHours()*60 + d.getMinutes();
+    const ranges = CONFIG.hours[d.getDay()] || [];
+    const open = ranges.some(([a,b]) => now >= toMin(a) && now <= toMin(b));
+    const el = document.getElementById('status');
+    el.className = 'status ' + (open ? 'open' : 'closed');
+    document.getElementById('statusTxt').textContent = open ? 'OUVERT' : 'FERMÉ';
+  }
+
+  document.getElementById('fsBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
+  document.addEventListener('keydown', e => { if (e.key.toLowerCase()==='f') document.getElementById('fsBtn').click(); });
+
+  buildScreens();
+  buildTicker();
+  refresh();
+  setInterval(refresh, 20000);
+  </script>
+</body>
+</html>
