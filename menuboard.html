@@ -13,273 +13,161 @@
   <style>
     /* ══════════════════════════════════════════════════════
        LE MISTRAL — MENUBOARD DIGITAL ANIMÉ
-       Style : signage food-court (écrans qui défilent)
-       Charte : NOIR #0b0b0d + OR #FFCC01 + blanc — couronne
-       Tout le contenu se modifie dans l'objet SCREENS (JS)
+       Écrans photo plein cadre qui défilent (signage food-court)
+       Charte : NOIR #0b0b0d + OR #FFCC01 + blanc
+       Contenu : objet SCREENS en bas du fichier
        ══════════════════════════════════════════════════════ */
-
-    :root {
-      --ink:    #0b0b0d;    /* noir profond */
-      --ink2:   #131311;    /* surface */
-      --gold:   #FFCC01;    /* or Le Mistral */
-      --gold-d: #e0b400;    /* or foncé */
-      --white:  #ffffff;
-      --smoke:  #cfc8bd;    /* texte secondaire clair */
-      --type-display: 'Anton', 'Arial Narrow', sans-serif;
-      --type-body:    'DM Sans', system-ui, sans-serif;
+    :root{
+      --ink:#0b0b0d; --ink2:#131311; --gold:#FFCC01; --white:#fff; --smoke:#d6cfc4;
+      --display:'Anton','Arial Narrow',sans-serif; --body:'DM Sans',system-ui,sans-serif;
     }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
+    body{background:var(--ink);color:var(--white);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
+    .bg-glow{position:fixed;z-index:0;border-radius:50%;filter:blur(130px);pointer-events:none}
+    .bg-glow.a{top:-18vw;right:-12vw;width:55vw;height:55vw;background:rgba(255,204,1,.14)}
+    .bg-glow.b{bottom:-22vw;left:-14vw;width:50vw;height:50vw;background:rgba(255,204,1,.06)}
+    .scanlines{position:fixed;inset:0;z-index:60;pointer-events:none;
+      background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.10) 2px 3px);
+      mix-blend-mode:multiply;opacity:.4}
 
-    body {
-      background: var(--ink);
-      color: var(--white);
-      font-family: var(--type-body);
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
+    .board{position:relative;z-index:1;height:100vh;height:100dvh;display:flex;flex-direction:column;
+      padding:clamp(12px,1.6vh,22px) clamp(14px,1.4vw,26px);gap:clamp(10px,1.4vh,18px)}
 
-    /* halos ambiance or */
-    .bg-glow { position: fixed; z-index: 0; border-radius: 50%; filter: blur(130px); pointer-events: none; }
-    .bg-glow.a { top: -18vw; right: -12vw; width: 55vw; height: 55vw; background: rgba(255,204,1,.16); }
-    .bg-glow.b { bottom: -22vw; left: -14vw; width: 50vw; height: 50vw; background: rgba(255,204,1,.07); }
+    /* ── HEADER ── */
+    .head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:clamp(10px,1vw,18px);min-width:0}
+    .crown{width:clamp(34px,4.6vh,60px);height:auto;flex:0 0 auto;filter:drop-shadow(0 0 14px rgba(255,204,1,.5))}
+    .brand-txt{display:flex;flex-direction:column;line-height:1;min-width:0}
+    .brand-txt h1{font-family:var(--display);font-size:clamp(28px,5vh,62px);letter-spacing:3px;color:#fff;
+      text-shadow:0 2px 0 #000,0 0 26px rgba(255,204,1,.28)}
+    .brand-txt .tag{font-family:var(--display);letter-spacing:6px;font-size:clamp(9px,1.25vh,14px);color:var(--gold);margin-top:3px}
+    .head-right{display:flex;align-items:center;gap:clamp(10px,1.3vw,24px)}
+    .halal{font-family:var(--display);letter-spacing:3px;font-size:clamp(11px,1.6vh,18px);color:var(--ink);
+      background:var(--gold);padding:6px 14px;border-radius:6px;box-shadow:0 0 20px rgba(255,204,1,.35)}
+    .status{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);letter-spacing:2px;font-size:clamp(11px,1.6vh,18px)}
+    .status .dot{width:11px;height:11px;border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
+    .status.open{color:var(--gold)} .status.open .dot{background:var(--gold);box-shadow:0 0 14px var(--gold)}
+    .status.closed{color:#ff5a5a} .status.closed .dot{background:#ff5a5a;box-shadow:0 0 14px #ff5a5a}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+    .clock{font-family:var(--display);font-size:clamp(20px,3.2vh,42px);letter-spacing:2px;font-variant-numeric:tabular-nums}
 
-    /* voile scanlines effet "écran" */
-    .scanlines {
-      position: fixed; inset: 0; z-index: 60; pointer-events: none;
-      background: repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.12) 2px 3px);
-      mix-blend-mode: multiply; opacity: .45;
-    }
-
-    .board {
-      position: relative; z-index: 1;
-      height: 100vh; height: 100dvh;
-      display: flex; flex-direction: column;
-      padding: clamp(12px,1.6vh,22px) clamp(14px,1.4vw,26px);
-      gap: clamp(10px,1.4vh,18px);
-    }
-
-    /* ─────────── HEADER ─────────── */
-    .head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: clamp(10px,1vw,18px); min-width: 0; }
-    .crown { width: clamp(34px,4.6vh,60px); height: auto; flex: 0 0 auto; filter: drop-shadow(0 0 14px rgba(255,204,1,.5)); }
-    .brand-txt { display: flex; flex-direction: column; line-height: 1; min-width: 0; }
-    .brand-txt h1 {
-      font-family: var(--type-display);
-      font-size: clamp(28px,5vh,62px); letter-spacing: 3px; color: var(--white);
-      text-shadow: 0 2px 0 #000, 0 0 26px rgba(255,204,1,.28);
-    }
-    .brand-txt .tag {
-      font-family: var(--type-display); letter-spacing: 6px;
-      font-size: clamp(9px,1.25vh,14px); color: var(--gold); margin-top: 3px;
-    }
-    .head-right { display: flex; align-items: center; gap: clamp(10px,1.3vw,24px); }
-    .halal {
-      font-family: var(--type-display); letter-spacing: 3px;
-      font-size: clamp(11px,1.6vh,18px); color: var(--ink);
-      background: var(--gold); padding: 6px 14px; border-radius: 6px;
-      box-shadow: 0 0 20px rgba(255,204,1,.35);
-    }
-    .status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--type-display);
-      letter-spacing: 2px; font-size: clamp(11px,1.6vh,18px); }
-    .status .dot { width: 11px; height: 11px; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
-    .status.open  { color: var(--gold); }
-    .status.open .dot  { background: var(--gold);  box-shadow: 0 0 14px var(--gold); }
-    .status.closed { color: #ff5a5a; }
-    .status.closed .dot { background: #ff5a5a; box-shadow: 0 0 14px #ff5a5a; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.35;transform:scale(.65);} }
-    .clock { font-family: var(--type-display); font-size: clamp(20px,3.2vh,42px);
-      letter-spacing: 2px; color: var(--white); font-variant-numeric: tabular-nums; }
-
-    /* ─────────── RANGÉE D'ÉCRANS ─────────── */
-    .screens { flex: 1 1 auto; min-height: 0; display: grid;
-      grid-template-columns: repeat(4, 1fr); gap: clamp(10px,1vw,18px); }
-
-    .screen {
-      position: relative; min-height: 0; border-radius: 16px; overflow: hidden;
-      box-shadow: 0 0 0 3px rgba(0,0,0,.7), 0 22px 50px rgba(0,0,0,.55);
-      isolation: isolate;
-    }
-    .screen.dark { background: linear-gradient(165deg,#181613,#0a0a0c); color: var(--white); --acc: var(--gold); --on:#0b0b0d; }
-    .screen.gold { background: linear-gradient(165deg,#ffd83a,#f2b900); color: var(--ink); --acc: #0b0b0d; --on: var(--gold); }
-
-    /* liseré */
-    .screen::after { content:""; position:absolute; inset:0; border-radius:16px; z-index:6; pointer-events:none; }
-    .screen.dark::after { box-shadow: inset 0 0 0 2px rgba(255,204,1,.55), inset 0 0 26px -6px rgba(255,204,1,.5); animation: breathe 4s ease-in-out infinite; }
-    .screen.gold::after { box-shadow: inset 0 0 0 3px rgba(0,0,0,.85); }
-    @keyframes breathe { 0%,100%{opacity:.55;} 50%{opacity:1;} }
-
-    /* brush stroke décoratif (comme le logo) */
-    .screen .brush {
-      position: absolute; z-index: 1; left: -6%; right: -6%; height: 26%;
-      bottom: -4%; transform: rotate(-3deg);
-      background: var(--acc); opacity: .10;
-      clip-path: polygon(0 55%, 12% 35%, 30% 50%, 48% 30%, 66% 52%, 84% 33%, 100% 50%, 100% 100%, 0 100%);
-    }
+    /* ── RANGÉE D'ÉCRANS ── */
+    .screens{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1vw,18px)}
+    .screen{position:relative;min-height:0;border-radius:16px;overflow:hidden;background:#0a0a0c;
+      box-shadow:0 0 0 3px rgba(0,0,0,.7),0 22px 50px rgba(0,0,0,.55);isolation:isolate}
+    .screen::after{content:"";position:absolute;inset:0;border-radius:16px;z-index:9;pointer-events:none;
+      box-shadow:inset 0 0 0 2px rgba(255,204,1,.5),inset 0 0 26px -6px rgba(255,204,1,.45);animation:breathe 4s ease-in-out infinite}
+    @keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
 
     /* bandeau catégorie */
-    .screen-tag {
-      position: absolute; top: 0; left: 0; right: 0; z-index: 7;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: clamp(9px,1.4vh,16px) clamp(11px,1vw,18px);
-      font-family: var(--type-display); letter-spacing: 3px;
-      font-size: clamp(13px,2vh,24px);
+    .screen-tag{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;align-items:center;justify-content:space-between;
+      padding:clamp(9px,1.4vh,15px) clamp(11px,1vw,18px);font-family:var(--display);letter-spacing:3px;
+      font-size:clamp(13px,2vh,24px);color:var(--ink);background:var(--gold)}
+    .screen-tag .idx{font-size:.62em;opacity:.65}
+    .screen-tag .new{font-size:.6em;letter-spacing:2px;padding:3px 8px;border-radius:5px;background:var(--ink);color:var(--gold);
+      animation:blink 1.4s steps(1) infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+    /* slides photo */
+    .slides{position:absolute;inset:0}
+    .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:scale(1.05);
+      transition:opacity .8s ease,transform .9s cubic-bezier(.16,.84,.3,1),visibility .8s}
+    .slide.active{opacity:1;visibility:visible;transform:none;z-index:3}
+    .slide.leaving{opacity:0;visibility:visible;transform:scale(.99);z-index:2;transition:opacity .6s ease,transform .7s ease}
+
+    .fallback{position:absolute;inset:0;display:grid;place-items:center;
+      background:radial-gradient(120% 90% at 50% 25%,rgba(255,204,1,.30),#0c0b09 72%)}
+    .fallback span{font-size:clamp(60px,15vh,150px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.6))}
+    .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+    .slide.active .ph{animation:ken 9s ease-out both}
+    @keyframes ken{from{transform:scale(1.02)}to{transform:scale(1.16)}}
+
+    /* balayage lumineux premium */
+    .shine{position:absolute;inset:0;z-index:2;pointer-events:none;
+      background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.14) 48%,transparent 60%);
+      transform:translateX(-120%)}
+    .slide.active .shine{animation:sweep 5.5s ease-in-out .6s infinite}
+    @keyframes sweep{0%{transform:translateX(-120%)}45%,100%{transform:translateX(120%)}}
+
+    .scrim{position:absolute;inset:0;z-index:3;
+      background:linear-gradient(180deg,rgba(6,5,3,.55) 0%,rgba(6,5,3,0) 26%,rgba(6,5,3,.45) 55%,rgba(6,5,3,.96) 100%)}
+
+    .body{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:clamp(12px,1.5vw,20px) clamp(12px,1.4vw,20px) clamp(30px,3.4vh,42px)}
+    .name{font-family:var(--display);letter-spacing:1px;line-height:.95;color:#fff;
+      font-size:clamp(21px,3.7vh,46px);text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 30px rgba(255,204,1,.25);
+      transform:translateY(18px);opacity:0}
+    .slide.active .name{animation:rise .65s .12s cubic-bezier(.16,.84,.3,1) forwards}
+    .desc{margin-top:6px;font-size:clamp(11px,1.45vh,16px);line-height:1.3;font-weight:500;color:var(--smoke);
+      text-shadow:0 1px 8px rgba(0,0,0,.95);transform:translateY(18px);opacity:0}
+    .slide.active .desc{animation:rise .65s .22s cubic-bezier(.16,.84,.3,1) forwards}
+
+    .price{display:inline-flex;align-items:flex-start;font-family:var(--display);line-height:1;margin-top:clamp(9px,1.4vh,16px);
+      padding:clamp(7px,1.1vh,13px) clamp(11px,1.3vw,19px);border-radius:12px;background:var(--gold);color:var(--ink);
+      font-size:clamp(27px,4.8vh,58px);box-shadow:0 10px 26px rgba(0,0,0,.5),0 0 26px -6px var(--gold);
+      transform:translateY(20px) scale(.85);opacity:0}
+    .slide.active .price{animation:pop .7s .32s cubic-bezier(.2,1.5,.4,1) forwards}
+    @keyframes pop{to{transform:none;opacity:1}}
+    .price .cur{font-size:.5em;margin:.12em .04em 0}
+    .price .cts{font-size:.42em;margin-top:.1em}
+    .price .from{font-size:.32em;align-self:center;margin-right:.5em;letter-spacing:1px;opacity:.85}
+
+    .tiers{display:flex;gap:clamp(5px,.6vw,11px);margin-top:clamp(9px,1.4vh,16px);flex-wrap:wrap;
+      transform:translateY(18px);opacity:0}
+    .slide.active .tiers{animation:rise .65s .3s cubic-bezier(.16,.84,.3,1) forwards}
+    .tier{display:flex;flex-direction:column;align-items:center;gap:3px;padding:clamp(5px,.8vh,10px) clamp(8px,.9vw,14px);
+      border-radius:10px;background:rgba(10,9,7,.82);border:1px solid rgba(255,204,1,.45);backdrop-filter:blur(4px);min-width:clamp(50px,6vw,84px)}
+    .tier .t-lab{font-size:clamp(8px,1.05vh,11px);font-weight:800;letter-spacing:.4px;color:var(--smoke);white-space:nowrap}
+    .tier .t-price{font-family:var(--display);font-size:clamp(16px,2.6vh,31px);line-height:1;color:var(--gold)}
+    .tier .t-price .cur{font-size:.55em}
+    .tier .t-price .cts{font-size:.5em;vertical-align:super}
+    @keyframes rise{to{transform:none;opacity:1}}
+
+    .corner{position:absolute;z-index:8;top:clamp(40px,6.2vh,62px);left:-2px;font-family:var(--display);letter-spacing:2px;
+      font-size:clamp(10px,1.4vh,15px);padding:5px 12px 5px 10px;border-radius:0 6px 6px 0;background:var(--gold);color:var(--ink);
+      transform:translateX(-110%);box-shadow:0 6px 16px rgba(0,0,0,.5)}
+    .slide.active .corner{animation:slideIn .55s .42s cubic-bezier(.16,.84,.3,1) forwards}
+    @keyframes slideIn{to{transform:none}}
+
+    .dots{position:absolute;z-index:8;left:50%;transform:translateX(-50%);bottom:clamp(8px,1.2vh,14px);display:flex;gap:6px}
+    .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);transition:.4s}
+    .dots i.on{width:20px;border-radius:4px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+    /* ── TICKER ── */
+    .ticker{flex:0 0 auto;overflow:hidden;white-space:nowrap;border-radius:12px;background:var(--gold);
+      box-shadow:0 0 26px rgba(255,204,1,.25)}
+    .ticker-track{display:inline-flex;align-items:center;padding:clamp(8px,1.2vh,13px) 0;font-family:var(--display);
+      letter-spacing:3px;font-size:clamp(12px,1.75vh,21px);color:var(--ink);animation:marquee 30s linear infinite;will-change:transform}
+    .ticker-track span{padding:0 clamp(20px,3vw,54px);display:inline-flex;align-items:center;gap:10px}
+    .ticker-track .sep{color:rgba(11,11,13,.4)}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    .fs-btn{position:fixed;z-index:70;top:10px;right:10px;width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,204,1,.25);color:var(--gold);font-size:18px;opacity:.3;transition:.25s;display:grid;place-items:center}
+    .fs-btn:hover{opacity:1;border-color:var(--gold)}
+
+    @media (max-width:1100px){.screens{grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr}}
+    @media (max-width:560px){
+      body{overflow-y:auto}.board{height:auto;min-height:100dvh}
+      .screens{grid-template-columns:1fr}.screen{min-height:62vh}.head{flex-wrap:wrap}
     }
-    .screen.dark .screen-tag { color: var(--gold); text-shadow: 0 0 16px rgba(255,204,1,.4); }
-    .screen.gold .screen-tag { color: var(--ink); }
-    .screen-tag .idx { font-size: .62em; opacity: .7; }
-    .screen-tag .nouveau {
-      font-size: .6em; letter-spacing: 2px; padding: 3px 8px; border-radius: 5px;
-      background: var(--acc); color: var(--on); animation: blink 1.4s steps(1) infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.35;} }
-
-    /* pile de slides */
-    .slides { position: absolute; inset: 0; }
-    .slide {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center;
-      padding: clamp(44px,7vh,74px) clamp(12px,1.4vw,22px) clamp(14px,2vh,24px);
-      opacity: 0; visibility: hidden; transform: translateY(7%) scale(1.04);
-      transition: opacity .7s ease, transform .8s cubic-bezier(.16,.84,.3,1), visibility .7s;
-    }
-    .slide.active { opacity: 1; visibility: visible; transform: none; z-index: 3; }
-    .slide.leaving { opacity: 0; visibility: visible; transform: translateY(-5%) scale(.99); z-index: 2;
-      transition: opacity .55s ease, transform .7s ease; }
-
-    /* visuel héro (spot + emoji) */
-    .hero {
-      position: relative; display: grid; place-items: center;
-      width: clamp(90px,17vh,190px); height: clamp(90px,17vh,190px);
-      border-radius: 50%; margin-bottom: clamp(8px,1.4vh,18px);
-      background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 68%);
-    }
-    .hero::before {
-      content:""; position:absolute; inset:6%; border-radius:50%;
-      border: 2px dashed color-mix(in srgb, var(--acc) 45%, transparent);
-      animation: spin 22s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .hero .emoji { font-size: clamp(52px,11vh,120px); line-height:1; filter: drop-shadow(0 10px 22px rgba(0,0,0,.45)); }
-    .slide.active .hero .emoji { animation: floatE 4.5s ease-in-out infinite; }
-    @keyframes floatE { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-9px) rotate(3deg);} }
-
-    .name {
-      font-family: var(--type-display); letter-spacing: 1px; line-height: .96;
-      font-size: clamp(22px,4vh,50px);
-      transform: translateY(16px); opacity: 0;
-    }
-    .slide.active .name { animation: rise .6s .1s cubic-bezier(.16,.84,.3,1) forwards; }
-    .screen.dark .name { color: var(--white); text-shadow: 0 0 22px rgba(255,204,1,.25); }
-    .screen.gold .name { color: var(--ink); }
-
-    .desc { margin-top: 7px; max-width: 94%; font-size: clamp(11px,1.5vh,16px); line-height: 1.3; font-weight: 500;
-      transform: translateY(16px); opacity: 0; }
-    .slide.active .desc { animation: rise .6s .2s cubic-bezier(.16,.84,.3,1) forwards; }
-    .screen.dark .desc { color: var(--smoke); }
-    .screen.gold .desc { color: rgba(11,11,13,.8); }
-
-    /* PRIX simple (style français : 7€00) */
-    .price {
-      font-family: var(--type-display); line-height: 1; margin-top: clamp(10px,1.6vh,20px);
-      display: inline-flex; align-items: flex-start;
-      padding: clamp(8px,1.2vh,14px) clamp(12px,1.4vw,20px); border-radius: 12px;
-      background: var(--acc); color: var(--on);
-      font-size: clamp(30px,5.4vh,66px);
-      transform: translateY(20px) scale(.85); opacity: 0;
-      box-shadow: 0 10px 26px rgba(0,0,0,.4);
-    }
-    .slide.active .price { animation: pricePop .7s .3s cubic-bezier(.2,1.5,.4,1) forwards; }
-    @keyframes pricePop { to { transform: none; opacity: 1; } }
-    .price .cur { font-size: .5em; margin: .12em .04em 0; }
-    .price .cts { font-size: .42em; margin-top: .1em; }
-    .price .from { font-size: .34em; align-self: center; margin-right: .5em; letter-spacing: 1px; opacity: .85; }
-
-    /* PRIX par paliers (assiettes / bouchées) */
-    .tiers { display: flex; gap: clamp(6px,.7vw,14px); margin-top: clamp(10px,1.6vh,18px); flex-wrap: wrap; justify-content: center;
-      transform: translateY(18px); opacity: 0; }
-    .slide.active .tiers { animation: rise .6s .3s cubic-bezier(.16,.84,.3,1) forwards; }
-    .tier {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      padding: clamp(6px,.9vh,11px) clamp(9px,1vw,16px); border-radius: 10px; min-width: clamp(56px,7vw,92px);
-    }
-    .screen.dark .tier { background: rgba(255,204,1,.12); border: 1px solid rgba(255,204,1,.3); }
-    .screen.gold .tier { background: rgba(11,11,13,.9); }
-    .tier .t-lab { font-size: clamp(9px,1.15vh,12px); font-weight: 800; letter-spacing: .5px; }
-    .screen.dark .tier .t-lab { color: var(--smoke); }
-    .screen.gold .tier .t-lab { color: var(--gold); }
-    .tier .t-price { font-family: var(--type-display); font-size: clamp(18px,2.9vh,34px); line-height: 1; }
-    .screen.dark .tier .t-price { color: var(--gold); }
-    .screen.gold .tier .t-price { color: var(--white); }
-    .tier .t-price .cur { font-size: .55em; }
-    .tier .t-price .cts { font-size: .5em; vertical-align: super; }
-
-    @keyframes rise { to { transform: none; opacity: 1; } }
-
-    /* ruban HALAL / NOUVEAU coin */
-    .corner {
-      position: absolute; z-index: 8; top: clamp(40px,6.2vh,66px); left: -2px;
-      font-family: var(--type-display); letter-spacing: 2px; font-size: clamp(10px,1.4vh,15px);
-      padding: 5px 12px 5px 10px; border-radius: 0 6px 6px 0; background: var(--acc); color: var(--on);
-      transform: translateX(-110%); box-shadow: 0 6px 16px rgba(0,0,0,.4);
-    }
-    .slide.active .corner { animation: slideIn .55s .42s cubic-bezier(.16,.84,.3,1) forwards; }
-    @keyframes slideIn { to { transform: none; } }
-
-    /* dots */
-    .dots { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); bottom: clamp(8px,1.2vh,14px);
-      display: flex; gap: 6px; }
-    .dots i { width: 7px; height: 7px; border-radius: 50%; transition: .4s; }
-    .screen.dark .dots i { background: rgba(255,204,1,.28); }
-    .screen.gold .dots i { background: rgba(11,11,13,.3); }
-    .dots i.on { width: 20px; border-radius: 4px; }
-    .screen.dark .dots i.on { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
-    .screen.gold .dots i.on { background: var(--ink); }
-
-    /* ─────────── TICKER ─────────── */
-    .ticker { flex: 0 0 auto; overflow: hidden; white-space: nowrap; border-radius: 12px;
-      background: var(--gold); box-shadow: 0 0 26px rgba(255,204,1,.25); }
-    .ticker-track { display: inline-flex; align-items: center; padding: clamp(8px,1.2vh,13px) 0;
-      font-family: var(--type-display); letter-spacing: 3px; font-size: clamp(12px,1.75vh,21px);
-      color: var(--ink); animation: marquee 30s linear infinite; will-change: transform; }
-    .ticker-track span { padding: 0 clamp(20px,3vw,54px); display: inline-flex; align-items: center; gap: 10px; }
-    .ticker-track .sep { color: rgba(11,11,13,.4); }
-    @keyframes marquee { from { transform: translateX(0);} to { transform: translateX(-50%);} }
-
-    /* bouton plein écran */
-    .fs-btn { position: fixed; z-index: 70; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 10px;
-      background: rgba(0,0,0,.45); border: 1px solid rgba(255,204,1,.25); color: var(--gold); font-size: 18px;
-      opacity: .3; transition: .25s; display: grid; place-items: center; }
-    .fs-btn:hover { opacity: 1; border-color: var(--gold); }
-
-    /* responsive */
-    @media (max-width: 1100px) { .screens { grid-template-columns: repeat(2,1fr); grid-auto-rows: 1fr; } }
-    @media (max-width: 560px) {
-      body { overflow-y: auto; }
-      .board { height: auto; min-height: 100dvh; }
-      .screens { grid-template-columns: 1fr; }
-      .screen { min-height: 60vh; }
-      .head { flex-wrap: wrap; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .slide,.name,.desc,.price,.tiers,.corner,.hero .emoji,.hero::before,.ticker-track,.screen.dark::after,.bg-glow {
-        animation: none !important; transition: opacity .3s ease !important; }
-      .name,.desc,.price,.tiers,.corner { transform: none !important; opacity: 1 !important; }
+    @media (prefers-reduced-motion:reduce){
+      .slide,.name,.desc,.price,.tiers,.corner,.shine,.slide.active .ph,.ticker-track,.screen::after,.bg-glow{
+        animation:none!important;transition:opacity .3s ease!important}
+      .name,.desc,.price,.tiers,.corner{transform:none!important;opacity:1!important}
+      .shine{display:none}
     }
   </style>
 </head>
 <body>
-  <div class="bg-glow a"></div>
-  <div class="bg-glow b"></div>
+  <div class="bg-glow a"></div><div class="bg-glow b"></div>
   <button class="fs-btn" id="fsBtn" title="Plein écran (F)" aria-label="Plein écran">⛶</button>
 
   <div class="board">
     <header class="head">
       <div class="brand">
-        <svg class="crown" viewBox="0 0 120 90" aria-hidden="true">
-          <path fill="#FFCC01" d="M6 84 L18 34 L38 58 L60 12 L82 58 L102 34 L114 84 Z"/>
-        </svg>
+        <svg class="crown" viewBox="0 0 120 90" aria-hidden="true"><path fill="#FFCC01" d="M6 84 L18 34 L38 58 L60 12 L82 58 L102 34 L114 84 Z"/></svg>
         <div class="brand-txt">
           <h1>LE&nbsp;MISTRAL</h1>
           <span class="tag">BURGER · KEBAB · TACOS</span>
@@ -293,180 +181,151 @@
     </header>
 
     <main class="screens" id="screens"></main>
-
     <footer class="ticker"><div class="ticker-track" id="ticker"></div></footer>
   </div>
-
   <div class="scanlines"></div>
 
   <script>
-  /* ══════════════════════════════════════════
-     CONFIG — infos établissement
-     ══════════════════════════════════════════ */
+  /* ═══ INFOS ÉTABLISSEMENT ═══ */
   const CONFIG = {
     address: '15 Place Jean Jaurès, 59119 Waziers',
-    // horaires pour le statut OUVERT/FERMÉ (0=dim … 6=sam)
-    // lun–sam : 11h30–14h30 & 18h30–23h30 · dim : 18h30–23h30
-    hours: {
-      1:[['11:30','14:30'],['18:30','23:30']], 2:[['11:30','14:30'],['18:30','23:30']],
-      3:[['11:30','14:30'],['18:30','23:30']], 4:[['11:30','14:30'],['18:30','23:30']],
-      5:[['11:30','14:30'],['18:30','23:30']], 6:[['18:30','23:30']], 0:[['18:30','23:30']]
-    }
+    hours: { 1:[['11:30','14:30'],['18:30','23:30']], 2:[['11:30','14:30'],['18:30','23:30']],
+             3:[['11:30','14:30'],['18:30','23:30']], 4:[['11:30','14:30'],['18:30','23:30']],
+             5:[['11:30','14:30'],['18:30','23:30']], 6:[['18:30','23:30']], 0:[['18:30','23:30']] }
   };
 
-  /* ══════════════════════════════════════════
-     SCREENS — contenu qui défile (vraie carte)
-     theme : 'dark' (noir) | 'gold' (or)
-     slide : { emoji, name, desc?, price? | tiers?, corner?, nouveau? }
-     ══════════════════════════════════════════ */
+  /* ═══ PHOTOS PRODUITS ═══
+     Pour héberger en local : télécharge chaque image, mets-la dans img/menu/
+     et remplace la valeur par 'img/menu/mon-fichier.png' */
+  const B = 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/';
+  const IMG = {
+    burger:   B+'hf_20260920_153133_fbc24d6f-0dc6-4a01-844c-31f65dbb3813.png',
+    boxkebab: B+'hf_20260922_165614_53e86d5a-4ebd-4684-ac47-0d57ba2f5b08.png',
+    assiette: B+'hf_20260922_165651_1946de1e-48a0-4ed9-b9e9-748d4c445ce9.png',
+    chicken:  B+'hf_20260922_165614_85803380-c513-4df2-9fa3-15649d32c497.png',
+    merguez:  B+'hf_20260922_165614_70b68099-092f-40f6-a444-15854f074e0a.png',
+    steak:    B+'hf_20260922_165614_cd5836d5-9cc1-43fe-a558-29a17c780d28.png',
+    kefta:    B+'hf_20260922_165614_5c66af69-5da9-4d09-a0cc-7d46ba11d914.png',
+    chef:     B+'hf_20260922_165651_f820d06e-c3f9-429f-a75f-129599bce5ee.png',
+    wings:    B+'hf_20260922_165614_9152dfd1-55e3-4f67-892b-3fc265efa653.png',
+    nuggets:  B+'hf_20260922_165651_8e795c0e-8496-4a03-b339-65cd6d78466d.png',
+    tenders:  B+'hf_20260922_165614_a3e67cd6-24a8-4906-8032-7f06968269d9.png',
+    mozza:    B+'hf_20260922_165614_9f44c0c7-b829-41e1-8d08-418988a76374.png',
+    tacos:    B+'hf_20260922_165614_a87349de-4791-4096-822a-acc0320fa279.png',
+    kapsalon: B+'hf_20260922_165651_d6d65a8e-71c1-4657-aadd-378bb3955a5a.png',
+    panini:   B+'hf_20260922_165651_468c34bf-3034-4978-aa13-b191c65ed1cc.png',
+    desserts: B+'hf_20260922_165727_4d1dce6a-1a51-42e4-bfa8-1c987e5197c7.png',
+    kid:      B+'hf_20260922_165651_3e08127f-82ec-4ef6-b9d0-87844f2c6492.png'
+  };
+
+  /* ═══ CONTENU DES ÉCRANS (vraie carte) ═══ */
+  const VIANDES = [{label:'1 VIANDE',price:7.00},{label:'2 VIANDES',price:9.00},{label:'3 VIANDES',price:10.50}];
   const SCREENS = [
-    {
-      label: 'LE BURGER', theme: 'gold',
-      slides: [
-        { emoji:'🍔', name:'Le Mistral', desc:'Triple steak · triple cheddar · cornichons · sauce maison', price:8.50, corner:'BEST-SELLER' },
-        { emoji:'🥙', name:'Box Kebab', desc:'Viande kebab + frites', price:4.00 },
-        { emoji:'🍔', name:'Menu Kid', desc:'Petit hamburger ou nuggets + frites + Capri-Sun + compote', price:4.90 }
-      ]
-    },
-    {
-      label: 'NOS ASSIETTES', theme: 'dark',
-      slides: [
-        { emoji:'🍽️', name:'Assiette Kebab',      desc:'Servie avec frites & salade', tiers:'VIANDES' },
-        { emoji:'🍗', name:'Chicken Mariné',       desc:'Servie avec frites & salade', tiers:'VIANDES' },
-        { emoji:'🌭', name:'Merguez',              desc:'Servie avec frites & salade', tiers:'VIANDES' },
-        { emoji:'🥩', name:'Steak',                desc:'Servie avec frites & salade', tiers:'VIANDES' },
-        { emoji:'🍖', name:'Kefta',                desc:'Viande hachée · frites & salade', tiers:'VIANDES' },
-        { emoji:'👨‍🍳', name:'Chicken du Chef',   desc:'Crème fraîche · champignons · cheddar', tiers:'VIANDES' }
-      ]
-    },
-    {
-      label: 'NOS BOUCHÉES', theme: 'gold',
-      slides: [
-        { emoji:'🍗', name:'Chicken Wings', tiers:[{label:'x4',price:4.00},{label:'x9',price:7.00}] },
-        { emoji:'🍤', name:'Nuggets',       tiers:[{label:'x4',price:2.50},{label:'x6',price:4.00},{label:'x9',price:5.30}] },
-        { emoji:'🍟', name:'Tenders',       tiers:[{label:'x4',price:3.00},{label:'x6',price:5.00},{label:'x9',price:6.00}] },
-        { emoji:'🧀', name:'Mozzarella Sticks', tiers:[{label:'x3',price:2.90},{label:'x5',price:3.90},{label:'x10',price:6.90}] }
-      ]
-    },
-    {
-      label: 'NOUVEAU', theme: 'dark', nouveau: true,
-      slides: [
-        { emoji:'🌮', name:'Tacos',   desc:'Le nouveau tacos du Mistral', corner:'NOUVEAU' },
-        { emoji:'🥙', name:'Kapsalon', desc:'Frites · viande · cheddar fondu · salade', corner:'NOUVEAU' },
-        { emoji:'🥪', name:'Panini Chicken', desc:'Aussi : Steak · Kefta · Kebab · 3 Fromages', price:4.50, corner:'dès' },
-        { emoji:'🍰', name:'Desserts', desc:'Tarte au Daim · Tiramisu', price:2.50 }
-      ]
-    }
+    { label:'LE BURGER', slides:[
+      {img:IMG.burger,   emoji:'🍔', name:'Le Mistral',  desc:'Triple steak · triple cheddar · cornichons · sauce maison', price:8.50, corner:'BEST-SELLER'},
+      {img:IMG.boxkebab, emoji:'🥙', name:'Box Kebab',   desc:'Viande kebab + frites', price:4.00},
+      {img:IMG.kid,      emoji:'🧃', name:'Menu Kid',    desc:'Hamburger ou nuggets + frites + Capri-Sun + compote', price:4.90}
+    ]},
+    { label:'NOS ASSIETTES', slides:[
+      {img:IMG.assiette, emoji:'🍽️', name:'Assiette Kebab',  desc:'Frites & salade', tiers:VIANDES},
+      {img:IMG.chicken,  emoji:'🍗', name:'Chicken Mariné',  desc:'Frites & salade', tiers:VIANDES},
+      {img:IMG.merguez,  emoji:'🌭', name:'Merguez',         desc:'Frites & salade', tiers:VIANDES},
+      {img:IMG.steak,    emoji:'🥩', name:'Steak',           desc:'Frites & salade', tiers:VIANDES},
+      {img:IMG.kefta,    emoji:'🍖', name:'Kefta',           desc:'Viande hachée · frites & salade', tiers:VIANDES},
+      {img:IMG.chef,     emoji:'👨‍🍳', name:'Chicken du Chef', desc:'Crème fraîche · champignons · cheddar', tiers:VIANDES}
+    ]},
+    { label:'NOS BOUCHÉES', slides:[
+      {img:IMG.wings,   emoji:'🍗', name:'Chicken Wings',     tiers:[{label:'x4',price:4.00},{label:'x9',price:7.00}]},
+      {img:IMG.nuggets, emoji:'🍤', name:'Nuggets',           tiers:[{label:'x4',price:2.50},{label:'x6',price:4.00},{label:'x9',price:5.30}]},
+      {img:IMG.tenders, emoji:'🍟', name:'Tenders',           tiers:[{label:'x4',price:3.00},{label:'x6',price:5.00},{label:'x9',price:6.00}]},
+      {img:IMG.mozza,   emoji:'🧀', name:'Mozzarella Sticks', tiers:[{label:'x3',price:2.90},{label:'x5',price:3.90},{label:'x10',price:6.90}]}
+    ]},
+    { label:'NOUVEAU', isNew:true, slides:[
+      {img:IMG.tacos,    emoji:'🌮', name:'Tacos',    desc:'Le nouveau tacos du Mistral', corner:'NOUVEAU'},
+      {img:IMG.kapsalon, emoji:'🥙', name:'Kapsalon', desc:'Frites · viande · cheddar fondu · salade', corner:'NOUVEAU'},
+      {img:IMG.panini,   emoji:'🥪', name:'Paninis',  desc:'Chicken · Steak · Kefta · Kebab · 3 Fromages', price:3.50, from:true},
+      {img:IMG.desserts, emoji:'🍰', name:'Desserts', desc:'Tarte au Daim · Tiramisu', price:2.50}
+    ]}
   ];
+  const INTERVALS=[5200,4400,4800,5000], DELAY=[0,700,1400,400];
 
-  const INTERVALS   = [5200, 4400, 4800, 5000];
-  const START_DELAY = [0, 700, 1400, 400];
-  const VIANDE_TIERS = [{label:'1 VIANDE',price:7.00},{label:'2 VIANDES',price:9.00},{label:'3 VIANDES',price:10.50}];
+  /* ═══ rendu ═══ */
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const split=p=>{const e=Math.floor(p+1e-6);return[e,Math.round((p-e)*100).toString().padStart(2,'0')]};
+  function priceHTML(p,from){const[e,c]=split(p);
+    return `${from?'<span class="from">DÈS</span>':''}${e}<span class="cur">€</span><span class="cts">${c}</span>`}
+  function tierHTML(t){const[e,c]=split(t.price);
+    return `<div class="tier"><span class="t-lab">${esc(t.label)}</span><span class="t-price">${e}<span class="cur">€</span><span class="cts">${c}</span></span></div>`}
 
-  /* ─── utils prix (style 7€00) ─── */
-  function priceHTML(p, from) {
-    const euros = Math.floor(p + 1e-6);
-    const cts = Math.round((p - euros) * 100).toString().padStart(2,'0');
-    const pre = from ? `<span class="from">${from}</span>` : '';
-    return `${pre}${euros}<span class="cur">€</span><span class="cts">${cts}</span>`;
-  }
-  function tierHTML(t) {
-    const euros = Math.floor(t.price + 1e-6);
-    const cts = Math.round((t.price - euros) * 100).toString().padStart(2,'0');
-    return `<div class="tier"><span class="t-lab">${t.label}</span>
-      <span class="t-price">${euros}<span class="cur">€</span><span class="cts">${cts}</span></span></div>`;
-  }
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-  function slideHTML(s) {
-    let priceBlock = '';
-    if (s.tiers === 'VIANDES') {
-      priceBlock = `<div class="tiers">${VIANDE_TIERS.map(tierHTML).join('')}</div>`;
-    } else if (Array.isArray(s.tiers)) {
-      priceBlock = `<div class="tiers">${s.tiers.map(tierHTML).join('')}</div>`;
-    } else if (typeof s.price === 'number') {
-      const from = s.corner === 'dès' ? 'DÈS' : null;
-      priceBlock = `<div class="price">${priceHTML(s.price, from)}</div>`;
-    }
-    const corner = (s.corner && s.corner !== 'dès') ? `<div class="corner">${esc(s.corner)}</div>` : '';
-    const desc = s.desc ? `<div class="desc">${esc(s.desc)}</div>` : '';
+  function slideHTML(s){
+    let block='';
+    if(Array.isArray(s.tiers)) block=`<div class="tiers">${s.tiers.map(tierHTML).join('')}</div>`;
+    else if(typeof s.price==='number') block=`<div class="price">${priceHTML(s.price,s.from)}</div>`;
     return `<div class="slide">
-        ${corner}
-        <div class="hero"><span class="emoji">${s.emoji || '🍔'}</span></div>
+      <div class="fallback"><span>${s.emoji||'🍔'}</span></div>
+      ${s.img?`<img class="ph" src="${s.img}" alt="${esc(s.name)}" loading="lazy" onerror="this.remove()">`:''}
+      <div class="shine"></div><div class="scrim"></div>
+      ${s.corner?`<div class="corner">${esc(s.corner)}</div>`:''}
+      <div class="body">
         <div class="name">${esc(s.name)}</div>
-        ${desc}
-        ${priceBlock}
-      </div>`;
-  }
+        ${s.desc?`<div class="desc">${esc(s.desc)}</div>`:''}
+        ${block}
+      </div>
+    </div>`}
 
-  function buildScreens() {
-    const root = document.getElementById('screens');
-    root.innerHTML = SCREENS.map((sc,i) => {
-      const slides = sc.slides.map(slideHTML).join('');
-      const dots = sc.slides.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('');
-      const nouveau = sc.nouveau ? `<span class="nouveau">✦ NEW</span>` : `<span class="idx">${String(i+1).padStart(2,'0')}</span>`;
-      return `<section class="screen ${sc.theme}" data-i="${i}">
-          <div class="brush"></div>
-          <div class="screen-tag">${esc(sc.label)} ${nouveau}</div>
-          <div class="slides">${slides}</div>
-          <div class="dots">${dots}</div>
-        </section>`;
-    }).join('');
+  function build(){
+    document.getElementById('screens').innerHTML = SCREENS.map((sc,i)=>{
+      const badge = sc.isNew?`<span class="new">✦ NEW</span>`:`<span class="idx">${String(i+1).padStart(2,'0')}</span>`;
+      return `<section class="screen">
+        <div class="screen-tag">${esc(sc.label)} ${badge}</div>
+        <div class="slides">${sc.slides.map(slideHTML).join('')}</div>
+        <div class="dots">${sc.slides.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div>
+      </section>`}).join('');
 
-    document.querySelectorAll('.screen').forEach((screen,i) => {
-      const slides = [...screen.querySelectorAll('.slide')];
-      const dots = [...screen.querySelectorAll('.dots i')];
-      if (!slides.length) return;
-      let cur = 0; slides[0].classList.add('active');
-      const advance = () => {
-        if (slides.length < 2) return;
-        const prev = cur; cur = (cur+1) % slides.length;
+    document.querySelectorAll('.screen').forEach((screen,i)=>{
+      const slides=[...screen.querySelectorAll('.slide')], dots=[...screen.querySelectorAll('.dots i')];
+      if(!slides.length) return;
+      let cur=0; slides[0].classList.add('active');
+      const advance=()=>{
+        if(slides.length<2) return;
+        const prev=cur; cur=(cur+1)%slides.length;
         slides[prev].classList.remove('active'); slides[prev].classList.add('leaving');
-        setTimeout(()=>slides[prev].classList.remove('leaving'), 800);
+        setTimeout(()=>slides[prev].classList.remove('leaving'),800);
         slides[cur].classList.add('active');
-        dots.forEach((d,k)=>d.classList.toggle('on', k===cur));
+        dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
       };
-      const iv = INTERVALS[i % INTERVALS.length];
-      setTimeout(()=>{ advance(); setInterval(advance, iv); }, START_DELAY[i % START_DELAY.length] + iv);
+      const iv=INTERVALS[i%INTERVALS.length];
+      setTimeout(()=>{advance();setInterval(advance,iv)}, DELAY[i%DELAY.length]+iv);
     });
   }
 
-  function buildTicker() {
-    const items = [
-      `<span>★ LE MISTRAL — WAZIERS</span>`,
+  function ticker(){
+    const it=[`<span>★ LE MISTRAL — WAZIERS</span>`,
       `<span class="sep">◆</span><span>✔ 100% HALAL</span>`,
       `<span class="sep">◆</span><span>✦ NOUVEAU : TACOS &amp; KAPSALON</span>`,
       `<span class="sep">◆</span><span>📍 ${esc(CONFIG.address)}</span>`,
       `<span class="sep">◆</span><span>LUN–SAM 11H30–14H30 · 18H30–23H30</span>`,
-      `<span class="sep">◆</span><span>DIM 18H30–23H30</span>`
-    ].join('');
-    document.getElementById('ticker').innerHTML = items + items;
+      `<span class="sep">◆</span><span>DIM 18H30–23H30</span>`].join('');
+    document.getElementById('ticker').innerHTML=it+it;
   }
 
-  /* ─── horloge + statut ouvert/fermé ─── */
-  function toMin(hhmm){ const [h,m]=hhmm.split(':').map(Number); return h*60+m; }
-  function refresh() {
-    const d = new Date();
-    document.getElementById('clock').textContent =
-      String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-    const now = d.getHours()*60 + d.getMinutes();
-    const ranges = CONFIG.hours[d.getDay()] || [];
-    const open = ranges.some(([a,b]) => now >= toMin(a) && now <= toMin(b));
-    const el = document.getElementById('status');
-    el.className = 'status ' + (open ? 'open' : 'closed');
-    document.getElementById('statusTxt').textContent = open ? 'OUVERT' : 'FERMÉ';
+  const toMin=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
+  function refresh(){
+    const d=new Date();
+    document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const now=d.getHours()*60+d.getMinutes();
+    const open=(CONFIG.hours[d.getDay()]||[]).some(([a,b])=>now>=toMin(a)&&now<=toMin(b));
+    document.getElementById('status').className='status '+(open?'open':'closed');
+    document.getElementById('statusTxt').textContent=open?'OUVERT':'FERMÉ';
   }
 
-  document.getElementById('fsBtn').addEventListener('click', () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  document.getElementById('fsBtn').addEventListener('click',()=>{
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
     else document.exitFullscreen?.();
   });
-  document.addEventListener('keydown', e => { if (e.key.toLowerCase()==='f') document.getElementById('fsBtn').click(); });
+  document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='f')document.getElementById('fsBtn').click()});
 
-  buildScreens();
-  buildTicker();
-  refresh();
-  setInterval(refresh, 20000);
+  build(); ticker(); refresh(); setInterval(refresh,20000);
   </script>
 </body>
 </html>
