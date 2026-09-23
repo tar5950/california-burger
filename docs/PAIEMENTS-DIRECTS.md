@@ -1,4 +1,29 @@
-# 💸 Réduire ou supprimer les frais Stripe sur les commandes Algorio
+# 💸 Payer du compte du client directement au compte du restaurant, sans intermédiaire
+
+## La réponse directe
+
+**Aujourd'hui, avec Algorio :** client → carte bancaire → **Stripe** (qui prend 1,5 % + 0,25 €) → compte du restaurant.
+**Ce qu'on veut :** compte bancaire du client → **virement** → compte bancaire du restaurant.
+
+Le **seul** moyen de paiement qui fait ça, c'est le **virement SEPA instantané**. La carte bancaire, elle, passe **toujours** par des intermédiaires (réseau CB, Visa ou Mastercard, et une société qui encaisse pour le restaurant : Stripe, SumUp ou la banque). Il faut donc **remplacer le paiement par carte de l'app par un paiement par virement instantané**. Il y a trois façons de le faire :
+
+| Façon de faire | Chemin de l'argent | Frais pour le restaurant | Confort pour le client |
+|---|---|---|---|
+| **1. IBAN + QR code de virement dans l'app** | Banque du client → banque du restaurant. **Aucun intermédiaire.** | **0 €** | Moyen : le client ouvre son appli bancaire, scanne le QR code ou colle l'IBAN, puis valide. Environ 30 secondes. |
+| **2. Wero** (appli des banques françaises : BNP, Société Générale, Crédit Agricole, BPCE, Crédit Mutuel, La Banque Postale…) | Banque du client → banque du restaurant. **Aucun intermédiaire** (Wero est un service des banques elles-mêmes). | **0 € ou quelques centimes** (en Belgique : 0,06 € par paiement + 18 €/an) | Bon : scan du QR code, puis validation dans l'appli bancaire. |
+| **3. Bouton « Payer par virement » via l'open banking** (Fintecture, Stripe Pay by Bank, etc.) | Banque du client → banque du restaurant. Le prestataire **ne touche jamais l'argent** : il transmet seulement l'ordre de virement à la banque du client. | **Quelques centimes par paiement** (le prix du service technique) | Très bon : un clic, puis validation dans l'appli bancaire, et la commande est confirmée automatiquement. |
+
+**Ce qu'il faut savoir :**
+- **Solution 1** : c'est la seule à 0 € et sans aucun tiers. En contrepartie, **l'app ne sait pas toute seule que le client a payé**. Le restaurateur voit le virement arriver dans son appli bancaire en moins de 10 secondes, avec la référence de commande, et valide la commande. On ne valide jamais sur une simple capture d'écran du client.
+- **Solution 2** : en septembre 2026, Wero **n'a pas encore d'offre officielle pour les comptes pro en France** (la fonction est souvent désactivée sur les comptes pro). Une offre « Wero for Work » pour indépendants existe, et le paiement en magasin est attendu fin 2026 à 2027. Il faut demander à la banque du restaurant.
+- **Solution 3** : c'est un service technique agréé par la Banque de France. Faire soi-même ce bouton sans prestataire demande un **agrément d'établissement de paiement**, donc ce n'est pas réaliste pour un seul restaurant.
+- **Algorio doit intégrer l'une de ces solutions dans son app**, car c'est son app. Si Algorio refuse, il faut une app de commande qui le permet, ou le site du restaurant peut le proposer lui-même (le site California Burger peut afficher l'IBAN et le QR code de virement sans serveur).
+- Garder aussi la possibilité de **payer au comptoir** en espèces ou par carte sur le terminal de la banque. C'est moins cher que Stripe, mais pas gratuit.
+- Recevoir les virements sur le **compte pro** au nom exact du restaurant : la banque du client vérifie que le nom correspond à l'IBAN.
+
+---
+
+# Détail de la recherche : les frais Stripe sur les commandes Algorio
 
 *Recherche réalisée en septembre 2026. Les tarifs changent : vérifier auprès de chaque fournisseur avant de décider.*
 *Note : le site algorio.fr et la documentation Stripe n'étaient pas accessibles depuis l'environnement de recherche. Les informations sur Algorio viennent de ses pages publiques indexées par les moteurs de recherche. Les points à confirmer sont listés en section 5.*
@@ -130,4 +155,6 @@ Chercher une app de commande qui permet de brancher **le contrat de paiement en 
 - [Commissions carte bancaire 2026 – Legalstart](https://www.legalstart.fr/fiches-pratiques/banque/taux-commission-carte-bancaire-commercant-2023/)
 - [Tarifs SumUp](https://help.sumup.com/fr-FR/articles/4oI3qHHji2I2S9dyvRfec3-tarifs-frais)
 - [Vérification du bénéficiaire – La finance pour tous](https://www.lafinancepourtous.com/2025/09/29/virement-la-verification-du-beneficiaire-par-la-banque-devient-obligatoire/) · [Virement instantané – Banque de France](https://www.banque-france.fr/fr/a-votre-service/particuliers/mieux-connaitre-moyens-paiement/le-virement-sepa-instantane)
+- [PISP, initiation de paiement – Komission](https://www.komission.fr/lexique/pisp) · [Initiation de paiement et DSP2 – Amalgame](https://www.amalgame.fr/initiation-de-paiement-guide-entreprises) · [Fintecture – virement immédiat](https://www.fintecture.com/virement-immediat/)
+- [Banques compatibles Wero – Moneyradar](https://moneyradar.org/articles-votre-argent/banques-compatibles-wero/) · [Wero Commerçants – Entrepreneur Hero](https://www.entrepreneurhero.fr/terminal-de-paiement/avis-wero-pro/)
 - [Commission Swile](https://blog.swile.co/titre-restaurant/commission) · [Fin des titres-restaurant papier – Openeat](https://www.openeat.fr/post/fin-tickets-restaurant-papier)
