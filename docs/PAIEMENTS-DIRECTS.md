@@ -1,126 +1,133 @@
-# 💸 Paiements directs au restaurateur, sans Stripe ni commission
+# 💸 Réduire ou supprimer les frais Stripe sur les commandes Algorio
 
-*Recherche réalisée en septembre 2026. Les tarifs changent : vérifier auprès de chaque fournisseur avant de signer.*
+*Recherche réalisée en septembre 2026. Les tarifs changent : vérifier auprès de chaque fournisseur avant de décider.*
+*Note : le site algorio.fr et la documentation Stripe n'étaient pas accessibles depuis l'environnement de recherche. Les informations sur Algorio viennent de ses pages publiques indexées par les moteurs de recherche. Les points à confirmer sont listés en section 5.*
 
-## TL;DR
+## Le problème
 
-Aujourd'hui, le site **n'utilise pas Stripe** : la commande part sur WhatsApp et le client paie sur place ou à la livraison. Le plus simple pour garder **0 % de commission** est de rester sur ce modèle et d'ajouter un moyen de paiement à distance gratuit :
+Le restaurateur utilise **Algorio** : le client scanne un QR code, commande et paie par CB, Apple Pay ou Google Pay. Algorio annonce **0 % de commission** (abonnement fixe de **69 €/mois**, sans engagement, argent « versé directement sur votre compte »). En revanche, le paiement en ligne passe par **Stripe**, et **c'est Stripe qui prélève des frais sur chaque commande** :
 
-1. **Virement instantané SEPA** vers le compte pro du restaurant (gratuit, arrive en moins de 10 secondes).
-2. **Wero** (successeur de Paylib, porté par les banques européennes) quand l'offre pro sera disponible pour la banque du restaurant.
-3. **Espèces** (toujours gratuites).
-4. Pour la carte bancaire, un **TPE fourni par la banque** ou un **SumUp** : il y aura une commission, mais bien plus faible qu'un paiement en ligne.
+- **1,5 % + 0,25 €** par paiement avec une carte européenne standard ;
+- 1,9 % + 0,25 € avec une carte premium ou professionnelle ;
+- 3,25 % + 0,25 € avec une carte hors Europe.
 
-> ⚠️ Un paiement **par carte** à 0 % de commission n'existe pas. Dès qu'une carte (CB, Visa, Mastercard) est utilisée, l'interchange (plafonné à 0,2 % en débit et 0,3 % en crédit dans l'UE) et les frais de réseau s'appliquent toujours. Le seul moyen d'éviter toute commission est un **virement** (classique, instantané ou via Wero) ou les **espèces**.
+### Le vrai coût : les 0,25 € fixes
 
----
+Pour un snack ou un fast-food, le panier est petit, donc la partie fixe pèse très lourd :
 
-## 1. Comparatif des solutions
+| Panier | Frais Stripe | En % du panier |
+|---|---|---|
+| 8 € | 0,37 € | **4,6 %** |
+| 12 € | 0,43 € | **3,6 %** |
+| 20 € | 0,55 € | 2,8 % |
+| 30 € | 0,70 € | 2,3 % |
 
-| Solution | Commission restaurateur | Argent reçu | Chez qui arrive l'argent | Adapté au site actuel |
-|---|---|---|---|---|
-| **Espèces** | 0 € | Immédiat | Caisse | ✅ déjà le cas |
-| **Virement instantané SEPA** (IBAN / QR code) | **0 €** (réception en général gratuite sur un compte pro, voir la grille tarifaire de la banque) | < 10 s, 24h/24 | **Compte pro du restaurant, en direct** | ✅ très simple |
-| **Wero** (téléphone / QR code) | 0 € entre particuliers ; offre pro France en cours de déploiement (en Belgique, par exemple : 0,06 € par transaction + 18 €/an) | Instantané | Compte bancaire, en direct | 🟡 dès que la banque pro le propose |
-| **TPE de la banque** (CB en présence du client) | ~0,4 à 0,8 % en moyenne + location du TPE (à négocier) | J+1 | Compte pro | ✅ à la livraison ou sur place |
-| **SumUp TPE** | 1,75 %, ou 0,89 % avec l'abonnement à 19 €/mois | J+1 à J+3 | Compte SumUp, puis compte pro | ✅ |
-| **SumUp lien de paiement** | 2,5 % | J+1 à J+3 | Compte SumUp, puis compte pro | 🟡 |
-| **Lydia Pro / Sumeria** (QR code) | 1,9 % HT | Rapide | Compte Lydia | 🟡 |
-| **PayPal** (QR code) | 2,29 % + 0,09 € | Immédiat, sur le solde PayPal | Compte PayPal | ❌ cher |
-| **Stripe** (cartes UE standard) | 1,5 % + 0,25 € (1,9 % + 0,25 € pour les cartes premium) | J+7 au premier paiement, puis J+2 | Compte Stripe, puis compte pro | ❌ ce qu'on veut éviter |
-
-### Simulation : 15 000 € de chiffre d'affaires par mois, panier moyen de 25 € (600 commandes)
-
-| Solution | Coût mensuel estimé |
-|---|---|
-| Stripe (1,5 % + 0,25 €) | **≈ 375 €** |
-| SumUp lien (2,5 %) | ≈ 375 € |
-| SumUp TPE (1,75 %) | ≈ 263 € |
-| SumUp TPE + abonnement (0,89 % + 19 €) | ≈ 153 € |
-| TPE bancaire (~0,6 % + ~25 € de location) | ≈ 115 € |
-| **Virement instantané / Wero / espèces** | **≈ 0 €** (hors frais de tenue du compte pro, qui sont payés de toute façon) |
-
-Soit **jusqu'à environ 4 500 € par an** d'économie par rapport à Stripe.
+Exemple : **1 000 commandes par mois à 12 €** donnent environ **430 € de frais Stripe par mois**, soit plus de **5 000 € par an**. C'est plus que l'abonnement Algorio lui-même (69 € × 12 = 828 €/an).
 
 ---
 
-## 2. Solution recommandée : virement instantané + QR code
+## ⚠️ Ce qu'il faut savoir avant tout
 
-### Pourquoi c'est maintenant viable
-
-- **Règlement européen 2024/886 (Instant Payments)** :
-  - depuis le **9 janvier 2025**, les banques de la zone euro doivent pouvoir **recevoir** les virements instantanés, et un virement instantané **ne peut pas coûter plus cher qu'un virement classique** (donc gratuit pour la plupart des particuliers) ;
-  - depuis le **9 octobre 2025**, elles doivent aussi pouvoir les **envoyer** ;
-  - depuis le **9 octobre 2025**, la **vérification du bénéficiaire (VoP)** est obligatoire : la banque du client vérifie que le nom saisi correspond à l'IBAN. Le client voit donc qu'il paie bien « California Burger », ce qui le rassure.
-- L'argent arrive **en moins de 10 secondes, 24h/24 et 7j/7**, directement sur le compte du restaurant. **Aucun intermédiaire.**
-- **Pas de rétrofacturation (chargeback)** : un virement est irrévocable, contrairement à la carte.
-
-### Comment le proposer au client
-
-1. **QR code EPC (« GiroCode », norme EPC069-12)** : un QR code standard qui préremplit le virement (nom, IBAN, montant, référence de commande). Il peut être généré **directement dans le navigateur**, sans serveur, donc compatible avec GitHub Pages.
-   - Limite : l'adoption par les applis bancaires françaises est **encore partielle** (elle est très répandue en Allemagne, en Autriche et en Belgique). Il faut donc toujours afficher l'IBAN en clair, avec un bouton « Copier », en solution de secours.
-2. **IBAN + référence** envoyés dans le message WhatsApp de confirmation, par exemple : « Virement instantané de 24,90 € à California Burger – IBAN FR76… – Référence CB-1234 ».
-3. **Wero** : dès que la banque pro du restaurant propose Wero pour les professionnels, afficher le numéro ou le QR Wero. Le client paie depuis son appli bancaire en 2 clics. Le paiement en ligne via Wero arrive dans les sites e-commerce français à l'automne 2026, et le paiement en magasin est prévu pour 2027.
-
-### Points de vigilance
-
-- **Utiliser un compte PRO** au nom commercial exact du restaurant. Avec la vérification VoP, un nom qui ne correspond pas affiche un avertissement au client. Utiliser Wero ou un IBAN **personnel** pour encaisser une activité commerciale est contraire aux conditions de la plupart des banques et mélange les flux perso et pro.
-- **Fraude par fausse capture d'écran** : ne jamais valider une commande sur une capture « virement envoyé ». Vérifier l'arrivée des fonds dans l'appli bancaire : avec l'instantané, c'est visible tout de suite.
-- **Remboursements** : ils se font à la main, par virement retour.
-- **Comptabilité** : la référence de commande dans le libellé du virement permet de rapprocher facilement chaque paiement.
-- **Espèces** : en France, refuser des espèces pour un paiement est en principe une contravention (art. R642-3 du Code pénal). On les garde donc comme option.
-- **Titres-restaurant** : les titres papier disparaissent le **1er mars 2027**. Les titres dématérialisés (Swile, Edenred, etc.) prennent en général **3 à 5 % de commission**, et on ne peut pas y échapper si on veut les accepter. Surveiller la réforme en cours.
+1. **Un paiement par carte sans aucun frais n'existe pas**, que ce soit avec Stripe, avec la banque ou ailleurs. Il y a toujours au minimum les frais interbancaires (plafonnés à 0,2 % en débit et 0,3 % en crédit) et les frais de réseau. On peut en revanche passer d'environ 3,6 % à **environ 0,5 %** du panier.
+2. **Seuls le virement (instantané ou Wero) et les espèces peuvent être vraiment à 0 €.**
+3. **Il est interdit de faire payer les frais au client** : pas de supplément pour un paiement par carte (article L.112-12 du Code monétaire et financier, et directive européenne DSP2 depuis 2018). En revanche, fixer un **montant minimum pour payer par carte** est autorisé, à condition de l'afficher clairement.
 
 ---
 
-## 3. Mise en œuvre possible sur le site (sans serveur, sans Stripe)
+## 1. Les pistes, de la plus simple à la plus radicale
 
-Le site est un simple fichier HTML hébergé sur GitHub Pages. Tout peut rester côté navigateur :
+### Piste A : « Commander dans l'app, payer au comptoir » (0 € de frais Stripe)
+Le client commande avec le QR code Algorio, mais **paie au comptoir** : en espèces, ou par CB sur le **terminal de paiement de la banque** du restaurant (environ 0,4 à 0,8 %, **sans frais fixe de 0,25 €**).
+- ✅ C'est la solution la plus directe : l'argent va chez le restaurateur, et Stripe ne touche rien.
+- ❓ **À demander à Algorio** : l'app propose-t-elle une option « payer sur place / au comptoir » ? Peut-on **désactiver le paiement en ligne** ou le rendre **facultatif** ?
+- ⚠️ On perd une partie de l'intérêt du QR code (la file d'attente au moment de payer), et il y a un risque de commandes non payées ou non récupérées pour la vente à emporter.
 
-1. Ajouter dans `CONFIG` :
-   ```js
-   payment: {
-     beneficiary: 'CALIFORNIA BURGER',   // nom EXACT du compte pro (VoP)
-     iban: 'FR76XXXXXXXXXXXXXXXXXXXXXXX',
-     bic: 'XXXXXXXX',
-     wero: '+33XXXXXXXXX'                 // optionnel
-   }
-   ```
-2. Dans le panier, faire choisir au client un mode de paiement : **Espèces / CB à la livraison / Virement instantané / Wero**.
-3. Si le client choisit le virement, générer un **QR code EPC** dans le navigateur, avec une petite librairie QR chargée depuis un CDN (cdnjs ou jsDelivr) :
-   ```
-   BCD
-   002
-   1
-   SCT
-   <BIC>
-   CALIFORNIA BURGER
-   <IBAN>
-   EUR24.90
+### Piste B : payer par virement instantané dans Stripe (« Pay by Bank »)
+Stripe propose en France, avec son partenaire TrueLayer, **Pay by Bank** : le client paie par **virement instantané depuis son appli bancaire**, sans carte. Les frais sont annoncés comme **nettement plus faibles que ceux de la carte**, car on ne passe plus par les réseaux Visa, Mastercard ou CB. Le tarif exact n'est pas publié sur les sources consultées : il faut le vérifier sur la page des tarifs Stripe ou dans le tableau de bord.
+- ✅ Il n'y a rien à changer dans l'organisation du restaurant.
+- ❓ **À demander à Algorio** : peuvent-ils **activer Pay by Bank** (et Wero plus tard) dans leur intégration Stripe ? Si Algorio utilise le « Payment Element » de Stripe, il suffit souvent de l'activer dans le tableau de bord.
+- ⚠️ Le client doit se connecter à sa banque : c'est un peu plus long qu'Apple Pay.
 
+### Piste C : Wero (arrive progressivement)
+Wero (successeur de Paylib, porté par les banques européennes) est un **virement instantané par numéro de téléphone ou QR code**. Pour les commerçants, il est annoncé **20 à 60 % moins cher que la carte**. En Belgique, l'offre pro de BNP Paribas Fortis coûte **0,06 € par transaction + 18 €/an**.
+- En France : paiement sur les sites e-commerce depuis le printemps et l'automne 2026 (Decathlon, Leclerc, Air France, etc.), et **paiement en magasin prévu en 2027**.
+- Stripe prévoit de proposer Wero en France, mais pour l'instant sa documentation ne le rend éligible qu'aux entreprises en Allemagne.
+- ❓ À demander à Algorio **et** à la banque pro du restaurant : quand Wero sera-t-il disponible ?
 
-   CB-1234
-   ```
-   Afficher aussi l'IBAN en clair avec un bouton « Copier ».
-4. Ajouter le mode de paiement choisi et la référence `CB-xxxx` dans le message WhatsApp envoyé par `buildMsg()` (dans `index.html`).
-5. Côté restaurateur : vérifier la réception du virement instantané avant de lancer la préparation, ou accepter le paiement à la livraison.
+### Piste D : réduire la facture Stripe elle-même
+- **Vérifier qui a le compte Stripe.** Si Algorio passe par **Stripe Connect**, la plateforme peut ajouter **ses propres frais** en plus de ceux de Stripe (les « frais d'application »). Il faut vérifier sur le relevé Stripe que le restaurant ne paie **que** 1,5 % + 0,25 €.
+- **Négocier avec Stripe** : Stripe propose des tarifs sur mesure, mais surtout à partir de gros volumes (sa formule mensuelle commence vers 500 € HT/mois pour environ 80 000 €/mois de ventes). C'est peu réaliste pour un seul restaurant.
+- **Fixer un montant minimum pour payer par carte** dans l'app (par exemple 10 €), si Algorio le permet. C'est légal si c'est affiché.
+
+### Piste E : changer d'outil de commande, ou demander à Algorio un autre prestataire de paiement
+Chercher une app de commande qui permet de brancher **le contrat de paiement en ligne de la banque du restaurateur** (par exemple Up2pay pour le Crédit Agricole, Mercanet pour BNP, Monetico pour le CIC et le Crédit Mutuel, Sherlocks pour LCL) ou **SumUp**.
+- Paiement en ligne via la banque : souvent **0,5 à 1 %** + un abonnement mensuel, selon ce qui est négocié. Le fixe par paiement est faible ou nul, ce qui est **nettement mieux pour les petits paniers**.
+- SumUp lien de paiement : 2,5 %, donc pas intéressant. SumUp terminal : 1,75 %, ou 0,89 % avec l'abonnement à 19 €/mois (utile pour la piste A).
+- ❓ À demander à Algorio : acceptent-ils un **autre prestataire de paiement que Stripe** ?
+
+---
+
+## 2. Comparatif sur 1 000 commandes par mois à 12 € (12 000 € de ventes)
+
+| Solution | Frais estimés par mois | Frais par panier de 12 € |
+|---|---|---|
+| **Stripe carte (situation actuelle)** | **≈ 430 €** | 0,43 € (3,6 %) |
+| SumUp lien de paiement (2,5 %) | ≈ 300 € | 0,30 € |
+| SumUp terminal au comptoir (1,75 %) | ≈ 210 € | 0,21 € |
+| SumUp terminal + abonnement (0,89 % + 19 €) | ≈ 126 € | 0,11 € |
+| Paiement en ligne via la banque (~0,8 % + ~20 €/mois, à négocier) | ≈ 116 € | 0,10 € |
+| Terminal de la banque au comptoir (~0,5 % + ~25 € de location) | ≈ 85 € | 0,06 € |
+| Wero pro (sur la base du tarif belge : 0,06 € + 18 €/an) | ≈ 62 € | 0,06 € |
+| Stripe Pay by Bank | ❓ tarif à vérifier (annoncé bien plus bas que la carte) | ❓ |
+| **Espèces ou virement direct** | **0 €** | 0 € |
+
+**Économie possible : entre 3 000 et 5 000 € par an** pour ce volume.
+
+---
+
+## 3. Recommandation
+
+1. **Tout de suite** : demander à Algorio (questions en section 5) :
+   - d'activer une option **« payer au comptoir »** en plus du paiement en ligne (piste A) ;
+   - d'activer **Stripe Pay by Bank** (piste B) ;
+   - de confirmer **qu'aucun frais Algorio ne s'ajoute** à ceux de Stripe (piste D).
+2. **Au comptoir** : utiliser le **terminal de paiement de la banque**, en négociant le taux (idéalement moins de 0,5 % pour la CB en débit), plutôt qu'un terminal à 1,75 %.
+3. **Dès que c'est disponible (fin 2026 à 2027)** : activer **Wero** avec la banque pro ou via Algorio.
+4. Si Algorio ne peut rien faire de tout ça, **comparer avec d'autres apps de commande** qui acceptent le paiement au comptoir ou un autre prestataire que Stripe (piste E), en tenant compte du coût total : abonnement + frais de paiement.
+
+---
+
+## 4. Points de vigilance
+
+- **Compte pro** : pour recevoir des virements ou du Wero, utiliser le compte **professionnel** au nom commercial exact. Depuis octobre 2025, la banque du client vérifie que le nom correspond à l'IBAN.
+- **Virements** : vérifier l'arrivée des fonds dans l'appli bancaire, jamais sur une simple capture d'écran du client.
+- **Titres-restaurant** : ils coûtent **3 à 5 %** de commission (Swile : 3,85 %), quel que soit le mode de paiement. Les titres papier disparaissent le **1er mars 2027**.
+- **Espèces** : en principe, on ne peut pas les refuser (article R642-3 du Code pénal).
+
+---
+
+## 5. Questions à poser à Algorio
+
+1. Le compte Stripe est-il **au nom du restaurant** (compte Stripe à lui) ou **géré par Algorio** (Stripe Connect) ?
+2. Algorio prélève-t-il **des frais en plus** de ceux de Stripe sur chaque paiement ?
+3. Peut-on proposer **« payer au comptoir / sur place »** en plus du paiement en ligne, ou à la place ?
+4. Peut-on activer **Pay by Bank** (virement instantané) ? Et **Wero** quand il sera disponible en France ?
+5. Peut-on fixer un **montant minimum** pour le paiement par carte ?
+6. Peut-on utiliser un **autre prestataire de paiement** (la banque du restaurant, SumUp, etc.) ?
+7. Les **titres-restaurant** sont-ils acceptés dans l'app, et avec quels frais ?
 
 ---
 
 ## Sources
 
-- [Virements instantanés gratuits depuis le 9 janvier 2025 – INC](https://www.inc-conso.fr/content/banque/virements-instantanes-gratuits-depuis-le-9-janvier-2025)
-- [Virements bancaires : du nouveau le 9 octobre – INC](https://www.inc-conso.fr/content/virements-bancaires-du-nouveau-le-9-octobre)
-- [Vérification du bénéficiaire obligatoire – La finance pour tous](https://www.lafinancepourtous.com/2025/09/29/virement-la-verification-du-beneficiaire-par-la-banque-devient-obligatoire/)
-- [Le virement SEPA instantané – Banque de France](https://www.banque-france.fr/fr/a-votre-service/particuliers/mieux-connaitre-moyens-paiement/le-virement-sepa-instantane)
-- [Wero – Professionnels](https://wero-wallet.eu/fr/e-m-commerce) · [Wero – Indépendants](https://wero-wallet.eu/fr/independants) · [Wero – Banque de France](https://www.banque-france.fr/fr/a-votre-service/particuliers/mieux-connaitre-moyens-paiement/wero)
-- [Wero en 2026 : ce que les commerçants doivent savoir](https://solutionsboutiques.fr/wero-debarque-dans-le-e-commerce-une-nouvelle-donne-pour-les-commercants)
-- [Wero Commerçants : bonne idée ou fausse bonne solution ?](https://www.entrepreneurhero.fr/terminal-de-paiement/avis-wero-pro/)
-- [Wero pros – BNP Paribas Fortis (tarif belge)](https://www.bnpparibasfortis.be/fr/public/entrepreneurs/banque-au-quotidien/paiements/systemes-paiement/wero-professionels)
-- [QR Code EPC – E-monétique](https://www.e-monetique.com/blog/actualites-2/qr-code-epc-199) · [Norme EPC069-12](https://girocodegenerator.com/en/wissen/epc-standard)
+- [Algorio – Lille](https://algorio.fr/restaurant/lille) · [Algorio – Strasbourg](https://algorio.fr/restaurant/strasbourg) · [Algorio – Villeneuve-d'Ascq](https://algorio.fr/restaurant/villeneuve-d-ascq)
 - [Tarifs Stripe](https://stripe.com/pricing) · [Frais Stripe 2026 – Indy](https://www.indy.fr/guide/comptabilite-en-ligne/commerce/stripe-comptabilite/frais-stripe/)
-- [Tarifs SumUp – Centre d'aide](https://help.sumup.com/fr-FR/articles/4oI3qHHji2I2S9dyvRfec3-tarifs-frais)
-- [Lydia Pro – Moneyvox](https://www.moneyvox.fr/banque-en-ligne/lydia-pro) · [Tarifs Sumeria Pro](https://sumeria.eu/pro/tarifs/)
-- [Frais PayPal marchands](https://www.paypal.com/fr/business/paypal-business-fees)
-- [Taux de commission carte bancaire 2026 – Legalstart](https://www.legalstart.fr/fiches-pratiques/banque/taux-commission-carte-bancaire-commercant-2023/)
-- [Fin des titres-restaurant papier en 2027 – Openeat](https://www.openeat.fr/post/fin-tickets-restaurant-papier) · [Dématérialisation – PayFit](https://payfit.com/fr/fiches-pratiques/dematerialisation-ticket-restaurant/)
+- [Stripe Connect – tarifs](https://stripe.com/connect/pricing) · [Stripe Connect – types de paiements](https://docs.stripe.com/connect/charges)
+- [Stripe Pay by Bank](https://stripe.com/fr/payment-method/pay-by-bank) · [Annonce TrueLayer × Stripe](https://truelayer.com/newsroom/announcements/stripe-announces-launch-of-pay-by-bank-in-france-and-germany/) · [Ecommerce Nation](https://www.ecommerce-nation.fr/stripe-truelayer-lancent-pay-by-bank-france-allemagne/)
+- [Stripe Wero](https://stripe.com/fr/payment-method/wero) · [Documentation Stripe Wero](https://docs.stripe.com/payments/wero) · [Guide Wero France – Stripe](https://stripe.com/resources/more/wero-guide-france)
+- [Wero – Professionnels](https://wero-wallet.eu/fr/e-m-commerce) · [Wero pros – BNP Paribas Fortis](https://www.bnpparibasfortis.be/fr/public/entrepreneurs/banque-au-quotidien/paiements/systemes-paiement/wero-professionels) · [Wero en 2026 pour les commerçants](https://solutionsboutiques.fr/wero-debarque-dans-le-e-commerce-une-nouvelle-donne-pour-les-commercants)
+- [Interdiction de faire payer un supplément pour la carte – Entrepreneur Hero](https://www.entrepreneurhero.fr/terminal-de-paiement/surcharge-cartes-etrangeres/) · [Elia Pay](https://eliapay.com/politique-de-surcharges-carte-en-france-que-dit-la-loi/)
+- [Commissions carte bancaire 2026 – Legalstart](https://www.legalstart.fr/fiches-pratiques/banque/taux-commission-carte-bancaire-commercant-2023/)
+- [Tarifs SumUp](https://help.sumup.com/fr-FR/articles/4oI3qHHji2I2S9dyvRfec3-tarifs-frais)
+- [Vérification du bénéficiaire – La finance pour tous](https://www.lafinancepourtous.com/2025/09/29/virement-la-verification-du-beneficiaire-par-la-banque-devient-obligatoire/) · [Virement instantané – Banque de France](https://www.banque-france.fr/fr/a-votre-service/particuliers/mieux-connaitre-moyens-paiement/le-virement-sepa-instantane)
+- [Commission Swile](https://blog.swile.co/titre-restaurant/commission) · [Fin des titres-restaurant papier – Openeat](https://www.openeat.fr/post/fin-tickets-restaurant-papier)
