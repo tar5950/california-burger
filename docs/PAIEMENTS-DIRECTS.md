@@ -98,6 +98,7 @@ Le site est un simple fichier HTML hébergé sur GitHub Pages. Tout peut rester 
    <IBAN>
    EUR24.90
 
+
    CB-1234
    ```
    Afficher aussi l'IBAN en clair avec un bouton « Copier ».
