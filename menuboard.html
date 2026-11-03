@@ -170,7 +170,7 @@ body.solo [data-screen="3"] .grid2{grid-template-columns:1fr}
   color:var(--gold);border-bottom:2px solid rgba(255,204,1,.35);padding-bottom:.4vh}
 
 /* ── PANNEAUX ROTATIFS (photo) ───────────────────────────── */
-.stage{position:relative;flex:1 1 auto;min-height:0}
+.stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
 .slide{position:absolute;inset:0;opacity:0;visibility:hidden;
   transition:opacity .5s ease,visibility .5s}
 .slide.on{opacity:1;visibility:visible}
@@ -213,12 +213,125 @@ body.solo [data-screen="3"] .grid2{grid-template-columns:1fr}
   font-family:var(--display);font-size:2vh;letter-spacing:.09em;gap:2vw}
 .foot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+
+/* ══════════════════════════════════════════════════════════
+   MOTION — ambiance de mur vidéo
+   Tout est en transform/opacity (accéléré par le GPU) pour
+   rester fluide sur un petit boîtier type Raspberry Pi.
+   ══════════════════════════════════════════════════════════ */
+
+/* fond vivant : deux halos dorés qui dérivent lentement */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.ambient b{position:absolute;display:block;border-radius:50%;filter:blur(90px);opacity:.5}
+.ambient b:nth-child(1){width:60vw;height:60vw;left:-15vw;top:-20vw;
+  background:rgba(255,204,1,.16);animation:drift1 26s ease-in-out infinite}
+.ambient b:nth-child(2){width:50vw;height:50vw;right:-12vw;bottom:-18vw;
+  background:rgba(255,160,1,.11);animation:drift2 34s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(12vw,6vh) scale(1.15)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.1)}
+  50%{transform:translate(-10vw,-7vh) scale(1)}}
+
+/* braises : particules qui montent lentement */
+.embers{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.embers i{position:absolute;bottom:-3vh;width:.5vh;height:.5vh;border-radius:50%;
+  background:var(--gold);opacity:0;animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  12%{opacity:.75}
+  85%{opacity:.5}
+  100%{transform:translateY(-104vh) scale(1.25);opacity:0}}
+
+/* onde lumineuse qui traverse les 3 écrans : signature mur vidéo */
+.wall-sweep{position:fixed;top:0;bottom:0;width:38vw;z-index:40;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,204,1,.13) 42%,
+    rgba(255,255,255,.1) 52%,transparent);
+  transform:translateX(-45vw) skewX(-8deg);animation:wall 9s ease-in-out infinite}
+@keyframes wall{0%{transform:translateX(-45vw) skewX(-8deg)}
+  55%,100%{transform:translateX(150vw) skewX(-8deg)}}
+
+/* reflet qui balaie les bandeaux dorés */
+.cat,.foot,.halal{position:relative;overflow:hidden}
+.cat::after,.foot::after,.halal::after{content:"";position:absolute;top:0;bottom:0;width:40%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:translateX(-160%);animation:shine 7s ease-in-out infinite}
+.foot::after{animation-delay:1.2s}.halal::after{animation-delay:2.4s}
+@keyframes shine{0%{transform:translateX(-160%)}45%,100%{transform:translateX(320%)}}
+
+/* couronne : scintillement discret */
+.crown{animation:glow 4.5s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 .4vh rgba(255,204,1,.5))}
+  50%{filter:drop-shadow(0 0 1.6vh rgba(255,204,1,.95))}}
+
+/* ── TRANSITION DE SLIDE ── */
+.slide{transform:scale(1.06);transition:opacity .55s ease,transform .8s cubic-bezier(.2,.8,.25,1),visibility .55s}
+.slide.on{transform:scale(1)}
+.slide.out{opacity:0;visibility:visible;transform:scale(.97) translateX(-2%);
+  transition:opacity .45s ease,transform .6s ease}
+
+/* volet doré qui essuie l'écran au changement */
+.wipe{position:absolute;inset:0;z-index:7;pointer-events:none;
+  background:linear-gradient(100deg,transparent 20%,var(--gold) 45%,#fff 50%,var(--gold) 55%,transparent 80%);
+  transform:translateX(-115%) skewX(-10deg);opacity:.9}
+.wipe.go{animation:wipe .85s cubic-bezier(.5,0,.3,1)}
+@keyframes wipe{0%{transform:translateX(-115%) skewX(-10deg)}
+  100%{transform:translateX(115%) skewX(-10deg)}}
+
+/* photo : zoom + dérive, effet caméra */
+.slide.on .photo{animation:kenPro 12s cubic-bezier(.3,0,.5,1) both}
+@keyframes kenPro{
+  0%{transform:scale(1.14) translate(1.5%,1%)}
+  100%{transform:scale(1.02) translate(-1.5%,-1%)}}
+
+/* ── TYPO CINÉTIQUE (écran vitrine uniquement) ──
+   Les écrans de prix restent fixes : animer un prix nuit à la lecture. */
+.name .w{display:inline-block;opacity:0;transform:translateY(.45em) rotateX(-55deg);
+  transform-origin:50% 100%}
+.slide.on .name .w{animation:wordIn .62s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes wordIn{to{opacity:1;transform:none}}
+
+.cap .desc{opacity:0;transform:translateY(.5em)}
+.slide.on .cap .desc{animation:softIn .6s .42s ease forwards}
+@keyframes softIn{to{opacity:1;transform:none}}
+
+/* prix : arrivée franche + halo qui pulse */
+.cap .price{opacity:0;transform:translateY(.35em) scale(.86)}
+.slide.on .cap .price{animation:priceIn .7s .55s cubic-bezier(.2,1.5,.4,1) forwards,
+  priceGlow 3.2s 1.3s ease-in-out infinite}
+@keyframes priceIn{to{opacity:1;transform:none}}
+@keyframes priceGlow{0%,100%{box-shadow:0 0 2vh -.6vh rgba(255,204,1,.55)}
+  50%{box-shadow:0 0 4.5vh -.3vh rgba(255,204,1,.95)}}
+
+/* bandeau catégorie : bascule au changement */
+.catTxt{display:inline-block;transition:opacity .3s,transform .3s}
+.catTxt.swap{opacity:0;transform:translateY(-.5em)}
+
+/* étiquette NOUVEAU : entrée + respiration */
+.flag{opacity:0;transform:translateX(-110%)}
+.slide.on .flag{animation:flagIn .6s .7s cubic-bezier(.2,.9,.3,1) forwards,
+  flagPulse 2.6s 1.6s ease-in-out infinite}
+@keyframes flagIn{to{opacity:1;transform:none}}
+@keyframes flagPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* les prix fixes s'installent une fois au démarrage, puis ne bougent plus */
+.tier,.ladder,.grid2 .row{opacity:0;animation:settle .6s ease forwards}
+@keyframes settle{to{opacity:1}}
+
 @media (prefers-reduced-motion:reduce){
-  .slide.on .photo{animation:none}
+  .ambient b,.embers i,.wall-sweep,.cat::after,.foot::after,.halal::after,
+  .crown,.wipe,.slide.on .photo,.slide.on .name .w,.slide.on .cap .desc,
+  .slide.on .cap .price,.slide.on .flag,.tier,.ladder,.grid2 .row{
+    animation:none!important}
+  .name .w,.cap .desc,.cap .price,.flag,.tier,.ladder,.grid2 .row{
+    opacity:1!important;transform:none!important}
 }
+
 </style>
 </head>
 <body>
+<div class="ambient"><b></b><b></b></div>
+<div class="embers" id="embers"></div>
+<div class="wall-sweep"></div>
 <div class="board">
 
   <header class="head">
@@ -328,7 +441,7 @@ function panelVitrine(){
         <div class="veil"></div>
         ${flag}
         <div class="cap">
-          <div class="name">${esc(s.name)}</div>
+          <div class="name">${esc(s.name).split(" ").map((w,k)=>`<span class="w" style="animation-delay:${.14+k*.09}s">${w}</span>`).join(" ")}</div>
           <div class="desc">${esc(s.desc||'')}</div>
           ${pr}
         </div></div>`;
@@ -336,7 +449,7 @@ function panelVitrine(){
   const nav=MENU.vitrine.slides.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join('');
   return `<section class="panel" data-screen="1" data-rot="1">
     <div class="cat"><span class="catTxt">${esc(MENU.vitrine.slides[0].cat||'')}</span></div>
-    <div class="stage">${slides}<div class="dots-nav">${nav}</div></div>
+    <div class="stage">${slides}<div class="wipe" id="wipe"></div><div class="dots-nav">${nav}</div></div>
   </section>`;
 }
 
@@ -378,11 +491,26 @@ document.querySelectorAll('[data-rot]').forEach((panel,idx)=>{
   if(slides.length<2) return;
   let cur=0;
   const catTxt=panel.querySelector('.catTxt');
+  const wipe=panel.querySelector('.wipe');
   const next=()=>{
-    slides[cur].classList.remove('on'); nav[cur]?.classList.remove('on');
+    const prev=slides[cur];
+    // volet doré qui essuie l'écran
+    if(wipe){ wipe.classList.remove('go'); void wipe.offsetWidth; wipe.classList.add('go'); }
+    prev.classList.remove('on'); prev.classList.add('out');
+    nav[cur]?.classList.remove('on');
+    setTimeout(()=>prev.classList.remove('out'),650);
+
     cur=(cur+1)%slides.length;
-    slides[cur].classList.add('on');   nav[cur]?.classList.add('on');
-    if(catTxt) catTxt.textContent=slides[cur].dataset.cat||'';
+    // la slide entrante apparaît derrière le volet, à mi-balayage
+    setTimeout(()=>{
+      slides[cur].classList.add('on');
+      nav[cur]?.classList.add('on');
+      if(catTxt){
+        catTxt.classList.add('swap');
+        setTimeout(()=>{ catTxt.textContent=slides[cur].dataset.cat||'';
+                         catTxt.classList.remove('swap'); },300);
+      }
+    },260);
   };
   setTimeout(()=>{ next(); setInterval(next,MENU.display.dwell); },
              MENU.display.dwell + idx*MENU.display.stagger);
@@ -403,6 +531,24 @@ function tick(){
 document.getElementById('footL').textContent='✔ 100% HALAL · PRIX EN € SERVICE COMPRIS';
 document.getElementById('footR').textContent=MENU.info.address;
 tick(); setInterval(tick,20000);
+
+/* braises : 16 particules suffisent pour l'effet sans charger le boîtier */
+(function(){
+  const box=document.getElementById('embers'); if(!box) return;
+  let html='';
+  for(let i=0;i<16;i++){
+    html+=`<i style="left:${Math.random()*100}%;
+      animation-duration:${9+Math.random()*9}s;
+      animation-delay:${-Math.random()*16}s;
+      transform:scale(${.6+Math.random()*1.1})"></i>`;
+  }
+  box.innerHTML=html;
+})();
+
+/* les blocs de prix s'installent en cascade au démarrage, puis restent fixes */
+document.querySelectorAll('.tier,.ladder,.grid2 .row').forEach((el,i)=>{
+  el.style.animationDelay=(0.15+i*0.055)+'s';
+});
 
 /* Auto-rechargement quotidien : remet le board à neuf sans intervention
    (protège d'une page figée après des jours d'affichage continu). */
