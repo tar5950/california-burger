@@ -108,49 +108,39 @@ const MENU = {
     ]
   },
 
-  /* ─── PANNEAUX ROTATIFS (avec photos) ───────────────────────
-     Seuls ces panneaux tournent. Maximum 4-5 photos sur tout le
-     board : au-delà, les images perdent leur effet (étude
-     eye-tracking sur stands alimentaires : le texte attire plus
-     que l'image sur ce type de panneau).
+  /* ─── ÉCRAN VITRINE (photos qui défilent) ──────────────────
+     Un seul panneau tourne : les prix de base des 2 autres écrans
+     restent visibles en permanence.
 
-     img   = nom du fichier à déposer dans  img/menu/
-     cdn   = secours si le fichier local est absent
-     price = null tant que le tarif n'est pas défini             */
-  nouveau: {
-    title: 'NOUVEAU',
-    badge: true,
+     cat   = titre du bandeau, change avec la photo
+     img   = fichier dans img/menu/   ·   cdn = secours
+     price = null → aucun prix affiché (tarif pas encore défini)  */
+  vitrine: {
     slides: [
-      { name: 'Tacos',    desc: 'Le nouveau tacos du Mistral',
-        price: null,
-        img: 'tacos.jpg',
-        cdn: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165614_a87349de-4791-4096-822a-acc0320fa279.png' },
+      { cat:'NOUVEAU', badge:true, name:'Tacos',
+        desc:'Le nouveau tacos du Mistral', price:null,
+        img:'tacos.jpg',
+        cdn:'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165614_a87349de-4791-4096-822a-acc0320fa279.png' },
 
-      { name: 'Kapsalon', desc: 'Frites · viande · cheddar fondu · salade',
-        price: null,
-        img: 'kapsalon.jpg',
-        cdn: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_d6d65a8e-71c1-4657-aadd-378bb3955a5a.png' }
-    ]
-  },
+      { cat:'NOUVEAU', badge:true, name:'Kapsalon',
+        desc:'Frites · viande · cheddar fondu · salade', price:null,
+        img:'kapsalon.jpg',
+        cdn:'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_d6d65a8e-71c1-4657-aadd-378bb3955a5a.png' },
 
-  aEmporter: {
-    title: 'À EMPORTER',
-    badge: false,
-    slides: [
-      { name: 'Box Kebab', desc: 'Viande kebab + frites',
-        price: 4,
-        img: 'box-kebab.jpg',
-        cdn: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165614_53e86d5a-4ebd-4684-ac47-0d57ba2f5b08.png' },
+      { cat:'NOS ASSIETTES', name:'Assiette Kebab',
+        desc:'Servie avec frites & salade · dès 7€', price:null,
+        img:'assiette.jpg',
+        cdn:'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_1946de1e-48a0-4ed9-b9e9-748d4c445ce9.png' },
 
-      { name: 'Menu Kid', desc: 'Hamburger ou nuggets + frites + boisson + compote',
-        price: 4.90,
-        img: 'menu-kid.jpg',
-        cdn: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_3e08127f-82ec-4ef6-b9d0-87844f2c6492.png' },
+      { cat:'À EMPORTER', name:'Box Kebab',
+        desc:'Viande kebab + frites', price:4,
+        img:'box-kebab.jpg',
+        cdn:'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165614_53e86d5a-4ebd-4684-ac47-0d57ba2f5b08.png' },
 
-      { name: 'Assiette Kebab', desc: 'Frites & salade · dès 7€',
-        price: null,
-        img: 'assiette.jpg',
-        cdn: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_1946de1e-48a0-4ed9-b9e9-748d4c445ce9.png' }
+      { cat:'POUR LES ENFANTS', name:'Menu Kid',
+        desc:'Hamburger ou nuggets + frites + boisson + compote', price:4.90,
+        img:'menu-kid.jpg',
+        cdn:'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/hf_20260922_165651_3e08127f-82ec-4ef6-b9d0-87844f2c6492.png' }
     ]
   },
 

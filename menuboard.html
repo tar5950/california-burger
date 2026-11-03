@@ -82,7 +82,35 @@ body{
 
 /* ── GRILLE DES 4 PANNEAUX ───────────────────────────────── */
 .screens{flex:1 1 auto;min-height:0;display:grid;
-  grid-template-columns:repeat(4,1fr);gap:1vw}
+  grid-template-columns:repeat(3,1fr);gap:1vw}
+
+/* MODE 1 ÉCRAN : un seul panneau occupe tout l'affichage.
+   S'active avec ?ecran=1 / 2 / 3 dans l'adresse. */
+body.solo .screens{grid-template-columns:1fr}
+body.solo .panel{display:none}
+body.solo .panel.show{display:flex}
+body.solo .brand h1{font-size:4.4vh}
+body.solo .crown{width:3.6vh}
+body.solo .cat{font-size:3.6vh}
+body.solo .cap .name{font-size:11vh}
+body.solo .cap .price{font-size:10.5vh}
+body.solo .tier .val{font-size:11vh}
+body.solo .row .n{font-size:6.2vh}
+body.solo .ladder .lname{font-size:4.4vh}
+body.solo .qty s{font-size:4vh}
+body.solo .qty b{font-size:2.3vh}
+body.solo .grid2 .n{font-size:3.6vh!important}
+body.solo .grid2 .p{font-size:3.8vh!important}
+body.solo .sect{font-size:3.2vh}
+body.solo .note{font-size:2.6vh}
+
+/* Écran 3 en plein écran : la carte est dense, on profite de toute
+   la largeur en 2 colonnes plutôt que de rapetisser le texte. */
+body.solo [data-screen="3"] .fixed{column-count:2;column-gap:3vw;display:block}
+body.solo [data-screen="3"] .ladder,
+body.solo [data-screen="3"] .grid2,
+body.solo [data-screen="3"] .sect{break-inside:avoid;margin-bottom:1.4vh}
+body.solo [data-screen="3"] .grid2{grid-template-columns:1fr}
 
 .panel{
   position:relative;min-height:0;overflow:hidden;border-radius:1.2vh;
@@ -252,7 +280,7 @@ function panelAssiettes(){
     return `<div class="row"><span class="n">${esc(v)}${star}</span></div>`;
   }).join('');
 
-  return `<section class="panel">
+  return `<section class="panel" data-screen="2">
     <div class="cat">${esc(a.title)}</div>
     <div class="fixed">
       <div class="tiers">${tiers}</div>
@@ -277,7 +305,7 @@ function panelCarte(){
   const p=`<div class="grid2">${MENU.paninis.items.map(line).join('')}</div>`;
   const e=`<div class="grid2">${MENU.extras.items.map(line).join('')}</div>`;
 
-  return `<section class="panel">
+  return `<section class="panel" data-screen="3">
     <div class="cat">${esc(MENU.bouchees.title)} · ${esc(MENU.paninis.title)}</div>
     <div class="fixed">
       ${b}
@@ -286,14 +314,14 @@ function panelCarte(){
     </div></section>`;
 }
 
-/* ═══ PANNEAUX ROTATIFS — photos ═══ */
-function panelRotating(cfg,id){
-  const slides=cfg.slides.map((s,i)=>{
-    const flag = cfg.badge ? '<div class="flag">NOUVEAU</div>'
+/* ═══ ÉCRAN VITRINE (photos qui défilent) ═══ */
+function panelVitrine(){
+  const slides=MENU.vitrine.slides.map((s,i)=>{
+    const flag = s.badge ? '<div class="flag">NOUVEAU</div>'
       : (MENU.mostOrdered.enabled && MENU.mostOrdered.item===s.name
           ? '<div class="flag">LE PLUS COMMANDÉ</div>' : '');
-    const pr = s.price===null ? '' : `<div class="price">${price(s.price)}</div>`;
-    return `<div class="slide${i===0?' on':''}">
+    const pr = s.price===null||s.price===undefined ? '' : `<div class="price">${price(s.price)}</div>`;
+    return `<div class="slide${i===0?' on':''}" data-cat="${esc(s.cat||'')}">
         <div class="ph-fallback"></div>
         <img class="photo" alt="${esc(s.name)}"
              data-local="img/menu/${esc(s.img)}" data-cdn="${esc(s.cdn||'')}">
@@ -305,20 +333,31 @@ function panelRotating(cfg,id){
           ${pr}
         </div></div>`;
   }).join('');
-
-  const nav=cfg.slides.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join('');
-  return `<section class="panel" data-rot="${id}">
-    <div class="cat">${esc(cfg.title)}${cfg.badge?'<span class="new">✦</span>':''}</div>
+  const nav=MENU.vitrine.slides.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join('');
+  return `<section class="panel" data-screen="1" data-rot="1">
+    <div class="cat"><span class="catTxt">${esc(MENU.vitrine.slides[0].cat||'')}</span></div>
     <div class="stage">${slides}<div class="dots-nav">${nav}</div></div>
   </section>`;
 }
 
 /* ═══ CONSTRUCTION ═══ */
+/* Ordre sur le mur :
+   ÉCRAN 1 (gauche)  vitrine photos — les nouveautés se découvrent
+                     en premier dans le sens de lecture
+   ÉCRAN 2 (centre)  assiettes — zone la plus regardée, donc le
+                     produit principal et ses prix
+   ÉCRAN 3 (droite)  le reste de la carte                        */
 document.getElementById('screens').innerHTML =
-    panelAssiettes()
-  + panelCarte()
-  + panelRotating(MENU.nouveau,'a')
-  + panelRotating(MENU.aEmporter,'b');
+    panelVitrine() + panelAssiettes() + panelCarte();
+
+/* ?ecran=1|2|3 → ce panneau seul, en plein écran.
+   Sans paramètre → les 3 côte à côte. */
+const solo=new URLSearchParams(location.search).get('ecran');
+if(solo && ['1','2','3'].includes(solo)){
+  document.body.classList.add('solo');
+  const el=document.querySelector(`[data-screen="${solo}"]`);
+  if(el) el.classList.add('show');
+}
 
 /* Images : local d'abord, CDN en secours, puis dégradé.
    Aucune requête réseau si les fichiers locaux sont présents. */
@@ -338,10 +377,12 @@ document.querySelectorAll('[data-rot]').forEach((panel,idx)=>{
   const nav=[...panel.querySelectorAll('.dots-nav i')];
   if(slides.length<2) return;
   let cur=0;
+  const catTxt=panel.querySelector('.catTxt');
   const next=()=>{
     slides[cur].classList.remove('on'); nav[cur]?.classList.remove('on');
     cur=(cur+1)%slides.length;
     slides[cur].classList.add('on');   nav[cur]?.classList.add('on');
+    if(catTxt) catTxt.textContent=slides[cur].dataset.cat||'';
   };
   setTimeout(()=>{ next(); setInterval(next,MENU.display.dwell); },
              MENU.display.dwell + idx*MENU.display.stagger);
