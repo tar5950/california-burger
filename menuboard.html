@@ -1,331 +1,371 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>LE MISTRAL — Menuboard</title>
-  <meta name="description" content="Menuboard digital animé — LE MISTRAL, Waziers. Kebab, burgers, tacos, paninis. Halal.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LE MISTRAL — Menuboard</title>
+<!-- AUCUNE RESSOURCE EXTERNE : le board doit fonctionner sans internet.
+     Pas de Google Fonts, pas de CDN. Si la connexion tombe en plein
+     service, le board continue d'afficher le menu normalement. -->
+<style>
+/* ════════════════════════════════════════════════════════════
+   LE MISTRAL — MENUBOARD
+   Noir #0b0b0d + Or #FFCC01 · 1080p paysage
+   Contenu : menu-data.js
+   ════════════════════════════════════════════════════════════ */
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800&display=swap" rel="stylesheet">
+/* Police d'affichage : dépose Anton.woff2 dans fonts/ pour le rendu
+   optimal. Sans ce fichier, repli sur une condensée système. */
+@font-face{
+  font-family:'MistralDisplay';
+  src:url('fonts/Anton.woff2') format('woff2');
+  font-weight:400; font-display:swap;
+}
 
-  <style>
-    /* ══════════════════════════════════════════════════════
-       LE MISTRAL — MENUBOARD DIGITAL ANIMÉ
-       Écrans photo plein cadre qui défilent (signage food-court)
-       Charte : NOIR #0b0b0d + OR #FFCC01 + blanc
-       Contenu : objet SCREENS en bas du fichier
-       ══════════════════════════════════════════════════════ */
-    :root{
-      --ink:#0b0b0d; --ink2:#131311; --gold:#FFCC01; --white:#fff; --smoke:#d6cfc4;
-      --display:'Anton','Arial Narrow',sans-serif; --body:'DM Sans',system-ui,sans-serif;
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%}
-    body{background:var(--ink);color:var(--white);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+:root{
+  --ink:#0b0b0d;
+  --panel:#121212;
+  --gold:#FFCC01;
+  --white:#fff;
+  --smoke:#cfc8bd;
 
-    .bg-glow{position:fixed;z-index:0;border-radius:50%;filter:blur(130px);pointer-events:none}
-    .bg-glow.a{top:-18vw;right:-12vw;width:55vw;height:55vw;background:rgba(255,204,1,.14)}
-    .bg-glow.b{bottom:-22vw;left:-14vw;width:50vw;height:50vw;background:rgba(255,204,1,.06)}
-    .scanlines{position:fixed;inset:0;z-index:60;pointer-events:none;
-      background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.10) 2px 3px);
-      mix-blend-mode:multiply;opacity:.4}
+  --display:'MistralDisplay',Impact,'Haettenschweiler','Arial Narrow',
+            'DejaVu Sans Condensed','Liberation Sans Narrow',sans-serif;
+  --body:system-ui,-apple-system,'Segoe UI',Roboto,'DejaVu Sans',sans-serif;
 
-    .board{position:relative;z-index:1;height:100vh;height:100dvh;display:flex;flex-direction:column;
-      padding:clamp(12px,1.6vh,22px) clamp(14px,1.4vw,26px);gap:clamp(10px,1.4vh,18px)}
+  /* marge de sécurité 5% : aucun contenu ne doit toucher les bords
+     (bezels des écrans + zone non sûre) */
+  --safe-x:2.6vw;
+  --safe-y:2.4vh;
+}
 
-    /* ── HEADER ── */
-    .head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{display:flex;align-items:center;gap:clamp(10px,1vw,18px);min-width:0}
-    .crown{width:clamp(34px,4.6vh,60px);height:auto;flex:0 0 auto;filter:drop-shadow(0 0 14px rgba(255,204,1,.5))}
-    .brand-txt{display:flex;flex-direction:column;line-height:1;min-width:0}
-    .brand-txt h1{font-family:var(--display);font-size:clamp(28px,5vh,62px);letter-spacing:3px;color:#fff;
-      text-shadow:0 2px 0 #000,0 0 26px rgba(255,204,1,.28)}
-    .brand-txt .tag{font-family:var(--display);letter-spacing:6px;font-size:clamp(9px,1.25vh,14px);color:var(--gold);margin-top:3px}
-    .head-right{display:flex;align-items:center;gap:clamp(10px,1.3vw,24px)}
-    .halal{font-family:var(--display);letter-spacing:3px;font-size:clamp(11px,1.6vh,18px);color:var(--ink);
-      background:var(--gold);padding:6px 14px;border-radius:6px;box-shadow:0 0 20px rgba(255,204,1,.35)}
-    .status{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);letter-spacing:2px;font-size:clamp(11px,1.6vh,18px)}
-    .status .dot{width:11px;height:11px;border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
-    .status.open{color:var(--gold)} .status.open .dot{background:var(--gold);box-shadow:0 0 14px var(--gold)}
-    .status.closed{color:#ff5a5a} .status.closed .dot{background:#ff5a5a;box-shadow:0 0 14px #ff5a5a}
-    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
-    .clock{font-family:var(--display);font-size:clamp(20px,3.2vh,42px);letter-spacing:2px;font-variant-numeric:tabular-nums}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--ink);color:var(--white);
+  font-family:var(--body);overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
 
-    /* ── RANGÉE D'ÉCRANS ── */
-    .screens{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1vw,18px)}
-    .screen{position:relative;min-height:0;border-radius:16px;overflow:hidden;background:#0a0a0c;
-      box-shadow:0 0 0 3px rgba(0,0,0,.7),0 22px 50px rgba(0,0,0,.55);isolation:isolate}
-    .screen::after{content:"";position:absolute;inset:0;border-radius:16px;z-index:9;pointer-events:none;
-      box-shadow:inset 0 0 0 2px rgba(255,204,1,.5),inset 0 0 26px -6px rgba(255,204,1,.45);animation:breathe 4s ease-in-out infinite}
-    @keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
+.board{
+  height:100vh;height:100dvh;
+  display:flex;flex-direction:column;
+  padding:var(--safe-y) var(--safe-x);
+  gap:1.4vh;
+}
 
-    /* bandeau catégorie */
-    .screen-tag{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;align-items:center;justify-content:space-between;
-      padding:clamp(9px,1.4vh,15px) clamp(11px,1vw,18px);font-family:var(--display);letter-spacing:3px;
-      font-size:clamp(13px,2vh,24px);color:var(--ink);background:var(--gold)}
-    .screen-tag .idx{font-size:.62em;opacity:.65}
-    .screen-tag .new{font-size:.6em;letter-spacing:2px;padding:3px 8px;border-radius:5px;background:var(--ink);color:var(--gold);
-      animation:blink 1.4s steps(1) infinite}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+/* ── EN-TÊTE ─────────────────────────────────────────────── */
+.head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:2vw}
+.brand{display:flex;align-items:center;gap:1.1vw;min-width:0}
+.crown{width:5vh;height:auto;flex:0 0 auto}
+.brand h1{
+  font-family:var(--display);font-size:6.4vh;letter-spacing:.04em;
+  line-height:1;color:var(--white);
+}
+.brand .sub{
+  font-family:var(--display);font-size:1.5vh;letter-spacing:.42em;
+  color:var(--gold);margin-top:.5vh;
+}
+.head-right{display:flex;align-items:center;gap:1.6vw}
+/* badge or → texte NOIR (or sur blanc = 1,5:1, illisible) */
+.halal{
+  font-family:var(--display);font-size:2vh;letter-spacing:.14em;
+  background:var(--gold);color:var(--ink);padding:.7vh 1.1vw;border-radius:.6vh;
+}
+.state{display:inline-flex;align-items:center;gap:.6vw;font-family:var(--display);
+  font-size:2vh;letter-spacing:.1em}
+.state i{width:1.3vh;height:1.3vh;border-radius:50%;display:block}
+.state.open{color:var(--gold)}       .state.open i{background:var(--gold)}
+.state.shut{color:#ff6b6b}           .state.shut i{background:#ff6b6b}
+.clock{font-family:var(--display);font-size:3.6vh;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums}
 
-    /* slides photo */
-    .slides{position:absolute;inset:0}
-    .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:scale(1.05);
-      transition:opacity .8s ease,transform .9s cubic-bezier(.16,.84,.3,1),visibility .8s}
-    .slide.active{opacity:1;visibility:visible;transform:none;z-index:3}
-    .slide.leaving{opacity:0;visibility:visible;transform:scale(.99);z-index:2;transition:opacity .6s ease,transform .7s ease}
+/* ── GRILLE DES 4 PANNEAUX ───────────────────────────────── */
+.screens{flex:1 1 auto;min-height:0;display:grid;
+  grid-template-columns:repeat(4,1fr);gap:1vw}
 
-    .fallback{position:absolute;inset:0;display:grid;place-items:center;
-      background:radial-gradient(120% 90% at 50% 25%,rgba(255,204,1,.30),#0c0b09 72%)}
-    .fallback span{font-size:clamp(60px,15vh,150px);filter:drop-shadow(0 12px 28px rgba(0,0,0,.6))}
-    .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-    .slide.active .ph{animation:ken 9s ease-out both}
-    @keyframes ken{from{transform:scale(1.02)}to{transform:scale(1.16)}}
+.panel{
+  position:relative;min-height:0;overflow:hidden;border-radius:1.2vh;
+  background:var(--panel);display:flex;flex-direction:column;
+  box-shadow:0 0 0 2px rgba(255,204,1,.45);
+}
+/* bandeau de catégorie : or plein, texte noir */
+.cat{
+  flex:0 0 auto;background:var(--gold);color:var(--ink);
+  font-family:var(--display);font-size:2.9vh;letter-spacing:.1em;
+  padding:1.1vh 1vw;display:flex;align-items:center;justify-content:space-between;
+}
+.cat .new{
+  font-size:.62em;letter-spacing:.14em;background:var(--ink);color:var(--gold);
+  padding:.35em .7em;border-radius:.4em;
+}
 
-    /* balayage lumineux premium */
-    .shine{position:absolute;inset:0;z-index:2;pointer-events:none;
-      background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.14) 48%,transparent 60%);
-      transform:translateX(-120%)}
-    .slide.active .shine{animation:sweep 5.5s ease-in-out .6s infinite}
-    @keyframes sweep{0%{transform:translateX(-120%)}45%,100%{transform:translateX(120%)}}
+/* ── PANNEAUX FIXES (texte) ──────────────────────────────── */
+.fixed{flex:1 1 auto;min-height:0;padding:1.4vh .9vw;display:flex;
+  flex-direction:column;gap:.9vh;overflow:hidden}
 
-    .scrim{position:absolute;inset:0;z-index:3;
-      background:linear-gradient(180deg,rgba(6,5,3,.55) 0%,rgba(6,5,3,0) 26%,rgba(6,5,3,.45) 55%,rgba(6,5,3,.96) 100%)}
+.tiers{display:flex;gap:.6vw}
+.tier{flex:1;background:#000;border:2px solid rgba(255,204,1,.5);
+  border-radius:1vh;padding:1.1vh .4vw;text-align:center}
+.tier .lab{display:block;font-size:1.45vh;font-weight:700;letter-spacing:.04em;
+  color:var(--smoke);white-space:nowrap}
+.tier .val{display:block;font-family:var(--display);font-size:6.8vh;
+  line-height:1;color:var(--gold);margin-top:.5vh}
+.tier .val .c{font-size:.46em;vertical-align:.5em;margin-left:.04em}
 
-    .body{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:clamp(12px,1.5vw,20px) clamp(12px,1.4vw,20px) clamp(30px,3.4vh,42px)}
-    .name{font-family:var(--display);letter-spacing:1px;line-height:.95;color:#fff;
-      font-size:clamp(21px,3.7vh,46px);text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 30px rgba(255,204,1,.25);
-      transform:translateY(18px);opacity:0}
-    .slide.active .name{animation:rise .65s .12s cubic-bezier(.16,.84,.3,1) forwards}
-    .desc{margin-top:6px;font-size:clamp(11px,1.45vh,16px);line-height:1.3;font-weight:500;color:var(--smoke);
-      text-shadow:0 1px 8px rgba(0,0,0,.95);transform:translateY(18px);opacity:0}
-    .slide.active .desc{animation:rise .65s .22s cubic-bezier(.16,.84,.3,1) forwards}
+.note{font-size:1.65vh;color:var(--smoke);font-weight:500}
 
-    .price{display:inline-flex;align-items:flex-start;font-family:var(--display);line-height:1;margin-top:clamp(9px,1.4vh,16px);
-      padding:clamp(7px,1.1vh,13px) clamp(11px,1.3vw,19px);border-radius:12px;background:var(--gold);color:var(--ink);
-      font-size:clamp(27px,4.8vh,58px);box-shadow:0 10px 26px rgba(0,0,0,.5),0 0 26px -6px var(--gold);
-      transform:translateY(20px) scale(.85);opacity:0}
-    .slide.active .price{animation:pop .7s .32s cubic-bezier(.2,1.5,.4,1) forwards}
-    @keyframes pop{to{transform:none;opacity:1}}
-    .price .cur{font-size:.5em;margin:.12em .04em 0}
-    .price .cts{font-size:.42em;margin-top:.1em}
-    .price .from{font-size:.32em;align-self:center;margin-right:.5em;letter-spacing:1px;opacity:.85}
+.list{display:flex;flex-direction:column;gap:1.15vh;flex:1 1 auto;min-height:0}
+.row{display:flex;align-items:baseline;gap:.5vw}
+.row .n{font-family:var(--display);font-size:4.3vh;letter-spacing:.02em;
+  color:var(--white);line-height:1.05}
+.row .dots{flex:1;border-bottom:2px dotted rgba(255,255,255,.18);
+  transform:translateY(-.5vh)}
+.row .p{font-family:var(--display);font-size:3.6vh;color:var(--gold);line-height:1}
+.row .p .c{font-size:.46em;vertical-align:.5em;margin-left:.04em}
+.row .sub{font-size:1.5vh;color:var(--smoke);font-weight:500}
 
-    .tiers{display:flex;gap:clamp(5px,.6vw,11px);margin-top:clamp(9px,1.4vh,16px);flex-wrap:wrap;
-      transform:translateY(18px);opacity:0}
-    .slide.active .tiers{animation:rise .65s .3s cubic-bezier(.16,.84,.3,1) forwards}
-    .tier{display:flex;flex-direction:column;align-items:center;gap:3px;padding:clamp(5px,.8vh,10px) clamp(8px,.9vw,14px);
-      border-radius:10px;background:rgba(10,9,7,.82);border:1px solid rgba(255,204,1,.45);backdrop-filter:blur(4px);min-width:clamp(50px,6vw,84px)}
-    .tier .t-lab{font-size:clamp(8px,1.05vh,11px);font-weight:800;letter-spacing:.4px;color:var(--smoke);white-space:nowrap}
-    .tier .t-price{font-family:var(--display);font-size:clamp(16px,2.6vh,31px);line-height:1;color:var(--gold)}
-    .tier .t-price .cur{font-size:.55em}
-    .tier .t-price .cts{font-size:.5em;vertical-align:super}
-    @keyframes rise{to{transform:none;opacity:1}}
+/* échelles de quantité (wings, nuggets…) */
+.ladder{display:flex;flex-direction:column;gap:.2vh}
+.ladder .lname{font-family:var(--display);font-size:2.6vh;color:var(--white);line-height:1.05}
+.ladder .lrow{display:flex;gap:.45vw;flex-wrap:wrap}
+.qty{background:#000;border:1px solid rgba(255,204,1,.4);border-radius:.6vh;
+  padding:.35vh .5vw;display:flex;align-items:baseline;gap:.35vw}
+.qty b{font-size:1.5vh;color:var(--smoke);font-weight:800}
+.qty s{font-family:var(--display);font-size:2.5vh;color:var(--gold);
+  text-decoration:none;line-height:1}
+.qty s .c{font-size:.46em;vertical-align:.5em}
 
-    .corner{position:absolute;z-index:8;top:clamp(40px,6.2vh,62px);left:-2px;font-family:var(--display);letter-spacing:2px;
-      font-size:clamp(10px,1.4vh,15px);padding:5px 12px 5px 10px;border-radius:0 6px 6px 0;background:var(--gold);color:var(--ink);
-      transform:translateX(-110%);box-shadow:0 6px 16px rgba(0,0,0,.5)}
-    .slide.active .corner{animation:slideIn .55s .42s cubic-bezier(.16,.84,.3,1) forwards}
-    @keyframes slideIn{to{transform:none}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.2vh .7vw}
+.grid2 .n{white-space:nowrap}
+.sect{font-family:var(--display);font-size:2vh;letter-spacing:.12em;
+  color:var(--gold);border-bottom:2px solid rgba(255,204,1,.35);padding-bottom:.4vh}
 
-    .dots{position:absolute;z-index:8;left:50%;transform:translateX(-50%);bottom:clamp(8px,1.2vh,14px);display:flex;gap:6px}
-    .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);transition:.4s}
-    .dots i.on{width:20px;border-radius:4px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+/* ── PANNEAUX ROTATIFS (photo) ───────────────────────────── */
+.stage{position:relative;flex:1 1 auto;min-height:0}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;
+  transition:opacity .5s ease,visibility .5s}
+.slide.on{opacity:1;visibility:visible}
 
-    /* ── TICKER ── */
-    .ticker{flex:0 0 auto;overflow:hidden;white-space:nowrap;border-radius:12px;background:var(--gold);
-      box-shadow:0 0 26px rgba(255,204,1,.25)}
-    .ticker-track{display:inline-flex;align-items:center;padding:clamp(8px,1.2vh,13px) 0;font-family:var(--display);
-      letter-spacing:3px;font-size:clamp(12px,1.75vh,21px);color:var(--ink);animation:marquee 30s linear infinite;will-change:transform}
-    .ticker-track span{padding:0 clamp(20px,3vw,54px);display:inline-flex;align-items:center;gap:10px}
-    .ticker-track .sep{color:rgba(11,11,13,.4)}
-    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* Ken Burns : SEULE la photo bouge. Le texte reste parfaitement fixe
+   (animer prix et libellés nuit à la lecture). */
+.slide.on .photo{animation:ken 12s linear both}
+@keyframes ken{from{transform:scale(1.03)}to{transform:scale(1.12)}}
 
-    .fs-btn{position:fixed;z-index:70;top:10px;right:10px;width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,.45);
-      border:1px solid rgba(255,204,1,.25);color:var(--gold);font-size:18px;opacity:.3;transition:.25s;display:grid;place-items:center}
-    .fs-btn:hover{opacity:1;border-color:var(--gold)}
+.ph-fallback{position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 25%,rgba(255,204,1,.22),#0a0908 72%)}
 
-    @media (max-width:1100px){.screens{grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr}}
-    @media (max-width:560px){
-      body{overflow-y:auto}.board{height:auto;min-height:100dvh}
-      .screens{grid-template-columns:1fr}.screen{min-height:62vh}.head{flex-wrap:wrap}
-    }
-    @media (prefers-reduced-motion:reduce){
-      .slide,.name,.desc,.price,.tiers,.corner,.shine,.slide.active .ph,.ticker-track,.screen::after,.bg-glow{
-        animation:none!important;transition:opacity .3s ease!important}
-      .name,.desc,.price,.tiers,.corner{transform:none!important;opacity:1!important}
-      .shine{display:none}
-    }
-  </style>
+/* voile sombre plein : garantit le contraste du texte quelle que
+   soit la photo (une ombre portée ne suffit pas) */
+.veil{position:absolute;left:0;right:0;bottom:0;height:62%;
+  background:linear-gradient(180deg,rgba(8,7,5,0),rgba(8,7,5,.88) 42%,rgba(8,7,5,.97))}
+
+.cap{position:absolute;left:0;right:0;bottom:0;padding:1.4vh 1vw 2vh}
+.cap .name{font-family:var(--display);font-size:8.8vh;line-height:.98;
+  color:var(--white);letter-spacing:.01em}
+.cap .desc{font-size:1.85vh;line-height:1.3;color:var(--smoke);
+  font-weight:500;margin-top:.6vh}
+.cap .price{display:inline-block;font-family:var(--display);font-size:8.4vh;
+  line-height:1;background:var(--gold);color:var(--ink);
+  padding:.9vh 1.1vw;border-radius:1vh;margin-top:1.1vh}
+.cap .price .c{font-size:.46em;vertical-align:.52em;margin-left:.03em}
+
+.flag{position:absolute;top:1.2vh;left:0;font-family:var(--display);
+  font-size:1.8vh;letter-spacing:.12em;background:var(--gold);color:var(--ink);
+  padding:.5vh .9vw;border-radius:0 .6vh .6vh 0}
+
+.dots-nav{position:absolute;right:1vw;bottom:1.2vh;display:flex;gap:.45vw}
+.dots-nav i{width:.9vh;height:.9vh;border-radius:50%;background:rgba(255,255,255,.28)}
+.dots-nav i.on{background:var(--gold);width:2.6vh;border-radius:.45vh}
+
+/* ── BANDEAU BAS ─────────────────────────────────────────── */
+.foot{flex:0 0 auto;background:var(--gold);color:var(--ink);border-radius:1vh;
+  padding:1vh 1.2vw;display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--display);font-size:2vh;letter-spacing:.09em;gap:2vw}
+.foot span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+@media (prefers-reduced-motion:reduce){
+  .slide.on .photo{animation:none}
+}
+</style>
 </head>
 <body>
-  <div class="bg-glow a"></div><div class="bg-glow b"></div>
-  <button class="fs-btn" id="fsBtn" title="Plein écran (F)" aria-label="Plein écran">⛶</button>
+<div class="board">
 
-  <div class="board">
-    <header class="head">
-      <div class="brand">
-        <svg class="crown" viewBox="0 0 120 90" aria-hidden="true"><path fill="#FFCC01" d="M6 84 L18 34 L38 58 L60 12 L82 58 L102 34 L114 84 Z"/></svg>
-        <div class="brand-txt">
-          <h1>LE&nbsp;MISTRAL</h1>
-          <span class="tag">BURGER · KEBAB · TACOS</span>
-        </div>
+  <header class="head">
+    <div class="brand">
+      <svg class="crown" viewBox="0 0 120 90" aria-hidden="true">
+        <path fill="#FFCC01" d="M6 84 L18 34 L38 58 L60 12 L82 58 L102 34 L114 84 Z"/>
+      </svg>
+      <div>
+        <h1>LE&nbsp;MISTRAL</h1>
+        <div class="sub">BURGER · KEBAB · TACOS</div>
       </div>
-      <div class="head-right">
-        <span class="halal">✔ HALAL</span>
-        <span class="status" id="status"><span class="dot"></span><span id="statusTxt">—</span></span>
-        <span class="clock" id="clock">--:--</span>
-      </div>
-    </header>
+    </div>
+    <div class="head-right">
+      <span class="halal">✔ HALAL</span>
+      <span class="state" id="state"><i></i><b id="stateTxt">—</b></span>
+      <span class="clock" id="clock">--:--</span>
+    </div>
+  </header>
 
-    <main class="screens" id="screens"></main>
-    <footer class="ticker"><div class="ticker-track" id="ticker"></div></footer>
-  </div>
-  <div class="scanlines"></div>
+  <main class="screens" id="screens"></main>
 
-  <script>
-  /* ═══ INFOS ÉTABLISSEMENT ═══ */
-  const CONFIG = {
-    address: '15 Place Jean Jaurès, 59119 Waziers',
-    hours: { 1:[['11:30','14:30'],['18:30','23:30']], 2:[['11:30','14:30'],['18:30','23:30']],
-             3:[['11:30','14:30'],['18:30','23:30']], 4:[['11:30','14:30'],['18:30','23:30']],
-             5:[['11:30','14:30'],['18:30','23:30']], 6:[['18:30','23:30']], 0:[['18:30','23:30']] }
-  };
+  <footer class="foot">
+    <span id="footL"></span>
+    <span id="footR"></span>
+  </footer>
+</div>
 
-  /* ═══ PHOTOS PRODUITS ═══
-     Pour héberger en local : télécharge chaque image, mets-la dans img/menu/
-     et remplace la valeur par 'img/menu/mon-fichier.png' */
-  const B = 'https://d8j0ntlcm91z4.cloudfront.net/user_3GY95lOglCr6LSucDNRs5uhWnc8/';
-  const IMG = {
-    burger:   B+'hf_20260920_153133_fbc24d6f-0dc6-4a01-844c-31f65dbb3813.png',
-    boxkebab: B+'hf_20260922_165614_53e86d5a-4ebd-4684-ac47-0d57ba2f5b08.png',
-    assiette: B+'hf_20260922_165651_1946de1e-48a0-4ed9-b9e9-748d4c445ce9.png',
-    chicken:  B+'hf_20260922_165614_85803380-c513-4df2-9fa3-15649d32c497.png',
-    merguez:  B+'hf_20260922_165614_70b68099-092f-40f6-a444-15854f074e0a.png',
-    steak:    B+'hf_20260922_165614_cd5836d5-9cc1-43fe-a558-29a17c780d28.png',
-    kefta:    B+'hf_20260922_165614_5c66af69-5da9-4d09-a0cc-7d46ba11d914.png',
-    chef:     B+'hf_20260922_165651_f820d06e-c3f9-429f-a75f-129599bce5ee.png',
-    wings:    B+'hf_20260922_165614_9152dfd1-55e3-4f67-892b-3fc265efa653.png',
-    nuggets:  B+'hf_20260922_165651_8e795c0e-8496-4a03-b339-65cd6d78466d.png',
-    tenders:  B+'hf_20260922_165614_a3e67cd6-24a8-4906-8032-7f06968269d9.png',
-    mozza:    B+'hf_20260922_165614_9f44c0c7-b829-41e1-8d08-418988a76374.png',
-    tacos:    B+'hf_20260922_165614_a87349de-4791-4096-822a-acc0320fa279.png',
-    kapsalon: B+'hf_20260922_165651_d6d65a8e-71c1-4657-aadd-378bb3955a5a.png',
-    panini:   B+'hf_20260922_165651_468c34bf-3034-4978-aa13-b191c65ed1cc.png',
-    desserts: B+'hf_20260922_165727_4d1dce6a-1a51-42e4-bfa8-1c987e5197c7.png',
-    kid:      B+'hf_20260922_165651_3e08127f-82ec-4ef6-b9d0-87844f2c6492.png'
-  };
+<script src="menu-data.js"></script>
+<script>
+/* ═══ PRIX — format français, sans centimes inutiles ═══
+   7 → 7€      10.5 → 10€50                                   */
+function price(v){
+  if(v===null||v===undefined) return '';
+  const e=Math.floor(v+1e-6);
+  const c=Math.round((v-e)*100);
+  return c===0 ? e+'€' : e+'€<span class="c">'+String(c).padStart(2,'0')+'</span>';
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-  /* ═══ CONTENU DES ÉCRANS (vraie carte) ═══ */
-  const VIANDES = [{label:'1 VIANDE',price:7.00},{label:'2 VIANDES',price:9.00},{label:'3 VIANDES',price:10.50}];
-  const SCREENS = [
-    { label:'LE BURGER', slides:[
-      {img:IMG.burger,   emoji:'🍔', name:'Le Mistral',  desc:'Triple steak · triple cheddar · cornichons · sauce maison', price:8.50, corner:'BEST-SELLER'},
-      {img:IMG.boxkebab, emoji:'🥙', name:'Box Kebab',   desc:'Viande kebab + frites', price:4.00},
-      {img:IMG.kid,      emoji:'🧃', name:'Menu Kid',    desc:'Hamburger ou nuggets + frites + Capri-Sun + compote', price:4.90}
-    ]},
-    { label:'NOS ASSIETTES', slides:[
-      {img:IMG.assiette, emoji:'🍽️', name:'Assiette Kebab',  desc:'Frites & salade', tiers:VIANDES},
-      {img:IMG.chicken,  emoji:'🍗', name:'Chicken Mariné',  desc:'Frites & salade', tiers:VIANDES},
-      {img:IMG.merguez,  emoji:'🌭', name:'Merguez',         desc:'Frites & salade', tiers:VIANDES},
-      {img:IMG.steak,    emoji:'🥩', name:'Steak',           desc:'Frites & salade', tiers:VIANDES},
-      {img:IMG.kefta,    emoji:'🍖', name:'Kefta',           desc:'Viande hachée · frites & salade', tiers:VIANDES},
-      {img:IMG.chef,     emoji:'👨‍🍳', name:'Chicken du Chef', desc:'Crème fraîche · champignons · cheddar', tiers:VIANDES}
-    ]},
-    { label:'NOS BOUCHÉES', slides:[
-      {img:IMG.wings,   emoji:'🍗', name:'Chicken Wings',     tiers:[{label:'x4',price:4.00},{label:'x9',price:7.00}]},
-      {img:IMG.nuggets, emoji:'🍤', name:'Nuggets',           tiers:[{label:'x4',price:2.50},{label:'x6',price:4.00},{label:'x9',price:5.30}]},
-      {img:IMG.tenders, emoji:'🍟', name:'Tenders',           tiers:[{label:'x4',price:3.00},{label:'x6',price:5.00},{label:'x9',price:6.00}]},
-      {img:IMG.mozza,   emoji:'🧀', name:'Mozzarella Sticks', tiers:[{label:'x3',price:2.90},{label:'x5',price:3.90},{label:'x10',price:6.90}]}
-    ]},
-    { label:'NOUVEAU', isNew:true, slides:[
-      {img:IMG.tacos,    emoji:'🌮', name:'Tacos',    desc:'Le nouveau tacos du Mistral', corner:'NOUVEAU'},
-      {img:IMG.kapsalon, emoji:'🥙', name:'Kapsalon', desc:'Frites · viande · cheddar fondu · salade', corner:'NOUVEAU'},
-      {img:IMG.panini,   emoji:'🥪', name:'Paninis',  desc:'Chicken · Steak · Kefta · Kebab · 3 Fromages', price:3.50, from:true},
-      {img:IMG.desserts, emoji:'🍰', name:'Desserts', desc:'Tarte au Daim · Tiramisu', price:2.50}
-    ]}
-  ];
-  const INTERVALS=[5200,4400,4800,5000], DELAY=[0,700,1400,400];
+/* ═══ PANNEAU FIXE 1 — ASSIETTES ═══ */
+function panelAssiettes(){
+  const a=MENU.assiettes;
+  const tiers=a.tiers.map(t=>
+    `<div class="tier"><span class="lab">${esc(t.label)}</span>
+       <span class="val">${price(t.price)}</span></div>`).join('');
 
-  /* ═══ rendu ═══ */
-  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const split=p=>{const e=Math.floor(p+1e-6);return[e,Math.round((p-e)*100).toString().padStart(2,'0')]};
-  function priceHTML(p,from){const[e,c]=split(p);
-    return `${from?'<span class="from">DÈS</span>':''}${e}<span class="cur">€</span><span class="cts">${c}</span>`}
-  function tierHTML(t){const[e,c]=split(t.price);
-    return `<div class="tier"><span class="t-lab">${esc(t.label)}</span><span class="t-price">${e}<span class="cur">€</span><span class="cts">${c}</span></span></div>`}
-
-  function slideHTML(s){
-    let block='';
-    if(Array.isArray(s.tiers)) block=`<div class="tiers">${s.tiers.map(tierHTML).join('')}</div>`;
-    else if(typeof s.price==='number') block=`<div class="price">${priceHTML(s.price,s.from)}</div>`;
-    return `<div class="slide">
-      <div class="fallback"><span>${s.emoji||'🍔'}</span></div>
-      ${s.img?`<img class="ph" src="${s.img}" alt="${esc(s.name)}" loading="lazy" onerror="this.remove()">`:''}
-      <div class="shine"></div><div class="scrim"></div>
-      ${s.corner?`<div class="corner">${esc(s.corner)}</div>`:''}
-      <div class="body">
-        <div class="name">${esc(s.name)}</div>
-        ${s.desc?`<div class="desc">${esc(s.desc)}</div>`:''}
-        ${block}
-      </div>
-    </div>`}
-
-  function build(){
-    document.getElementById('screens').innerHTML = SCREENS.map((sc,i)=>{
-      const badge = sc.isNew?`<span class="new">✦ NEW</span>`:`<span class="idx">${String(i+1).padStart(2,'0')}</span>`;
-      return `<section class="screen">
-        <div class="screen-tag">${esc(sc.label)} ${badge}</div>
-        <div class="slides">${sc.slides.map(slideHTML).join('')}</div>
-        <div class="dots">${sc.slides.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div>
-      </section>`}).join('');
-
-    document.querySelectorAll('.screen').forEach((screen,i)=>{
-      const slides=[...screen.querySelectorAll('.slide')], dots=[...screen.querySelectorAll('.dots i')];
-      if(!slides.length) return;
-      let cur=0; slides[0].classList.add('active');
-      const advance=()=>{
-        if(slides.length<2) return;
-        const prev=cur; cur=(cur+1)%slides.length;
-        slides[prev].classList.remove('active'); slides[prev].classList.add('leaving');
-        setTimeout(()=>slides[prev].classList.remove('leaving'),800);
-        slides[cur].classList.add('active');
-        dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
-      };
-      const iv=INTERVALS[i%INTERVALS.length];
-      setTimeout(()=>{advance();setInterval(advance,iv)}, DELAY[i%DELAY.length]+iv);
-    });
+  let formule='';
+  if(MENU.formule.enabled){
+    formule=`<div class="row" style="margin-top:.4vh">
+        <span class="n" style="color:var(--gold)">${esc(MENU.formule.label)}</span>
+        <span class="dots"></span>
+        <span class="p">+${price(MENU.formule.supplement)}</span>
+      </div><div class="note">${esc(MENU.formule.detail)}</div>`;
   }
 
-  function ticker(){
-    const it=[`<span>★ LE MISTRAL — WAZIERS</span>`,
-      `<span class="sep">◆</span><span>✔ 100% HALAL</span>`,
-      `<span class="sep">◆</span><span>✦ NOUVEAU : TACOS &amp; KAPSALON</span>`,
-      `<span class="sep">◆</span><span>📍 ${esc(CONFIG.address)}</span>`,
-      `<span class="sep">◆</span><span>LUN–SAM 11H30–14H30 · 18H30–23H30</span>`,
-      `<span class="sep">◆</span><span>DIM 18H30–23H30</span>`].join('');
-    document.getElementById('ticker').innerHTML=it+it;
-  }
+  const viandes=a.viandes.map(v=>{
+    const star = MENU.mostOrdered.enabled && MENU.mostOrdered.item.includes(v)
+      ? ' <span style="color:var(--gold);font-size:.5em">★</span>' : '';
+    return `<div class="row"><span class="n">${esc(v)}${star}</span></div>`;
+  }).join('');
 
-  const toMin=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
-  function refresh(){
-    const d=new Date();
-    document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-    const now=d.getHours()*60+d.getMinutes();
-    const open=(CONFIG.hours[d.getDay()]||[]).some(([a,b])=>now>=toMin(a)&&now<=toMin(b));
-    document.getElementById('status').className='status '+(open?'open':'closed');
-    document.getElementById('statusTxt').textContent=open?'OUVERT':'FERMÉ';
-  }
+  return `<section class="panel">
+    <div class="cat">${esc(a.title)}</div>
+    <div class="fixed">
+      <div class="tiers">${tiers}</div>
+      <div class="note">${esc(a.note)}</div>
+      ${formule}
+      <div class="list">${viandes}</div>
+    </div></section>`;
+}
 
-  document.getElementById('fsBtn').addEventListener('click',()=>{
-    if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
-    else document.exitFullscreen?.();
+/* ═══ PANNEAU FIXE 2 — BOUCHÉES / PANINIS / BOISSONS ═══ */
+function panelCarte(){
+  const b=MENU.bouchees.items.map(i=>`
+    <div class="ladder">
+      <div class="lname">${esc(i.name)}</div>
+      <div class="lrow">${i.tiers.map(([q,p])=>
+        `<span class="qty"><b>${esc(q)}</b><s>${price(p)}</s></span>`).join('')}</div>
+    </div>`).join('');
+
+  const line=i=>
+    `<div class="row"><span class="n" style="font-size:2.2vh">${esc(i.name)}</span>
+       <span class="dots"></span><span class="p" style="font-size:2.4vh">${price(i.price)}</span></div>`;
+  const p=`<div class="grid2">${MENU.paninis.items.map(line).join('')}</div>`;
+  const e=`<div class="grid2">${MENU.extras.items.map(line).join('')}</div>`;
+
+  return `<section class="panel">
+    <div class="cat">${esc(MENU.bouchees.title)} · ${esc(MENU.paninis.title)}</div>
+    <div class="fixed">
+      ${b}
+      <div class="sect">${esc(MENU.paninis.title)}</div>${p}
+      <div class="sect">${esc(MENU.extras.title)}</div>${e}
+    </div></section>`;
+}
+
+/* ═══ PANNEAUX ROTATIFS — photos ═══ */
+function panelRotating(cfg,id){
+  const slides=cfg.slides.map((s,i)=>{
+    const flag = cfg.badge ? '<div class="flag">NOUVEAU</div>'
+      : (MENU.mostOrdered.enabled && MENU.mostOrdered.item===s.name
+          ? '<div class="flag">LE PLUS COMMANDÉ</div>' : '');
+    const pr = s.price===null ? '' : `<div class="price">${price(s.price)}</div>`;
+    return `<div class="slide${i===0?' on':''}">
+        <div class="ph-fallback"></div>
+        <img class="photo" alt="${esc(s.name)}"
+             data-local="img/menu/${esc(s.img)}" data-cdn="${esc(s.cdn||'')}">
+        <div class="veil"></div>
+        ${flag}
+        <div class="cap">
+          <div class="name">${esc(s.name)}</div>
+          <div class="desc">${esc(s.desc||'')}</div>
+          ${pr}
+        </div></div>`;
+  }).join('');
+
+  const nav=cfg.slides.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join('');
+  return `<section class="panel" data-rot="${id}">
+    <div class="cat">${esc(cfg.title)}${cfg.badge?'<span class="new">✦</span>':''}</div>
+    <div class="stage">${slides}<div class="dots-nav">${nav}</div></div>
+  </section>`;
+}
+
+/* ═══ CONSTRUCTION ═══ */
+document.getElementById('screens').innerHTML =
+    panelAssiettes()
+  + panelCarte()
+  + panelRotating(MENU.nouveau,'a')
+  + panelRotating(MENU.aEmporter,'b');
+
+/* Images : local d'abord, CDN en secours, puis dégradé.
+   Aucune requête réseau si les fichiers locaux sont présents. */
+document.querySelectorAll('img.photo').forEach(img=>{
+  const local=img.dataset.local, cdn=img.dataset.cdn;
+  img.addEventListener('error',()=>{
+    if(img.src.indexOf(local)>-1 && cdn){ img.src=cdn; }
+    else { img.remove(); }
   });
-  document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='f')document.getElementById('fsBtn').click()});
+  img.src=local;
+});
 
-  build(); ticker(); refresh(); setInterval(refresh,20000);
-  </script>
+/* Rotation : seuls les 2 panneaux photo tournent, en décalé.
+   Les prix de base restent visibles en permanence. */
+document.querySelectorAll('[data-rot]').forEach((panel,idx)=>{
+  const slides=[...panel.querySelectorAll('.slide')];
+  const nav=[...panel.querySelectorAll('.dots-nav i')];
+  if(slides.length<2) return;
+  let cur=0;
+  const next=()=>{
+    slides[cur].classList.remove('on'); nav[cur]?.classList.remove('on');
+    cur=(cur+1)%slides.length;
+    slides[cur].classList.add('on');   nav[cur]?.classList.add('on');
+  };
+  setTimeout(()=>{ next(); setInterval(next,MENU.display.dwell); },
+             MENU.display.dwell + idx*MENU.display.stagger);
+});
+
+/* ═══ HORLOGE + OUVERT/FERMÉ ═══ */
+const mins=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  const now=d.getHours()*60+d.getMinutes();
+  const open=(MENU.info.hours[d.getDay()]||[]).some(([a,b])=>now>=mins(a)&&now<=mins(b));
+  const el=document.getElementById('state');
+  el.className='state '+(open?'open':'shut');
+  document.getElementById('stateTxt').textContent=open?'OUVERT':'FERMÉ';
+}
+document.getElementById('footL').textContent='✔ 100% HALAL · PRIX EN € SERVICE COMPRIS';
+document.getElementById('footR').textContent=MENU.info.address;
+tick(); setInterval(tick,20000);
+
+/* Auto-rechargement quotidien : remet le board à neuf sans intervention
+   (protège d'une page figée après des jours d'affichage continu). */
+setTimeout(()=>location.reload(),6*60*60*1000);
+</script>
 </body>
 </html>
