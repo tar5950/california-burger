@@ -1,0 +1,17 @@
+DOSSIER DES VIDEOS DU MENUBOARD
+================================
+Depose ici les fichiers .mp4 generes (Higgsfield ou autre).
+
+Pour qu'une video remplace la photo d'un produit, ouvre menu-data.js
+et ajoute la ligne  video: 'nom-du-fichier.mp4'  dans la slide.
+
+Exemple :
+  { cat:'NOUVEAU', badge:true, name:'Tacos',
+    desc:'Le nouveau tacos du Mistral', price:null,
+    img:'tacos.jpg',            <-- image de secours
+    video:'tacos.mp4' },        <-- la video prend le dessus
+
+Conseils :
+- format 16:9, 1080p, sans son (le board coupe le son de toute facon)
+- 5 a 8 secondes, en boucle propre
+- garde l'image .jpg en secours : si le .mp4 manque, la photo s'affiche

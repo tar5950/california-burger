@@ -279,6 +279,8 @@ body.solo [data-screen="3"] .grid2{grid-template-columns:1fr}
 
 /* photo : zoom + dérive, effet caméra */
 .slide.on .photo{animation:kenPro 12s cubic-bezier(.3,0,.5,1) both}
+/* une vidéo bouge déjà : pas de zoom par-dessus */
+.slide .vid{animation:none!important;object-fit:cover}
 @keyframes kenPro{
   0%{transform:scale(1.14) translate(1.5%,1%)}
   100%{transform:scale(1.02) translate(-1.5%,-1%)}}
@@ -436,8 +438,10 @@ function panelVitrine(){
     const pr = s.price===null||s.price===undefined ? '' : `<div class="price">${price(s.price)}</div>`;
     return `<div class="slide${i===0?' on':''}" data-cat="${esc(s.cat||'')}">
         <div class="ph-fallback"></div>
-        <img class="photo" alt="${esc(s.name)}"
-             data-local="img/menu/${esc(s.img)}" data-cdn="${esc(s.cdn||'')}">
+        ${s.video
+          ? `<video class="photo vid" src="video/${esc(s.video)}" muted loop playsinline preload="auto"></video>`
+          : `<img class="photo" alt="${esc(s.name)}"
+                  data-local="img/menu/${esc(s.img)}" data-cdn="${esc(s.cdn||'')}">`}
         <div class="veil"></div>
         ${flag}
         <div class="cap">
@@ -474,6 +478,16 @@ if(solo && ['1','2','3'].includes(solo)){
 
 /* Images : local d'abord, CDN en secours, puis dégradé.
    Aucune requête réseau si les fichiers locaux sont présents. */
+/* Vidéos : on ne joue que la slide visible, et on repart du début.
+   Évite de faire tourner 5 vidéos en même temps sur un petit boîtier. */
+function syncVideos(){
+  document.querySelectorAll('video.vid').forEach(v=>{
+    const visible=v.closest('.slide')?.classList.contains('on');
+    if(visible){ v.currentTime=0; v.play().catch(()=>{}); }
+    else v.pause();
+  });
+}
+
 document.querySelectorAll('img.photo').forEach(img=>{
   const local=img.dataset.local, cdn=img.dataset.cdn;
   img.addEventListener('error',()=>{
@@ -505,6 +519,7 @@ document.querySelectorAll('[data-rot]').forEach((panel,idx)=>{
     setTimeout(()=>{
       slides[cur].classList.add('on');
       nav[cur]?.classList.add('on');
+      syncVideos();
       if(catTxt){
         catTxt.classList.add('swap');
         setTimeout(()=>{ catTxt.textContent=slides[cur].dataset.cat||'';
@@ -531,6 +546,7 @@ function tick(){
 document.getElementById('footL').textContent='✔ 100% HALAL · PRIX EN € SERVICE COMPRIS';
 document.getElementById('footR').textContent=MENU.info.address;
 tick(); setInterval(tick,20000);
+syncVideos();
 
 /* braises : 16 particules suffisent pour l'effet sans charger le boîtier */
 (function(){
