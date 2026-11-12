@@ -1,0 +1,288 @@
+<title>Menuboard Animé</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Mise en page : bandes pleine largeur, contenu dans un rail de 1040px.
+   Un seul accent chaud, réservé aux chiffres et aux appels à l'action. */
+:root{
+  --paper:#FBFBFD; --card:#FFFFFF; --ink:#121826; --ink-2:#4A5568;
+  --line:#E3E6ED; --accent:#2F5BFF; --hot:#E8541F; --band:#F2F4F9;
+  --display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --body:'Inter',ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0D1017; --card:#151A24; --ink:#ECEFF5; --ink-2:#9AA4B8;
+  --line:#242A36; --accent:#6B8CFF; --hot:#FF8450; --band:#121722;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0D1017; --card:#151A24; --ink:#ECEFF5; --ink-2:#9AA4B8;
+  --line:#242A36; --accent:#6B8CFF; --hot:#FF8450; --band:#121722;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.band{width:100%}
+.band.alt{background:var(--band)}
+.rail{max-width:1040px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:clamp(40px,6vw,76px)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.12}
+h1{font-size:clamp(32px,5.4vw,56px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:18px;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent)}
+.lede{font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:62ch}
+.stack{display:flex;flex-direction:column;gap:18px}
+.stack-lg{display:flex;flex-direction:column;gap:clamp(28px,4vw,44px)}
+
+/* en-tête */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line)}
+.top .rail{padding-block:16px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;width:100%;max-width:1040px}
+.brand{font-family:var(--display);font-weight:700;letter-spacing:-.01em;font-size:18px}
+.brand span{color:var(--accent)}
+.top .meta{font-size:14px;color:var(--ink-2)}
+
+/* grilles */
+.grid{display:grid;gap:16px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:860px){.g3,.g2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card p{color:var(--ink-2);font-size:15px}
+.fig{font-family:var(--display);font-size:clamp(30px,4vw,40px);font-weight:700;
+  color:var(--hot);line-height:1;font-variant-numeric:tabular-nums}
+.src{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--line);padding-left:10px}
+
+/* problème : liste sans cartes, hiérarchie par le texte */
+.prob{display:flex;flex-direction:column;gap:14px;max-width:70ch}
+.prob div{display:flex;gap:12px;align-items:baseline}
+.prob b{font-family:var(--display);color:var(--hot);flex:0 0 auto}
+
+/* étapes numérotées : ici l'ordre est une vraie information */
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:14px}
+.step{display:flex;gap:16px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
+.step::before{counter-increment:s;content:counter(s,decimal-leading-zero);
+  font-family:var(--display);font-weight:700;color:var(--accent);font-size:15px;
+  flex:0 0 auto;padding-top:2px;font-variant-numeric:tabular-nums}
+.step h3{margin-bottom:3px}
+.step p{color:var(--ink-2);font-size:15px;margin:0}
+
+/* tableau */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-2);font-weight:500}
+tr:last-child td{border-bottom:none}
+td b{font-variant-numeric:tabular-nums}
+.pick{color:var(--hot);font-weight:600}
+
+/* inclus */
+.inc{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px;max-width:860px}
+@media(max-width:700px){.inc{grid-template-columns:1fr}}
+.inc div{display:flex;gap:10px;align-items:baseline;font-size:15px}
+.inc i{color:var(--accent);font-style:normal;flex:0 0 auto;font-weight:700}
+
+/* contact */
+.cta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:clamp(22px,3vw,30px);display:flex;flex-direction:column;gap:16px}
+.phone{font-family:var(--display);font-size:clamp(24px,4vw,34px);font-weight:700;
+  letter-spacing:.01em;user-select:all;font-variant-numeric:tabular-nums}
+.note{font-size:13.5px;color:var(--ink-2)}
+footer{border-top:1px solid var(--line)}
+footer .rail{padding-block:20px;font-size:13.5px;color:var(--ink-2)}
+</style>
+
+<header class="band top"><div class="rail">
+  <div class="brand">TK<span>&nbsp;Digital</span></div>
+  <div class="meta">Affichage dynamique pour la restauration · Lille</div>
+</div></header>
+
+<section class="band"><div class="rail stack">
+  <span class="eyebrow">Menuboard animé</span>
+  <h1>Votre carte sur écran, lisible du fond de la file.</h1>
+  <p class="lede">Des écrans de menu animés, conçus pour être lus en quelques secondes
+  par un client qui fait la queue. Vos photos, vos prix, votre charte. Pas d'abonnement,
+  et ça continue de tourner même si votre connexion tombe.</p>
+</div></section>
+
+<section class="band alt"><div class="rail stack">
+  <h2>Ce qui cloche sur la plupart des écrans de menu</h2>
+  <div class="prob">
+    <div><b>→</b><p><strong>Le texte est trop petit.</strong> La règle du métier impose environ
+      8 mm de hauteur de lettre par mètre de recul. Un client à 5 m a besoin de caractères
+      de 4 cm. La plupart des écrans sont à la moitié.</p></div>
+    <div><b>→</b><p><strong>Tout bouge en même temps.</strong> Quand le prix défile, le client
+      ne peut pas le lire. Il attend, la file ralentit.</p></div>
+    <div><b>→</b><p><strong>Une coupure internet et l'écran devient noir.</strong> Les solutions
+      qui diffusent depuis le web affichent une page d'erreur en plein service.</p></div>
+    <div><b>→</b><p><strong>L'abonnement court toute l'année.</strong> 8 à 20 € par écran et par
+      mois, pour afficher une carte qui change trois fois par an.</p></div>
+  </div>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">Ce que ça change</span>
+    <h2>Quatre bénéfices, et ce qui les appuie</h2>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <span class="fig">+13 à 20 %</span>
+      <h3>Sur le produit que vous mettez en avant</h3>
+      <p>Une expérience menée en restaurant, avec tirage au sort des tables, a mesuré cette
+      hausse de demande sur les plats affichés comme les plus commandés. L'effet était plus
+      marqué chez les nouveaux clients.</p>
+      <p class="src">Cai, Chen &amp; Fang, <em>American Economic Review</em>, 2009. Étude
+      menée en Chine : à prendre comme un ordre de grandeur, pas comme une garantie.</p>
+    </div>
+    <div class="card">
+      <span class="fig">0 €</span>
+      <h3>D'abonnement</h3>
+      <p>Les fichiers vous appartiennent et tournent sur votre matériel. Rien à renouveler,
+      aucun compte à maintenir, aucun prestataire qui coupe le service.</p>
+      <p class="src">À comparer aux plateformes d'affichage dynamique, entre 8 et 20 € par
+      écran et par mois.</p>
+    </div>
+    <div class="card">
+      <span class="fig">Hors&nbsp;ligne</span>
+      <h3>Fonctionne sans internet</h3>
+      <p>Images, polices et animations sont stockées sur l'appareil. Une coupure de box,
+      une panne d'opérateur, un redémarrage après microcoupure : l'écran continue d'afficher
+      votre carte normalement.</p>
+      <p class="src">Vérifié en test : zéro requête réseau pendant le fonctionnement.</p>
+    </div>
+    <div class="card">
+      <span class="fig">2 min</span>
+      <h3>Pour changer un prix</h3>
+      <p>Les tarifs sont isolés dans un fichier à part, commenté en français. Vous modifiez
+      un chiffre, c'est à l'écran. Pas de technicien, pas de logiciel à apprendre.</p>
+      <p class="src">Le code et le contenu sont séparés : impossible de casser l'affichage
+      en corrigeant un prix.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="band alt"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">La méthode</span>
+    <h2>Conçu pour être lu, pas seulement pour être joli</h2>
+    <p class="lede">Chaque choix vient de normes du métier ou d'études mesurées, pas d'une
+    impression.</p>
+  </div>
+  <div class="grid g3">
+    <div class="card"><h3>Dimensionné pour le fond de la file</h3>
+      <p>Les noms de produits sont calibrés pour un client à 5 mètres sur un écran de 55
+      pouces. Tout est exprimé en proportion de la hauteur d'écran : le même fichier reste
+      lisible si vous changez de télé.</p></div>
+    <div class="card"><h3>Les prix ne bougent jamais</h3>
+      <p>Seul l'écran vitrine est animé. Les écrans de tarifs restent fixes, pour qu'un
+      client puisse lire un prix au moment où il le cherche, sans attendre.</p></div>
+    <div class="card"><h3>Contraste vérifié</h3>
+      <p>Chaque association de couleurs est mesurée selon les critères d'accessibilité
+      WCAG. Pas de texte qui disparaît sur une photo claire.</p></div>
+    <div class="card"><h3>Photos produits sur mesure</h3>
+      <p>Vos plats sont photographiés ou générés dans une direction artistique unique,
+      à votre charte. Pas de banque d'images où l'on reconnaît le même burger que chez
+      le concurrent.</p></div>
+    <div class="card"><h3>Affichage conforme</h3>
+      <p>Prix TTC, mention service compris, lisibilité : l'affichage respecte les
+      obligations applicables à la restauration.</p></div>
+    <div class="card"><h3>De 1 à 3 écrans ou plus</h3>
+      <p>Chaque écran est autonome et porte son propre contenu. On en ajoute un plus tard
+      sans refaire l'ensemble.</p></div>
+  </div>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">Déroulé</span>
+    <h2>Comment ça se passe</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div><h3>Vous me transmettez votre carte</h3>
+      <p>Photo de la carte papier, logo, couleurs. C'est tout ce dont j'ai besoin pour démarrer.</p></div></div>
+    <div class="step"><div><h3>Je vous montre une maquette</h3>
+      <p>Vous voyez vos vrais produits et vos vrais prix à l'écran avant toute installation,
+      et vous demandez les corrections que vous voulez.</p></div></div>
+    <div class="step"><div><h3>Je produis les visuels et les animations</h3>
+      <p>Photos de vos plats, mouvements, transitions. Une direction artistique unique sur
+      l'ensemble des écrans.</p></div></div>
+    <div class="step"><div><h3>Vous branchez</h3>
+      <p>Une clé USB par écran, ou un petit boîtier. L'écran démarre tout seul sur votre
+      carte, y compris après une coupure de courant.</p></div></div>
+  </div>
+</div></section>
+
+<section class="band alt"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">Matériel</span>
+    <h2>Ce qu'il vous faut derrière l'écran</h2>
+    <p class="lede">Trois formules possibles. La première ne demande aucun équipement
+    supplémentaire.</p>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Formule</th><th>Matériel</th><th>Budget</th><th>Pour qui</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pick">Clé USB</span></td><td>Une clé par écran</td>
+        <td><b>~10 €</b> par écran</td>
+        <td>Le plus simple. La quasi-totalité des télés lisent et bouclent une vidéo depuis une clé.</td></tr>
+      <tr><td>Boîtier dédié</td><td>Un mini-ordinateur par écran</td>
+        <td><b>100 à 140 €</b> par écran</td>
+        <td>Quand la carte change souvent, ou pour un affichage interactif.</td></tr>
+      <tr><td>Écran professionnel</td><td>Dalle certifiée usage intensif</td>
+        <td><b>500 à 900 €</b> par écran</td>
+        <td>Recommandé en neuf : garantie 3 ans et fonctionnement 16 h/jour couvert.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">À savoir : une télé grand public n'est garantie que pour un usage
+  domestique, et le fabricant peut refuser la prise en charge en cas de panne dans un
+  commerce. À éviter aussi, l'OLED : un menu fixe finit par marquer la dalle.</p>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">Prestation</span>
+    <h2>Ce qui est compris</h2>
+  </div>
+  <div class="inc">
+    <div><i>✦</i><span>Conception des écrans à votre charte</span></div>
+    <div><i>✦</i><span>Intégration complète de votre carte et de vos prix</span></div>
+    <div><i>✦</i><span>Photos produits sur mesure</span></div>
+    <div><i>✦</i><span>Animations et transitions</span></div>
+    <div><i>✦</i><span>Fichiers prêts à brancher, un par écran</span></div>
+    <div><i>✦</i><span>Fonctionnement hors ligne garanti</span></div>
+    <div><i>✦</i><span>Notice pour modifier vos prix vous-même</span></div>
+    <div><i>✦</i><span>Accompagnement à la mise en route</span></div>
+  </div>
+  <p class="note">Tarif selon le nombre d'écrans et le volume de visuels à produire.
+  Devis gratuit après avoir vu votre carte.</p>
+</div></section>
+
+<section class="band alt"><div class="rail">
+  <div class="cta">
+    <span class="eyebrow">Parlons-en</span>
+    <h2>Envoyez-moi une photo de votre carte</h2>
+    <p class="lede">Je vous montre une maquette de vos écrans avant que vous n'engagiez
+    quoi que ce soit.</p>
+    <div>
+      <p class="note">Tarik — TK Digital</p>
+      <p class="phone">07 68 78 98 00</p>
+    </div>
+    <p class="note">Appel ou WhatsApp. Numéro sélectionnable pour copie.</p>
+  </div>
+</div></section>
+
+<footer class="band"><div class="rail">TK Digital · Affichage dynamique pour la restauration · Lille</div></footer>
