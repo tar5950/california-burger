@@ -3,14 +3,22 @@
 Relevé le 12/11/2026 sur https://chicknbeef.com/notre-carte/
 
 ## Couleurs
-| Rôle | Valeur |
-|---|---|
-| Rouge principal | `#D62300` |
-| Rouge foncé | `#B01D00` |
-| Or / ambre | `#F5A623` |
-| Or clair | `#FFD166` |
-| Crème | `#F9F4EE` |
-| Noir | `#1A1A1A` |
+
+**Attention : deux rouges coexistent.** Le logo officiel et le site ne sont pas
+calés sur la même valeur.
+
+| Rôle | Valeur | Source |
+|---|---|---|
+| **Rouge du logo** | `#BE3C2A` | relevé sur le logo couleur fourni par le client — brique, légèrement terreux |
+| Rouge du site | `#D62300` | CSS du site — plus vif, plus saturé |
+| Rouge foncé | `#B01D00` | CSS du site |
+| Or / ambre | `#F5A623` | flammes du logo + site |
+| Or clair | `#FFD166` | site |
+| Crème | `#F9F4EE` | site |
+| Noir | `#1A1A1A` | site |
+
+**Recommandation** : ancrer sur `#BE3C2A` (le logo fait foi, c'est la marque déposée)
+et réserver `#D62300` aux aplats qui doivent claquer à l'écran. À faire valider.
 
 `#2EA3F2` est le bleu par défaut du thème WordPress, ce n'est pas une couleur de marque.
 
@@ -20,7 +28,14 @@ Relevé le 12/11/2026 sur https://chicknbeef.com/notre-carte/
 - Secondaire : Open Sans
 
 ## Logo
-`img/logo-blanc.png` — pastille ronde avec burger + « CHICK'N BEEF » en gras arrondi, version blanche.
+- `img/logo-couleur.png` — **version officielle, fond détouré transparent** (fournie par le client).
+  Pastille ronde : burger vu de trois quarts, flammes orange sous le steak, nom en
+  capitales arrondies autour de l'arc, marque déposée ®.
+- `img/logo-blanc.png` — version blanche monochrome (récupérée sur le site).
+- `img/apercu-noir.jpg`, `img/apercu-rouge.jpg` — contrôles de lisibilité sur fond sombre et rouge.
+
+Le logo se tient bien sur fond noir. Sur fond rouge vif il perd du contraste :
+préférer la version blanche dans ce cas.
 
 ## Positionnement
 - Burgers **halal certifiés**, **cuits à la flamme**
