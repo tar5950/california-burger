@@ -1,0 +1,336 @@
+<title>Dossier Menuboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Rail unique de 900px, bandes pleine largeur. Accent bleu TK, rouge réservé aux alertes. */
+:root{
+  --paper:#FAFAFC; --card:#FFF; --ink:#11161F; --ink2:#525E72; --line:#E2E6EE;
+  --accent:#2F5BFF; --hot:#D83A1B; --ok:#1C8B55; --band:#F1F3F9; --code:#12161F; --codefg:#E7ECF5;
+  --d:'Space Grotesk',ui-sans-serif,system-ui,sans-serif; --b:'Inter',ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0B0E14; --card:#141922; --ink:#EAEEF6; --ink2:#95A1B5; --line:#232B38;
+  --accent:#7D9BFF; --hot:#FF7E5C; --ok:#4ECB8E; --band:#10151D; --code:#080B11; --codefg:#E7ECF5;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0B0E14; --card:#141922; --ink:#EAEEF6; --ink2:#95A1B5; --line:#232B38;
+  --accent:#7D9BFF; --hot:#FF7E5C; --ok:#4ECB8E; --band:#10151D; --code:#080B11; --codefg:#E7ECF5;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--b);font-size:16px;line-height:1.62}
+.band{width:100%}.band.alt{background:var(--band)}
+.rail{max-width:900px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:clamp(30px,5vw,56px)}
+h1,h2,h3{font-family:var(--d);margin:0;line-height:1.14;text-wrap:balance}
+h1{font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(21px,3vw,30px);font-weight:700}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--d);font-size:11.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.lede{font-size:clamp(16px,1.8vw,18.5px);color:var(--ink2);max-width:64ch}
+.stack{display:flex;flex-direction:column;gap:16px}
+.stack-lg{display:flex;flex-direction:column;gap:clamp(24px,4vw,38px)}
+.top{border-bottom:1px solid var(--line)}
+.top .rail{padding-block:14px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:var(--d);font-weight:700;font-size:17px}.brand span{color:var(--accent)}
+.meta{font-size:13.5px;color:var(--ink2)}
+
+/* compte à rebours */
+.clock{background:var(--card);border:2px solid var(--hot);border-radius:14px;padding:20px;display:flex;
+  flex-direction:column;gap:8px}
+.cd{font-family:var(--d);font-size:clamp(30px,7vw,52px);font-weight:700;color:var(--hot);
+  font-variant-numeric:tabular-nums;line-height:1}
+.cd.fin{color:var(--ink2)}
+
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}
+@media(max-width:720px){.g2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px;
+  display:flex;flex-direction:column;gap:9px;min-width:0}
+.card p{color:var(--ink2);font-size:14.5px}
+.pill{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:999px;font-family:var(--d);letter-spacing:.04em}
+.pill.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.pill.wait{background:color-mix(in srgb,var(--hot) 15%,transparent);color:var(--hot)}
+a.lnk{color:var(--accent);font-weight:600;word-break:break-word}
+
+ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:12px}
+ol.steps li{counter-increment:s;display:flex;gap:14px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;padding:15px 17px;min-width:0}
+ol.steps li::before{content:counter(s);font-family:var(--d);font-weight:700;color:var(--accent);
+  flex:0 0 auto;font-variant-numeric:tabular-nums}
+ol.steps b{display:block}
+ol.steps span{color:var(--ink2);font-size:14.5px}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:430px;font-size:14.5px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--d);font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);font-weight:500}
+tr:last-child td{border-bottom:none}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--band);
+  padding:1px 5px;border-radius:4px}
+
+/* blocs de prompt copiables */
+.pr{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pr>summary{cursor:pointer;padding:14px 17px;font-family:var(--d);font-weight:700;display:flex;
+  align-items:center;justify-content:space-between;gap:12px;list-style:none}
+.pr>summary::-webkit-details-marker{display:none}
+.pr>summary::after{content:"+";font-size:19px;color:var(--accent);flex:0 0 auto}
+.pr[open]>summary::after{content:"−"}
+.pr .in{padding:0 17px 17px;display:flex;flex-direction:column;gap:11px}
+.pr .how{font-size:13.5px;color:var(--ink2)}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:15px;
+  overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55;
+  white-space:pre-wrap;word-break:break-word}
+button.cp{align-self:flex-start;font-family:var(--d);font-weight:700;font-size:14px;border:none;
+  background:var(--accent);color:#fff;padding:9px 17px;border-radius:9px;cursor:pointer}
+button.cp:disabled{background:var(--ok)}
+button.cp:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+ul.ck{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.ck li{display:flex;gap:10px;align-items:baseline;font-size:15px}
+ul.ck i{font-style:normal;flex:0 0 auto;font-weight:700;color:var(--hot)}
+.warn{background:color-mix(in srgb,var(--hot) 9%,transparent);border-left:3px solid var(--hot);
+  border-radius:0 9px 9px 0;padding:14px 16px;font-size:14.5px}
+footer{border-top:1px solid var(--line)}
+footer .rail{padding-block:18px;font-size:13.5px;color:var(--ink2)}
+</style>
+
+<header class="band top"><div class="rail">
+  <div class="brand">TK<span>&nbsp;Digital</span></div>
+  <div class="meta">Dossier menuboard · Le Mistral &amp; Chick'n Beef</div>
+</div></header>
+
+<section class="band"><div class="rail stack">
+  <span class="eyebrow">Où on en est</span>
+  <h1>Les deux menuboards tournent. Il manque les vidéos et les prix.</h1>
+  <p class="lede">Tout ce qui pouvait être fait sans toi est fait. Ce qui reste demande
+  soit une génération depuis ton navigateur, soit un chiffre que seul le client a.</p>
+</div></section>
+
+<section class="band alt"><div class="rail stack">
+  <div class="clock">
+    <span class="eyebrow" style="color:var(--hot)">Essai Higgsfield — gratuit, déjà annulé, aucun prélèvement</span>
+    <div class="cd" id="cd">—</div>
+    <p class="meta" id="cdsub">Fin le samedi 15 novembre à 17h28 (heure française).</p>
+  </div>
+  <div class="warn"><b>L'illimité ne marche pas dans Claude Code</b> — la fenêtre où tu me parles.
+  Il fonctionne sur <b>higgsfield.ai</b> et sur <b>claude.ai</b>. D'ici je n'ai que 4 crédits,
+  et une vidéo en coûte 12,5. C'est pour ça que je ne peux pas générer moi-même.</div>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack"><span class="eyebrow">État</span><h2>Les deux projets</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <span class="pill ok">EN LIGNE</span>
+      <h3>Le Mistral — Waziers</h3>
+      <p>3 écrans animés, noir et or, carte complète, fonctionne sans internet.
+      3 fichiers vidéo prêts pour clés USB.</p>
+      <p><b>Manque :</b> prix du tacos, du kapsalon et du burger · prix de la formule ·
+      top 1 caisse · coût matière par portion de viande.</p>
+    </div>
+    <div class="card">
+      <span class="pill ok">EN LIGNE</span>
+      <h3>Chick'n Beef — Lille &amp; Nord</h3>
+      <p>3 écrans, leur charte et leurs 11 photos récupérées sur leur site.
+      Double prix carte / menu. 3 fichiers vidéo prêts.</p>
+      <p><b>Manque :</b> les vrais prix comptoir — ceux affichés viennent d'Uber Eats
+      et sont 10 à 30 % trop chers · top 1 caisse.</p>
+    </div>
+    <div class="card">
+      <span class="pill wait">EN ATTENTE</span>
+      <h3>Les vidéos animées</h3>
+      <p>Mascotte, morsure, fromage qui file. Les prompts sont écrits et prêts.
+      À générer depuis ton navigateur pendant l'essai.</p>
+    </div>
+    <div class="card">
+      <span class="pill ok">FAIT</span>
+      <h3>Le pack de prompts</h3>
+      <p>Issu de trois recherches : cinématographie culinaire, écriture de prompts
+      vidéo, cohérence d'un personnage. Copiable ci-dessous.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="band alt"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">À faire maintenant</span>
+    <h2>Pendant qu'il reste du temps gratuit</h2>
+  </div>
+  <ol class="steps">
+    <li><div><b>Ouvre higgsfield.ai ou claude.ai</b><span>Dans ton navigateur. Pas Claude Code.</span></div></li>
+    <li><div><b>Copie le prompt 1 et le prompt 2</b><span>La fiche personnage, puis le premier plan. Rien d'autre pour l'instant.</span></div></li>
+    <li><div><b>Renvoie-moi les deux résultats</b><span>Si la mascotte tient, on enchaîne. Sinon on corrige avant de gaspiller des générations.</span></div></li>
+    <li><div><b>Je monte les écrans avec</b><span>Titres, prix, boucles, fichiers prêts à brancher.</span></div></li>
+  </ol>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack">
+    <span class="eyebrow">Prompts</span>
+    <h2>À copier tels quels</h2>
+    <p class="lede">En anglais : ces modèles obéissent nettement mieux. Les réglages comptent
+    autant que le texte — ils sont rappelés au-dessus de chaque bloc.</p>
+  </div>
+
+  <details class="pr" open><summary>1 · La fiche personnage</summary><div class="in">
+    <p class="how"><b>Modèle</b> Nano Banana Pro · <b>Format</b> 16:9 · <b>Résolution</b> 4K ·
+    <b>Référence</b> la mascotte déjà générée. Découpe ensuite la planche en 4 fichiers séparés.</p>
+    <pre id="p1">Character turnaround model sheet, four consistent full-body views in a row — front view, three-quarter view, side profile, and back view, evenly spaced, identical original character on all four views.
+
+Stylized 3D animated-film character render, modern feature-animation look, smooth matte surfaces, soft global illumination with a gentle rim light. A friendly young cartoon king, male, reading about 18 years old, cheerful and approachable. Head-to-body ratio about 1:4, head noticeably large. Rounded soft-square head, full cheeks, small rounded chin, short button nose. Very large expressive eyes set wide apart, warm dark-brown irises, one large round white catchlight in the upper-left of each iris. Thick softly rounded dark eyebrows raised in a friendly arch. Wide open joyful grin, upper teeth as one clean smooth white band with no individual tooth gaps. Warm light-tan skin #B16A3C, even tone, no skin texture detail. Short dark-brown hair #5A3823, soft rounded clumped strands, matte finish. A simple golden five-point crown, exactly five identical rounded triangular points, smooth polished gold #FFCC01, no engraving, no gemstones, no jewels, no fur trim, sitting level and centred on top of the head with the hairline visible beneath. Plain matte-black pullover hoodie #0B0A08, relaxed fit, hood down behind the neck, soft ribbed cuffs, two flat drawstrings, completely plain with no print and no zipper. Simplified rounded cartoon mitten-style hands, four fingers and a thumb, no fingernails. Clean soft shading, no black outline. Flat solid golden-yellow background #FFCC01, perfectly even, no gradient, no vignette, no floor, no shadow on the background.
+
+Format 16:9, 4K. No labels, no captions, no text anywhere in the image.
+Constraints: no text, no letters, no watermark, no logo, no frame borders, no extra characters, no duplicate figures, no photoreal skin, no outline, no gemstones on the crown, no hood up, no hoodie print, no distorted hands, no extra fingers.</pre>
+    <button class="cp" data-t="p1">Copier</button>
+  </div></details>
+
+  <details class="pr"><summary>2 · L'image de départ — « sur le point de croquer »</summary><div class="in">
+    <p class="how"><b>Modèle</b> Nano Banana Pro · <b>16:9 · 4K</b> ·
+    <b>Références</b> vue de face + vue 3/4. C'est cette image qui servira de première
+    image de la vidéo : tout se joue ici.</p>
+    <pre id="p2">Keep the mascot's design, proportions, colours and facial features exactly the same as Image 1. Change only the pose.
+
+Medium shot, chest up, the mascot centred and facing the camera, holding a huge triple cheeseburger with both hands close to his mouth, mouth slightly open, about to bite.
+
+The same king mascot character from the reference image — identical face, identical very large eyes and catchlights, identical wide grin, identical short dark-brown hair, identical simple golden five-point crown with exactly five points and no gemstones sitting level on his head, identical plain matte-black hoodie with the hood down and no print, identical stylized 3D animated-film render style and soft lighting, identical flat solid golden-yellow background #FFCC01 with no gradient. Do not change the character's design, proportions, colours or render style.
+
+Format 16:9, 4K.
+Constraints: no text, no letters, no watermark, no logo, no extra characters, no extra fingers, no distorted hands.</pre>
+    <button class="cp" data-t="p2">Copier</button>
+  </div></details>
+
+  <details class="pr"><summary>3 · La morsure — la vidéo</summary><div class="in">
+    <p class="how"><b>Modèle</b> Seedance 2.5 · <b>start_image</b> = l'image 2 ·
+    <b>pas de end_image</b> · <b>6 s · 16:9 · 1080p</b> ·
+    <b><code>generate_audio: false</code></b> — sinon tu récupères une musique au hasard.
+    Ce plan ne boucle pas : il ira au milieu d'un montage. Prévois 4 à 6 essais.</p>
+    <pre id="p3">Begin exactly on the provided first frame and bring the still to life.
+The mascot takes one single bite of the burger, his cheeks puff slightly, he closes his eyes in delight and grins with his mouth closed. The melted cheddar stretches and the strand breaks. One action and one small reaction, nothing more.
+Camera locked off on a tripod, fixed framing, the camera never moves — no pan, no tilt, no zoom, no handheld drift. One continuous take, no cuts, real-time speed.
+Flat even lighting, constant throughout. The flat solid golden-yellow background stays perfectly even with no gradient and no shadow.
+
+The same king mascot character from the reference image — identical face, identical very large eyes, identical wide grin, identical short dark-brown hair, identical simple golden five-point crown with exactly five points and no gemstones sitting level on his head, identical plain matte-black hoodie with the hood down and no print, identical stylized 3D animated-film render style. Do not change the character's design, proportions, colours or render style.
+
+Constraints: no text, no letters, no words, no numbers, no subtitles, no captions, no watermark, no logo, no signage, no extra characters, no extra fingers, no warped hands, no audio.</pre>
+    <button class="cp" data-t="p3">Copier</button>
+  </div></details>
+
+  <details class="pr"><summary>4 · Le clin d'œil — boucle parfaite</summary><div class="in">
+    <p class="how"><b>Seedance 2.5</b> · <b>start_image ET end_image = la même image</b> —
+    c'est la méthode documentée pour obtenir une boucle · 6 s · 1080p ·
+    <code>generate_audio: false</code>.</p>
+    <pre id="p4">Begin exactly on the provided first frame and bring the still to life.
+The mascot winks once with his right eye and gives a small nod, then returns to his exact starting pose. Everything else is still.
+Camera locked off, fixed framing, the camera never moves. Flat even lighting, constant.
+Seamless loop: the final frame matches the first frame exactly; the motion returns to its starting state gradually and never snaps back.
+One continuous take, no cuts, real-time speed.
+
+The same king mascot character from the reference image — identical face, identical very large eyes, identical wide grin, identical short dark-brown hair, identical simple golden five-point crown with exactly five points and no gemstones, identical plain matte-black hoodie with the hood down and no print, identical stylized 3D animated-film render style. Do not change the character's design, proportions, colours or render style.
+
+Constraints: no text, no letters, no subtitles, no watermark, no logo, no signage, no extra characters, no extra fingers, no warped hands, no audio.</pre>
+    <button class="cp" data-t="p4">Copier</button>
+  </div></details>
+
+  <details class="pr"><summary>5 · Produit seul, sans mascotte — le tour sur lui-même</summary><div class="in">
+    <p class="how">La boucle la plus sûre qui existe : mathématiquement parfaite.
+    <b>start_image ET end_image = la même photo du produit</b> · 6 s · 1080p ·
+    <code>generate_audio: false</code>.</p>
+    <pre id="p5">Begin exactly on the provided first frame and bring the still to life.
+The dish rotates exactly one full revolution on a turntable at a slow constant speed, ending in precisely its starting orientation. The food itself is rigid and unchanged: preserve plating, portion, colour, gloss and geometry exactly. Nothing is added to or removed from the dish.
+Camera locked off, fixed framing, the camera never moves. Lighting constant throughout.
+Rich Maillard crust, char localised on the raised edges only, rendered fat glistening, discrete specular highlights, irregular and asymmetric.
+Seamless loop: the final frame matches the first frame exactly; the rotation returns to its starting state gradually and never snaps back.
+One continuous take, no cuts, real-time speed.
+
+Constraints: no text, no letters, no subtitles, no watermark, no logo, no signage, no hands, no people, no plate morph, no extra food appearing, no grey meat, no flat frontal lighting, no uniform plastic sheen, no blue colour cast, no audio.</pre>
+    <button class="cp" data-t="p5">Copier</button>
+  </div></details>
+
+  <div class="warn"><b>Trois pièges.</b> Le son est activé par défaut, mets toujours
+  <code>generate_audio: false</code>. N'utilise jamais de parenthèses ni de crochets dans
+  un prompt Seedance : ce sont des commandes réservées, et <code>【 】</code> veut dire
+  sous-titres. Et ne demande jamais de texte ni de prix dans une vidéo — l'IA écrit mal
+  et inventerait tes tarifs.</div>
+</div></section>
+
+<section class="band alt"><div class="rail stack-lg">
+  <div class="stack"><span class="eyebrow">Installation</span><h2>Les 6 fichiers sur les télés</h2></div>
+  <ol class="steps">
+    <li><div><b>Un fichier par clé USB</b><span>À la racine de la clé, une clé par télé.</span></div></li>
+    <li><div><b>Lecteur multimédia de la télé → Répéter</b><span>Active la lecture en boucle.</span></div></li>
+    <li><div><b>Désactive la mise en veille</b><span>Et l'extinction après absence de signal, sinon l'écran s'éteint tout seul au bout de quelques heures.</span></div></li>
+  </ol>
+  <div class="tw"><table>
+    <thead><tr><th>Fichier</th><th>Écran</th><th>Contenu</th></tr></thead>
+    <tbody>
+      <tr><td><code>MISTRAL_ECRAN-1</code></td><td>gauche</td><td>vitrine photo qui défile</td></tr>
+      <tr><td><code>MISTRAL_ECRAN-2</code></td><td>centre</td><td>assiettes et prix</td></tr>
+      <tr><td><code>MISTRAL_ECRAN-3</code></td><td>droite</td><td>bouchées, paninis, boissons</td></tr>
+      <tr><td><code>CHICKNBEEF_ECRAN-1</code></td><td>gauche</td><td>vitrine photo qui défile</td></tr>
+      <tr><td><code>CHICKNBEEF_ECRAN-2</code></td><td>centre</td><td>Beef Burgers</td></tr>
+      <tr><td><code>CHICKNBEEF_ECRAN-3</code></td><td>droite</td><td>Chick'n, wraps, à côté</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">1920 × 1080, H.264, 25 images/s, sans son. Écrans 1 : 60 s · écrans 2 et 3 : 27 à 30 s.
+  Ces vidéos sont figées : un changement de prix demande de régénérer les fichiers.</p>
+</div></section>
+
+<section class="band"><div class="rail stack-lg">
+  <div class="stack"><span class="eyebrow">Ce qu'il me faut</span><h2>À demander aux clients</h2></div>
+  <div class="grid g2">
+    <div class="card"><h3>Le Mistral</h3><ul class="ck">
+      <li><i>·</i><span>Prix du tacos, du kapsalon et du burger</span></li>
+      <li><i>·</i><span>Prix de la formule (frites + boisson)</span></li>
+      <li><i>·</i><span>Le produit le plus commandé, d'après la caisse</span></li>
+      <li><i>·</i><span>Coût matière d'une portion de viande</span></li>
+    </ul></div>
+    <div class="card"><h3>Chick'n Beef</h3><ul class="ck">
+      <li><i>·</i><span>Les vrais prix comptoir — une photo de la carte suffit</span></li>
+      <li><i>·</i><span>Prix des salades et des boissons</span></li>
+      <li><i>·</i><span>Le produit le plus commandé, d'après la caisse</span></li>
+    </ul></div>
+  </div>
+  <div class="warn"><b>Le produit le plus commandé, ce n'est pas un détail.</b> C'est le seul
+  levier à preuve forte du dossier : une expérience en restaurant, avec tirage au sort,
+  a mesuré <b>+13 à 20 % de demande</b> sur les plats affichés comme les plus commandés.
+  Mais l'affichage doit être <b>vrai</b> : une fausse allégation de popularité est une
+  pratique commerciale trompeuse. D'où ma demande d'un chiffre de caisse, pas d'une intuition.</div>
+</div></section>
+
+<footer class="band"><div class="rail">TK Digital · Tarik · Lille — dossier mis à jour le 14 novembre 2026</div></footer>
+
+<script>
+// compte à rebours jusqu'à la fin de l'essai Higgsfield
+const FIN = new Date('2026-11-15T16:28:49Z').getTime();
+function maj(){
+  const el=document.getElementById('cd'), sub=document.getElementById('cdsub');
+  const r=FIN-Date.now();
+  if(r<=0){ el.textContent='Essai terminé'; el.classList.add('fin');
+    sub.textContent="L'essai gratuit est fini. Les générations consomment désormais des crédits."; return; }
+  const h=Math.floor(r/3600000), m=Math.floor(r%3600000/60000), s=Math.floor(r%60000/1000);
+  el.textContent=`${h} h ${String(m).padStart(2,'0')} min ${String(s).padStart(2,'0')} s`;
+}
+maj(); setInterval(maj,1000);
+
+// copie des prompts
+document.querySelectorAll('button.cp').forEach(b=>{
+  b.addEventListener('click',async()=>{
+    const t=document.getElementById(b.dataset.t).textContent;
+    const fini=()=>{const o=b.textContent;b.textContent='Copié';b.disabled=true;
+      setTimeout(()=>{b.textContent=o;b.disabled=false},1600)};
+    try{ await navigator.clipboard.writeText(t); fini(); }
+    catch(e){
+      const el=document.getElementById(b.dataset.t);
+      const sel=window.getSelection(), rg=document.createRange();
+      rg.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(rg);
+      b.textContent='Sélectionné — copie avec ton clavier';
+      setTimeout(()=>{b.textContent='Copier'},2600);
+    }
+  });
+});
+</script>
